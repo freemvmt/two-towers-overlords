@@ -245,7 +245,7 @@ def evaluate_model(
     dataset: MSMarcoDataset,
     sample_size: int = 200,
     min_query_groups: int = 20,
-    candidate_pool_size: int = 50,
+    candidate_pool_size: int = 100,
     comprehensive: bool = False,
     log_wandb: bool = False,
     wandb_prefix: str = "",

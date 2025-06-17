@@ -95,7 +95,7 @@ def sweep_train():
         margin=config.margin,
         project_name="two-towers-retrieval",
         use_wandb=True,
-        accumulation_steps=config.get("accumulation_steps", 2),
+        accumulation_steps=config.get("accumulation_steps", 4),
         num_workers=config.get("num_workers", 6),
         run_comprehensive_test=config.get("run_comprehensive_test", True),  # Enable by default for sweeps
     )
@@ -110,12 +110,12 @@ def run_sweep(project_name: str = "two-towers-retrieval"):
         "metric": {"name": "val_ndcg_10", "goal": "maximize"},
         "parameters": {
             "margin": {"values": [0.3, 0.5, 0.7]},
-            "epochs": {"values": [8, 10, 12]},
-            "batch_size": {"values": [256, 512, 1024]},
+            "epochs": {"values": [9, 12, 15]},
+            "batch_size": {"values": [256, 512, 1024, 2048]},
             "learning_rate": {"values": [1e-3, 1e-4]},
-            "max_samples": {"values": [50_000, 100_000]},  # -1 means use full dataset
-            "projection_dim": {"values": [128, 256]},
-            "accumulation_steps": {"values": [1, 2, 4]},
+            "max_samples": {"values": [100_000]},  # -1 means use full dataset
+            "projection_dim": {"values": [128, 256, 512]},
+            "accumulation_steps": {"values": [2, 4]},
         },
     }
 
@@ -132,7 +132,7 @@ def run_sweep(project_name: str = "two-towers-retrieval"):
         sweep_id=sweep_id,
         function=sweep_train,
         project=project_name,
-        count=30,
+        count=20,
     )
 
 
