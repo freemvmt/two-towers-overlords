@@ -200,7 +200,7 @@ def evaluate_model(
                 irrelevant_docs.update(query_groups[other_qid]["relevant_docs"])
         if len(irrelevant_docs) > candidate_pool_size:
             irrelevant_docs = set(random.sample(list(irrelevant_docs), candidate_pool_size))
-        all_candidate_docs = list(relevant_docs | irrelevant_docs)
+        all_candidate_docs = list(relevant_docs) + list(irrelevant_docs)
 
         # Create ground-truth relevance labels (1 for relevant, 0 for irrelevant)
         true_relevance = np.array([1] * len(relevant_docs) + [0] * len(irrelevant_docs))
@@ -255,6 +255,13 @@ def run_training(
     """Main training function with wandb integration."""
     print("Initializing model and data...")
 
+    # Set up device (GPU if available, otherwise CPU)
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    print(f"Using device: {device}")
+    if device.type == "cuda":
+        print(f"GPU: {torch.cuda.get_device_name(0)}")
+        print(f"Memory: {torch.cuda.get_device_properties(0).total_memory / 1e9:.1f}GB")
+
     # Initialize wandb if enabled
     if use_wandb:
         config = {
@@ -267,14 +274,17 @@ def run_training(
             "distance_metric": "cosine",
             "margin": margin,
             "dataset_type": "ms_marco_all_passages",  # Using all passages by default
+            "device": str(device),
+            "device_name": torch.cuda.get_device_name(0) if device.type == "cuda" else "CPU",
         }
         if wandb_config:
             config.update(wandb_config)
 
         wandb.init(project=project_name, config=config)
 
-    # Initialize model
+    # Initialize model and move to device
     model = TwoTowersModel(projection_dim=projection_dim)
+    model = model.to(device)  # Move model to GPU if available
     criterion = TripletLoss(margin=margin)
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 

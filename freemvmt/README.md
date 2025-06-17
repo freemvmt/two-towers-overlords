@@ -38,7 +38,7 @@ uv run python main.py
 uv run python main.py --no-wandb
 
 # Custom training parameters
-uv run python main.py --epochs 5 --batch-size 16 --learning-rate 2e-4 --max-samples 5000
+uv run python main.py --epochs 5 --batch-size 16 --learning-rate 2e-4 --max-samples 5000 --projection-dim 64
 
 # Run hyperparameter sweep
 uv run python main.py --sweep
