@@ -188,4 +188,5 @@ Now to run an absolute monster sweep...
 
 ## Additional resources
 
-- https://www.shaped.ai/blog/the-two-tower-model-for-recommendation-systems-a-deep-dive
+- ShapedAI deep dive on [the two tower model for recommendation systems](https://www.shaped.ai/blog/the-two-tower-model-for-recommendation-systems-a-deep-dive)
+- Wandb explainer and tutorial on [Bayesian hyperparameter optimisation](https://wandb.ai/wandb_fc/articles/reports/What-Is-Bayesian-Hyperparameter-Optimization-With-Tutorial---Vmlldzo1NDQyNzcw#what-are-hyperparameters?)
