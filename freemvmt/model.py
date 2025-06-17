@@ -89,7 +89,7 @@ class TwoTowersModel(nn.Module):
 class TripletLoss(nn.Module):
     """Triplet loss with cosine distance."""
 
-    def __init__(self, margin: float = 0.1):
+    def __init__(self, margin: float = 0.3):
         super().__init__()
         self.margin = margin
 

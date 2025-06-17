@@ -356,7 +356,9 @@ def run_training(
         if wandb_config:
             config.update(wandb_config)
 
-        wandb.init(project=project_name, config=config)
+        # Only initialize wandb if it's not already initialized (e.g., during sweeps)
+        if not wandb.run:
+            wandb.init(project=project_name, config=config)
 
     # Initialize model and move to device
     model = TwoTowersModel(projection_dim=projection_dim)
