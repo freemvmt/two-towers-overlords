@@ -15,6 +15,7 @@ class AveragePoolingTower(nn.Module):
 
     def __init__(self, model_name: str = "sentence-transformers/all-MiniLM-L6-v2", projection_dim: int = 128):
         super().__init__()
+        # we export TOKENIZERS_PARALLELISM=false to avoid the tokenizer clashing with the DL workers
         self.tokenizer = AutoTokenizer.from_pretrained(model_name)
         self.pretrained_model = AutoModel.from_pretrained(model_name)
         self.embedding_dim = self.pretrained_model.config.hidden_size

@@ -68,14 +68,11 @@ def main():
 
 def sweep_train():
     """Training function for wandb sweep."""
-    # Initialize wandb
-    wandb.init()
-
     # Get hyperparameters from wandb config
     config = wandb.config
 
     # Run training with sweep parameters
-    # assume we're running on GPU, so default to high accumulation steps / dl workers
+    # assume we're running on beefy GPU (e.g. RTX 3090), so default to high accumulation steps / workers
     print("Running training with hyperparameters:")
     trained_model = run_training(
         num_epochs=config.epochs,
@@ -86,7 +83,7 @@ def sweep_train():
         margin=config.margin,
         project_name="two-towers-retrieval-sweep",
         use_wandb=True,
-        accumulation_steps=config.get("accumulation_steps", 4),
+        accumulation_steps=config.get("accumulation_steps", 2),
         num_workers=config.get("num_workers", 6),
     )
 
@@ -99,13 +96,13 @@ def run_sweep(project_name: str = "two-towers-retrieval-sweep"):
         "method": "bayes",  # Can be 'grid', 'random', or 'bayes'
         "metric": {"name": "val_ndcg_10", "goal": "maximize"},
         "parameters": {
-            "margin": {"values": [0.1, 0.3, 0.5]},
-            "epochs": {"values": [8, 12, 20]},
+            "margin": {"values": [0.3, 0.5]},
+            "epochs": {"values": [8, 12, 16]},
             "batch_size": {"values": [256, 512, 1024]},
             "learning_rate": {"values": [1e-3, 1e-4]},
-            "max_samples": {"values": [50000, 100000, -1]},  # -1 means use full dataset
+            "max_samples": {"values": [50000]},  # -1 means use full dataset
             "projection_dim": {"values": [128, 256, 512]},
-            "accumulation_steps": {"values": [2]},
+            "accumulation_steps": {"values": [2, 4]},
         },
     }
 
