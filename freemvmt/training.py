@@ -3,7 +3,7 @@ Training script for two-towers document retrieval model using MS Marco dataset.
 """
 
 import random
-from typing import Dict, List, Tuple, Optional, Union
+from typing import Tuple, Optional, Union
 
 from datasets import load_dataset
 import torch
@@ -17,49 +17,69 @@ from model import TwoTowersModel, TripletLoss
 from tqdm import tqdm
 
 
+MsMarcoDatasetItem = dict[str, Union[str, int]]
+Triplet = Tuple[list[str], list[str], list[str]]
+
+
+# this file is littered with 'type: ignore' comments mostly to allay python's concerns about the HF Dataset
 class MSMarcoDataset(Dataset):
     """MS Marco dataset that expands each query to include all its positive passages."""
 
-    def __init__(self, split: str = "train", max_samples: int = 10000):
-        print(f"Loading MS Marco {split} dataset...")
+    def __init__(self, split: str = "train", max_samples: int = 10_000) -> None:
+        print(f"Building MS Marco {split} dataset with at most {max_samples} samples...")
         # get map-style dataset from Hugging Face
-        # this file is littered with type: ignore comments because the dataset is not well-typed (?)
         self.dataset = load_dataset("microsoft/ms_marco", "v1.1", split=split)
 
-        # Expand dataset to include all query-passage pairs
-        self.expanded_data = []
+        # expand record to produce all query-passage pairs (and collect up all unique passages simultaneously)
+        # TODO: should we randomly select items from the dataset? (as it stands, same sample size will be identical every time)
+        self.data: list[MsMarcoDatasetItem] = []
+        self.docs = set()
         sample_count = 0
         for item in self.dataset:
             query = str(item["query"])  # type: ignore
-            query_id = str(item["query_id"])  # type: ignore
+            query_id = int(item["query_id"])  # type: ignore
 
-            # Add all positive passages for this query
+            # Add all positive passages ('documents') for this query
             try:
-                passage_texts = item["passages"]["passage_text"]  # type: ignore
-                for passage in passage_texts:
-                    if passage.strip():  # Skip empty passages
-                        self.expanded_data.append({"query": query, "positive": str(passage), "query_id": query_id})
+                for doc in item["passages"]["passage_text"]:  # type: ignore
+                    if doc.strip():  # Skip empty docs
+                        doc = str(doc)
+                        self.data.append(
+                            {
+                                "query_id": query_id,
+                                "query": query,
+                                "positive": doc,
+                            }
+                        )
+                        self.docs.add(doc)
                         sample_count += 1
                         # traverse full dataset if max_samples is -1
                         if max_samples == -1:
                             continue
+                        # else break off when we reach max_samples
                         if max_samples and sample_count >= max_samples:
                             break
             except (KeyError, TypeError):
-                # Fallback: use empty string if no passages
-                self.expanded_data.append({"query": query, "positive": "", "query_id": query_id})
-                sample_count += 1
-
+                print(f"Error while building query-doc pairs for record: {item}")
+                continue
             if max_samples and sample_count >= max_samples:
                 break
 
-        print(f"Expanded to {len(self.expanded_data)} query-passage pairs")
+        # save list of unique docs as list
+        self.docs = list(self.docs)
+        print(
+            f"Built {split} dataset with {len(self.data)} query-document pairs, including {len(self.docs)} unique passages"
+        )
 
     def __len__(self) -> int:
-        return len(self.expanded_data)
+        return len(self.data)
 
-    def __getitem__(self, idx: int) -> Dict[str, str]:
-        return self.expanded_data[idx]
+    def __getitem__(self, idx: int) -> MsMarcoDatasetItem:
+        return self.data[idx]
+
+    def get_unique_passages(self) -> list[str]:
+        """Get all unique passages from the dataset (prepared during init)."""
+        return self.docs  # type: ignore
 
 
 class TripletDataLoader:
@@ -83,8 +103,8 @@ class TripletDataLoader:
             persistent_workers=True if num_workers > 0 else False,
         )
 
-    def create_triplets(self, batch: List[Dict[str, str]]) -> Tuple[List[str], List[str], List[str]]:
-        """Create triplets by randomly sampling negatives from the batch."""
+    def create_triplets(self, batch: list[MsMarcoDatasetItem]) -> Triplet:
+        """Create triplets by randomly sampling negatives (from within the batch)."""
         queries = []
         positives = []
         negatives = []
@@ -96,16 +116,16 @@ class TripletDataLoader:
             # Sample a negative from other items in the batch (as long as the query is different)
             while True:
                 negative, query_id = self._get_random_negative(batch, i)
-                if negative and query_id != int(item["query_id"]):
+                if negative and query_id != item["query_id"]:
                     negatives.append(negative)
                     break
 
         return queries, positives, negatives
 
-    def _get_random_negative(self, batch: list[dict[str, str]], idx: int) -> tuple[str, int]:  # type: ignore
+    def _get_random_negative(self, batch: list[MsMarcoDatasetItem], idx: int) -> tuple[str, int]:  # type: ignore
         """Get a random negative sample from the batch, excluding the specified index."""
         neg_idx = random.choice([j for j in range(len(batch)) if j != idx])
-        return batch[neg_idx]["positive"], int(batch[neg_idx]["query_id"])
+        return batch[neg_idx]["positive"], batch[neg_idx]["query_id"]  # type: ignore
 
     def __iter__(self):
         for batch in self.dataloader:
@@ -246,23 +266,22 @@ def evaluate_model(
         dataset: The dataset to evaluate on (train/validation/test)
         sample_size: Number of samples to use from the dataset
         min_query_groups: Minimum number of unique queries to evaluate on
-        candidate_pool_size: Size of candidate pool for each query
+        candidate_pool_size: Size of candidate pool for each query (-1 => use all documents)
         comprehensive: If True, performs comprehensive evaluation with detailed output and multiple metrics
         log_wandb: Whether to log results to wandb
         wandb_prefix: Prefix for wandb logging keys (e.g., "final_test_", "val_")
 
     Returns:
         If comprehensive=False: float (NDCG@10 score)
-        If comprehensive=True: Dict containing detailed metrics
+        If comprehensive=True: dict containing detailed metrics
     """
     # see https://www.evidentlyai.com/ranking-metrics/ndcg-metric
-    model.eval()
-
     print(f"Sampling documents for evaluation (initial sample size: {sample_size})...")
+    model.eval()
 
     # Group by query_id to get multiple relevant documents for each query
     # We run the below loop until we have sufficient unique queries
-    query_groups: dict[str, dict[str, Union[str, set[str]]]] = {}
+    query_groups: dict[int, dict[str, Union[str, set[str]]]] = {}
     sample_multiplier = 1
     print(f"Grouping data by queries (target: {min_query_groups} unique queries)...")
     while len(query_groups) < min_query_groups and sample_multiplier <= 10:  # Prevent infinite loop
@@ -272,11 +291,14 @@ def evaluate_model(
         for item in eval_data:
             query_id = item["query_id"]
             if query_id not in query_groups:
-                query_groups[query_id] = {"query": item["query"], "relevant_docs": set()}
+                query_groups[query_id] = {  # type: ignore
+                    "query": item["query"],
+                    "relevant_docs": set(),
+                }
             query_groups[query_id]["relevant_docs"].add(item["positive"])  # type: ignore
         sample_multiplier += 1
 
-    # Sort query groups by no. of relevant docs collected (descending) to get most populated query IDs
+    # Sort query groups by no. of relevant docs collected (descending) to get most populated query groups
     query_ids = sorted(
         query_groups.keys(),
         key=lambda qid: len(query_groups[qid]["relevant_docs"]),
@@ -288,7 +310,7 @@ def evaluate_model(
     avg_relevant_per_query = total_relevant_docs / len(query_ids)
 
     print(f"Selected {len(query_ids)} queries for comprehensive evaluation")
-    print(f"  Total relevant documents: {total_relevant_docs}")
+    print(f"  Total relevant documents across these queries: {total_relevant_docs}")
     print(f"  Average relevant docs per query: {avg_relevant_per_query:.2f}")
 
     # Initialize score collections based on evaluation type
@@ -297,19 +319,28 @@ def evaluate_model(
     ndcg_1_scores = [] if comprehensive else None
 
     for i, query_id in enumerate(tqdm(query_ids, desc="Evaluating queries")):
-        query_data = query_groups[query_id]
+        query_data: dict[str, Union[str, set[str]]] = query_groups[query_id]
         query = query_data["query"]
         relevant_docs = query_data["relevant_docs"]
 
         # Create candidate pool: relevant docs + many more random irrelevant docs
-        # FIXME: if candidate_pool_size == -1, use ALL docs in the dataset (challenge!!)
-        irrelevant_docs = set()
-        for other_qid in query_ids:
-            if other_qid != query_id:
-                irrelevant_docs.update(query_groups[other_qid]["relevant_docs"])
-        if len(irrelevant_docs) > candidate_pool_size:
-            irrelevant_docs = set(random.sample(list(irrelevant_docs), candidate_pool_size))
-        all_candidate_docs = list(relevant_docs) + list(irrelevant_docs)
+        # if candidate_pool_size == -1, we use ALL docs in the dataset (for a challenge!)
+        if candidate_pool_size == -1:
+            all_docs = set(dataset.get_unique_passages())
+            irrelevant_docs = all_docs - relevant_docs  # type: ignore
+        else:
+            # get all irrelevant docs from within evaluation set (ensuring no overlap with relevant docs)
+            irrelevant_docs = set(
+                doc
+                for other_qid in query_ids
+                for doc in query_groups[other_qid]["relevant_docs"]
+                if other_qid != query_id
+                if doc not in relevant_docs
+            )
+            if len(irrelevant_docs) > candidate_pool_size:
+                irrelevant_docs = set(random.sample(list(irrelevant_docs), candidate_pool_size))
+        # we don't make a list from union of sets here to ensure relevant docs come first in the candidate pool
+        candidate_pool = list(relevant_docs) + list(irrelevant_docs)
 
         # Create ground-truth relevance labels (1 for relevant, 0 for irrelevant)
         true_relevance = np.array([1] * len(relevant_docs) + [0] * len(irrelevant_docs))
@@ -317,7 +348,7 @@ def evaluate_model(
         # Get embeddings and compute similarities
         with torch.no_grad():
             query_embed = model.encode_queries([query])  # type: ignore  # Shape: (1, embed_dim)
-            doc_embeds = model.encode_documents(all_candidate_docs)  # Shape: (n_docs, embed_dim)
+            doc_embeds = model.encode_documents(candidate_pool)  # Shape: (n_docs, embed_dim)
             # Compute similarities between the query and all candidate documents
             similarities = torch.cosine_similarity(query_embed.cpu(), doc_embeds.cpu(), dim=1).numpy()
 
@@ -337,7 +368,7 @@ def evaluate_model(
             print("\nSample evaluation results:")
             print(f"Query: {query}")
             print(f"Number of relevant docs: {len(relevant_docs)}")
-            print(f"Number of candidate docs: {len(all_candidate_docs)}")
+            print(f"Number of candidate docs: {len(candidate_pool)}")
             print(f"NDCG@10 score for this query: {ndcg_10:.4f}")
 
             # Show top-ranked documents
@@ -346,9 +377,9 @@ def evaluate_model(
             for rank, doc_idx in enumerate(ranked_indices):
                 relevance = "RELEVANT" if true_relevance[doc_idx] == 1 else "irrelevant"
                 doc_preview = (
-                    all_candidate_docs[doc_idx][:100] + "..."
-                    if len(all_candidate_docs[doc_idx]) > 100
-                    else all_candidate_docs[doc_idx]
+                    candidate_pool[doc_idx][:100] + "..."
+                    if len(candidate_pool[doc_idx]) > 100
+                    else candidate_pool[doc_idx]
                 )
                 print(f"  {rank + 1}. [{relevance}] {doc_preview}")
 
@@ -387,7 +418,7 @@ def evaluate_model(
     # Log to wandb if requested
     if log_wandb:
         wandb.log(results)
-        print("✅ Comprehensive test results logged to wandb")
+        print("\n✅ Comprehensive test results logged to wandb")
 
     return results
 
@@ -401,12 +432,11 @@ def run_training(
     margin: float = 0.1,
     project_name: str = "two-towers-retrieval",
     use_wandb: bool = True,
-    wandb_config: Optional[Dict] = None,
+    wandb_config: Optional[dict] = None,
     accumulation_steps: int = 2,  # Gradient accumulation for effective larger batch sizes
     use_mixed_precision: bool = True,  # Enable mixed precision training
     num_workers: int = 4,  # DataLoader workers for better CPU-GPU pipeline
     run_comprehensive_test: bool = True,  # Run comprehensive test after training
-    test_samples: int = 10000,  # Number of samples for comprehensive testing
 ) -> TwoTowersModel:
     """Main training function with GPU optimizations and wandb integration."""
     print("Initializing model and data...")
