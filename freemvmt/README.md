@@ -162,6 +162,16 @@ import torch
 similarity = torch.cosine_similarity(query_embeddings, doc_embeddings)
 ```
 
+
+## Sweeping
+
+Running sweeps with wandb turns out to be super powerful! The first one we ran [uodzb69z](https://wandb.ai/freemvmt-london/two-towers-retrieval/sweeps/uodzb69z/workspace?nw=nwuserfreemvmt). In general CSVs, buffers from tmux sessions, and images of the trajectories can be found in the `sweeps/` dir.
+
+Conclusions we drew from conducting hyperparameter sweep experiments:
+- 
+
+
+
 ## Additional resources
 
 - https://www.shaped.ai/blog/the-two-tower-model-for-recommendation-systems-a-deep-dive
