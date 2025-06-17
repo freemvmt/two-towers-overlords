@@ -36,6 +36,9 @@ class AveragePoolingTower(nn.Module):
         # Tokenize
         tokens = self.tokenizer(texts, padding=True, truncation=True, return_tensors="pt", max_length=512)
 
+        # Move tokenized inputs to the same device as the model
+        tokens = {k: v.to(self.pretrained_model.device) for k, v in tokens.items()}
+
         # Get embeddings from pretrained model
         with torch.no_grad():
             output = self.pretrained_model(**tokens)
