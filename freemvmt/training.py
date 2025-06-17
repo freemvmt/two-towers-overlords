@@ -5,7 +5,7 @@ Training script for two-towers document retrieval model using MS Marco dataset.
 import random
 from typing import Dict, List, Tuple, Optional, Union
 
-from datasets import load_dataset, Dataset as MapDataset
+from datasets import load_dataset
 import torch
 from torch import autocast, GradScaler
 from torch.utils.data import DataLoader, Dataset
@@ -22,19 +22,19 @@ class MSMarcoDataset(Dataset):
     def __init__(self, split: str = "train", max_samples: int = 10000):
         print(f"Loading MS Marco {split} dataset...")
         # get map-style dataset from Hugging Face
+        # this file is littered with type: ignore comments because the dataset is not well-typed (?)
         self.dataset = load_dataset("microsoft/ms_marco", "v1.1", split=split)
-        assert isinstance(self.dataset, MapDataset)  # Runtime check
 
         # Expand dataset to include all query-passage pairs
         self.expanded_data = []
         sample_count = 0
         for item in self.dataset:
-            query = str(item["query"])
-            query_id = str(item["query_id"])
+            query = str(item["query"])  # type: ignore
+            query_id = str(item["query_id"])  # type: ignore
 
             # Add all positive passages for this query
             try:
-                passage_texts = item["passages"]["passage_text"]
+                passage_texts = item["passages"]["passage_text"]  # type: ignore
                 for passage in passage_texts:
                     if passage.strip():  # Skip empty passages
                         self.expanded_data.append({"query": query, "positive": str(passage), "query_id": query_id})
@@ -95,7 +95,7 @@ class TripletDataLoader:
 
         return queries, positives, negatives
 
-    def _get_random_negative(self, batch: List[Dict[str, str]], idx: int) -> tuple[str, int]:
+    def _get_random_negative(self, batch: list[dict[str, str]], idx: int) -> tuple[str, int]:  # type: ignore
         """Get a random negative sample from the batch, excluding the specified index."""
         neg_idx = random.choice([j for j in range(len(batch)) if j != idx])
         return batch[neg_idx]["positive"], int(batch[neg_idx]["query_id"])
@@ -249,7 +249,7 @@ def evaluate_model(
             query_id = item["query_id"]
             if query_id not in query_groups:
                 query_groups[query_id] = {"query": item["query"], "relevant_docs": set()}
-            query_groups[query_id]["relevant_docs"].add(item["positive"])
+            query_groups[query_id]["relevant_docs"].add(item["positive"])  # type: ignore
         sample_multiplier += 1
 
     # finally we sort sort query groups by no. of relevant docs collected (descending) to get most populated query IDs
@@ -280,7 +280,7 @@ def evaluate_model(
 
         # Get embeddings and compute similarities
         with torch.no_grad():
-            query_embed = model.encode_queries([query])  # Shape: (1, embed_dim)
+            query_embed = model.encode_queries([query])  # type: ignore  # Shape: (1, embed_dim)
             doc_embeds = model.encode_documents(all_candidate_docs)  # Shape: (n_docs, embed_dim)
             # Compute similarities between the query and all candidate documents
             similarities = torch.cosine_similarity(query_embed.cpu(), doc_embeds.cpu(), dim=1).numpy()
