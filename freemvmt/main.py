@@ -87,7 +87,7 @@ def sweep_train():
         project_name="two-towers-retrieval-sweep",
         use_wandb=True,
         accumulation_steps=config.get("accumulation_steps", 4),
-        num_workers=config.get("accumulation_steps", 6),
+        num_workers=config.get("num_workers", 6),
     )
 
     return trained_model
@@ -105,7 +105,7 @@ def run_sweep(project_name: str = "two-towers-retrieval-sweep"):
             "learning_rate": {"values": [1e-3, 1e-4, 1e-5]},
             "max_samples": {"values": [10000, 50000, 100000]},
             "projection_dim": {"values": [64, 128, 256]},
-            "accumulation_steps": {"value": [2, 4]},
+            "accumulation_steps": {"values": [2, 4]},
         },
     }
 
