@@ -68,6 +68,10 @@ def main():
 
 def sweep_train():
     """Training function for wandb sweep."""
+    # Initialize wandb for the sweep run if not already done
+    if not wandb.run:
+        wandb.init()
+
     # Get hyperparameters from wandb config
     config = wandb.config
 
