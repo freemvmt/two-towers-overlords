@@ -40,10 +40,10 @@ python main.py --no-wandb
 # Custom training parameters (args here are good for dev/debug on CPU)
 python main.py \
   --no-wandb \
-  --epochs 2 \
-  --margin 0.1 \
-  --batch-size 128 \
-  --projection-dim 64 \
+  --epochs 1 \
+  --margin 0.3 \
+  --batch-size 64 \
+  --projection-dim 32 \
   --max-samples 1000 \
   --accumulation-steps 1 \
   --num-workers 1 \
@@ -51,8 +51,8 @@ python main.py \
 
 # compare with heavy duty, tracked GPU job
 python main.py \
-  --epochs 3 \
-  --margin 0.1 \
+  --epochs 5 \
+  --margin 0.3 \
   --batch-size 256 \
   --projection-dim 128 \
   --max-samples 10000 \
