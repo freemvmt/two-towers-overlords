@@ -37,8 +37,16 @@ uv run python main.py
 # Run training without wandb
 uv run python main.py --no-wandb
 
-# Custom training parameters
+# Custom training parameters (args here are good for dev/debug on CPU)
 uv run python main.py --epochs 5 --batch-size 16 --learning-rate 2e-4 --max-samples 5000 --projection-dim 64
+python main.py \
+  --epochs 2 \
+  --margin 0.1 \
+  --batch-size 128 \
+  --projection-dim 64 \
+  --max-samples 1000 \
+  --accumulation-steps 1 \
+  --num-workers 1
 
 # Run hyperparameter sweep
 uv run python main.py --sweep
