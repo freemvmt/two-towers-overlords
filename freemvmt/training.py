@@ -7,6 +7,7 @@ from typing import Dict, List, Tuple, Optional, Union
 
 from datasets import load_dataset, Dataset as MapDataset
 import torch
+from torch import autocast, GradScaler
 from torch.utils.data import DataLoader, Dataset
 from sklearn.metrics import ndcg_score
 import numpy as np
@@ -61,10 +62,17 @@ class MSMarcoDataset(Dataset):
 class TripletDataLoader:
     """Creates triplets for training with random negative sampling."""
 
-    def __init__(self, dataset: MSMarcoDataset, batch_size: int = 128):
+    def __init__(self, dataset: MSMarcoDataset, batch_size: int = 128, num_workers: int = 4):
         self.dataset = dataset
         self.batch_size = batch_size
-        self.dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
+        self.dataloader = DataLoader(
+            dataset,
+            batch_size=batch_size,
+            shuffle=True,
+            num_workers=num_workers,
+            pin_memory=True,  # Faster GPU transfer
+            persistent_workers=True if num_workers > 0 else False,
+        )
 
     def create_triplets(self, batch: List[Dict[str, str]]) -> Tuple[List[str], List[str], List[str]]:
         """Create triplets by randomly sampling negatives from the batch."""
@@ -140,6 +148,69 @@ def train_epoch(
     return total_loss / num_batches
 
 
+def train_epoch_optimized(
+    model: TwoTowersModel,
+    dataloader: TripletDataLoader,
+    criterion: TripletLoss,
+    optimizer: torch.optim.Optimizer,
+    device: torch.device,
+    scaler: GradScaler,
+    accumulation_steps: int = 2,
+    log_wandb: bool = True,
+) -> float:
+    """Train for one epoch with mixed precision and gradient accumulation."""
+    model.train()
+    total_loss = 0.0
+    num_batches = 0
+
+    for batch_idx, (queries, positives, negatives) in enumerate(dataloader):
+        # Use automatic mixed precision
+        with autocast(device.type):
+            # Get embeddings
+            query_embeds = model.encode_queries(queries)
+            positive_embeds = model.encode_documents(positives)
+            negative_embeds = model.encode_documents(negatives)
+
+            # Compute triplet loss
+            loss = criterion(query_embeds, positive_embeds, negative_embeds)
+
+            # Scale loss for gradient accumulation
+            loss = loss / accumulation_steps
+
+        # Backward pass with gradient scaling
+        scaler.scale(loss).backward()
+
+        # Update weights after every accumulation step
+        if (batch_idx + 1) % accumulation_steps == 0:
+            scaler.step(optimizer)
+            scaler.update()
+            optimizer.zero_grad()
+
+        total_loss += loss.item() * accumulation_steps  # Unscale loss for logging
+        num_batches += 1
+
+        # Log to wandb
+        if log_wandb and batch_idx % 10 == 0:
+            wandb.log(
+                {
+                    "batch_loss": loss.item() * accumulation_steps,
+                    "batch": num_batches,
+                    "gpu_memory_allocated": torch.cuda.memory_allocated() / 1e9 if torch.cuda.is_available() else 0,
+                    "gpu_memory_reserved": torch.cuda.memory_reserved() / 1e9 if torch.cuda.is_available() else 0,
+                }
+            )
+
+        if batch_idx % (num_batches / 10) == 0:
+            mem_info = (
+                f"GPU Memory: {torch.cuda.memory_allocated() / 1e9:.2f}GB allocated, {torch.cuda.memory_reserved() / 1e9:.2f}GB reserved"
+                if torch.cuda.is_available()
+                else ""
+            )
+            print(f"Batch {batch_idx}, Loss: {loss.item() * accumulation_steps:.4f}, {mem_info}")
+
+    return total_loss / num_batches
+
+
 def evaluate_model(
     model: TwoTowersModel,
     dataset: MSMarcoDataset,
@@ -210,7 +281,7 @@ def evaluate_model(
             query_embed = model.encode_queries([query])  # Shape: (1, embed_dim)
             doc_embeds = model.encode_documents(all_candidate_docs)  # Shape: (n_docs, embed_dim)
             # Compute similarities between the query and all candidate documents
-            similarities = torch.cosine_similarity(query_embed, doc_embeds, dim=1).numpy()
+            similarities = torch.cosine_similarity(query_embed.cpu(), doc_embeds.cpu(), dim=1).numpy()
 
         # Calculate NDCG@10 - sklearn expects true_relevance and similarities as 2D arrays (one row per query)
         ndcg = ndcg_score(true_relevance.reshape(1, -1), similarities.reshape(1, -1), k=10)
@@ -243,7 +314,7 @@ def evaluate_model(
 
 def run_training(
     num_epochs: int = 3,
-    batch_size: int = 128,
+    batch_size: int = 256,  # Increased default batch size for better GPU utilization
     learning_rate: float = 1e-4,
     max_samples: int = 1000,
     projection_dim: int = 128,
@@ -251,8 +322,11 @@ def run_training(
     project_name: str = "two-towers-retrieval",
     use_wandb: bool = True,
     wandb_config: Optional[Dict] = None,
+    accumulation_steps: int = 2,  # Gradient accumulation for effective larger batch sizes
+    use_mixed_precision: bool = True,  # Enable mixed precision training
+    num_workers: int = 4,  # DataLoader workers for better CPU-GPU pipeline
 ) -> TwoTowersModel:
-    """Main training function with wandb integration."""
+    """Main training function with GPU optimizations and wandb integration."""
     print("Initializing model and data...")
 
     # Set up device (GPU if available, otherwise CPU)
@@ -297,16 +371,40 @@ def run_training(
     train_dataset = MSMarcoDataset("train", max_samples=max_samples)
     eval_dataset = MSMarcoDataset("validation", max_samples=1000)
 
-    # Create data loader
-    train_loader = TripletDataLoader(train_dataset, batch_size=batch_size)
+    # Create data loader with optimizations
+    train_loader = TripletDataLoader(train_dataset, batch_size=batch_size, num_workers=num_workers)
+
+    # GPU optimization settings
+    effective_batch_size = batch_size * accumulation_steps
+    print("Training configuration:")
+    print(f"  Physical batch size: {batch_size}")
+    print(f"  Gradient accumulation steps: {accumulation_steps}")
+    print(f"  Effective batch size: {effective_batch_size}")
+    print(f"  Mixed precision: {use_mixed_precision}")
+    print(f"  DataLoader workers: {num_workers}")
+
+    # Initialize mixed precision scaler
+    scaler = GradScaler(device.type) if use_mixed_precision and device.type == "cuda" else None
 
     print(f"Starting training for {num_epochs} epochs...")
 
     for epoch in range(num_epochs):
         print(f"\nEpoch {epoch + 1}/{num_epochs}")
 
-        # Training
-        avg_loss = train_epoch(model, train_loader, criterion, optimizer, log_wandb=use_wandb)
+        # Training (we differenitiate based on presence of GPU)
+        if use_mixed_precision and device.type == "cuda" and scaler is not None:
+            avg_loss = train_epoch_optimized(
+                model=model,
+                dataloader=train_loader,
+                criterion=criterion,
+                optimizer=optimizer,
+                device=device,
+                scaler=scaler,
+                accumulation_steps=accumulation_steps,
+                log_wandb=use_wandb,
+            )
+        else:
+            avg_loss = train_epoch(model, train_loader, criterion, optimizer, log_wandb=use_wandb)
         print(f"Average training loss: {avg_loss:.4f}")
 
         # Evaluation

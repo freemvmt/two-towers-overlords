@@ -22,6 +22,13 @@ def main():
     parser.add_argument("--no-wandb", action="store_true", help="Disable wandb logging")
     parser.add_argument("--sweep", action="store_true", help="Run hyperparameter sweep with wandb")
 
+    # GPU optimization arguments
+    parser.add_argument(
+        "--accumulation-steps", type=int, default=1, help="Gradient accumulation steps for larger effective batch size"
+    )
+    parser.add_argument("--no-mixed-precision", action="store_true", help="Disable mixed precision training")
+    parser.add_argument("--num-workers", type=int, default=4, help="Number of DataLoader workers")
+
     args = parser.parse_args()
 
     if args.sweep:
@@ -50,6 +57,9 @@ def main():
         margin=args.margin,
         project_name=args.project_name,
         use_wandb=not args.no_wandb,
+        accumulation_steps=args.accumulation_steps,
+        use_mixed_precision=not args.no_mixed_precision,
+        num_workers=args.num_workers,
     )
 
     print("\nTraining completed!")
@@ -65,6 +75,8 @@ def sweep_train():
     config = wandb.config
 
     # Run training with sweep parameters
+    # assume we're running on GPU, so default to high accumulation steps / dl workers
+    print("Running training with hyperparameters:")
     trained_model = run_training(
         num_epochs=config.epochs,
         batch_size=config.batch_size,
@@ -74,6 +86,8 @@ def sweep_train():
         margin=config.margin,
         project_name="two-towers-retrieval-sweep",
         use_wandb=True,
+        accumulation_steps=config.get("accumulation_steps", 4),
+        num_workers=config.get("accumulation_steps", 6),
     )
 
     return trained_model
@@ -86,10 +100,11 @@ def run_sweep(project_name: str = "two-towers-retrieval-sweep"):
         "metric": {"name": "val_ndcg_10", "goal": "maximize"},
         "parameters": {
             "epochs": {"values": [3, 5, 8]},
-            "batch_size": {"values": [16, 32, 64, 128]},
+            "batch_size": {"values": [128, 256, 512]},
             "learning_rate": {"distribution": "log_uniform_values", "min": 1e-5, "max": 1e-3},
             "max_samples": {"values": [1000, 2000, 5000]},
             "projection_dim": {"values": [64, 128, 256]},
+            "accumulation_steps": {"value": [2, 4]},
         },
     }
 
