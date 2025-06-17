@@ -81,7 +81,7 @@ def sweep_train():
         max_samples=config.max_samples,
         projection_dim=config.projection_dim,
         margin=config.margin,
-        project_name="two-towers-retrieval-sweep",
+        project_name="two-towers-retrieval",
         use_wandb=True,
         accumulation_steps=config.get("accumulation_steps", 2),
         num_workers=config.get("num_workers", 6),
@@ -90,7 +90,7 @@ def sweep_train():
     return trained_model
 
 
-def run_sweep(project_name: str = "two-towers-retrieval-sweep"):
+def run_sweep(project_name: str = "two-towers-retrieval"):
     """Run hyperparameter sweep with wandb."""
     sweep_config = {
         "method": "bayes",  # Can be 'grid', 'random', or 'bayes'
@@ -119,7 +119,7 @@ def run_sweep(project_name: str = "two-towers-retrieval-sweep"):
         sweep_id=sweep_id,
         function=sweep_train,
         project=project_name,
-        count=10,
+        count=5,
     )
 
 
