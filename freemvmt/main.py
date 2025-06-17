@@ -100,12 +100,12 @@ def run_sweep(project_name: str = "two-towers-retrieval-sweep"):
         "metric": {"name": "val_ndcg_10", "goal": "maximize"},
         "parameters": {
             "margin": {"values": [0.1, 0.3, 0.5]},
-            "epochs": {"values": [3, 5, 8]},
-            "batch_size": {"values": [128, 256, 512]},
-            "learning_rate": {"values": [1e-3, 1e-4, 1e-5]},
-            "max_samples": {"values": [10000, 50000, 100000]},
-            "projection_dim": {"values": [64, 128, 256]},
-            "accumulation_steps": {"values": [2, 4]},
+            "epochs": {"values": [8, 12, 20]},
+            "batch_size": {"values": [256, 512, 1024]},
+            "learning_rate": {"values": [1e-3, 1e-4]},
+            "max_samples": {"values": [50000, 100000, -1]},  # -1 means use full dataset
+            "projection_dim": {"values": [128, 256, 512]},
+            "accumulation_steps": {"values": [2]},
         },
     }
 

@@ -39,7 +39,9 @@ class MSMarcoDataset(Dataset):
                     if passage.strip():  # Skip empty passages
                         self.expanded_data.append({"query": query, "positive": str(passage), "query_id": query_id})
                         sample_count += 1
-
+                        # traverse full dataset if max_samples is -1
+                        if max_samples == -1:
+                            continue
                         if max_samples and sample_count >= max_samples:
                             break
             except (KeyError, TypeError):
@@ -316,7 +318,7 @@ def run_training(
     num_epochs: int = 3,
     batch_size: int = 256,  # Increased default batch size for better GPU utilization
     learning_rate: float = 1e-4,
-    max_samples: int = 1000,
+    max_samples: int = 10000,
     projection_dim: int = 128,
     margin: float = 0.1,
     project_name: str = "two-towers-retrieval",
