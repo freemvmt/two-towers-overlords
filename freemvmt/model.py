@@ -18,17 +18,17 @@ class AveragePoolingTower(nn.Module):
         self.tokenizer = AutoTokenizer.from_pretrained(model_name)
         self.pretrained_model = AutoModel.from_pretrained(model_name)
         self.embedding_dim = self.pretrained_model.config.hidden_size
-        
+
         # Freeze the pre-trained model (we just want word embeddings for free)
         for param in self.pretrained_model.parameters():
             param.requires_grad = False
-        
+
         # Add trainable projection layer
         self.projection = nn.Sequential(
             # project word embeddings to a lower-dimensional space, then activate and run through dense layer
             nn.Linear(self.embedding_dim, projection_dim),
             nn.ReLU(),
-            nn.Linear(projection_dim, projection_dim)
+            nn.Linear(projection_dim, projection_dim),
         )
 
     def forward(self, texts: list[str]) -> torch.Tensor:
@@ -41,13 +41,13 @@ class AveragePoolingTower(nn.Module):
             output = self.pretrained_model(**tokens)
 
         # Average pooling (excluding padding tokens) and normalize
-        pooled_embeddings = self._mean_pooling(output, tokens['attention_mask'])
+        pooled_embeddings = self._mean_pooling(output, tokens["attention_mask"])
         pooled_embeddings = F.normalize(pooled_embeddings, p=2, dim=1)
 
         # Apply trainable projection
         projected = self.projection(pooled_embeddings)
         return projected
-    
+
     # Mean Pooling - Take attention mask into account for correct averaging
     def _mean_pooling(self, output, attention_mask):
         token_embeddings = output[0]  # First element of output contains all token embeddings
@@ -58,10 +58,11 @@ class AveragePoolingTower(nn.Module):
 class TwoTowersModel(nn.Module):
     """Two-towers architecture for document retrieval."""
 
-    def __init__(self,
-          projection_dim: int = 128,
-          model_name: str = "sentence-transformers/all-MiniLM-L6-v2",
-        ):
+    def __init__(
+        self,
+        projection_dim: int = 128,
+        model_name: str = "sentence-transformers/all-MiniLM-L6-v2",
+    ):
         super().__init__()
         self.query_tower = AveragePoolingTower(model_name, projection_dim)
         self.document_tower = AveragePoolingTower(model_name, projection_dim)
@@ -95,8 +96,10 @@ class TripletLoss(nn.Module):
 
     def forward(self, anchor: torch.Tensor, positive: torch.Tensor, negative: torch.Tensor) -> torch.Tensor:
         """Compute triplet loss using cosine distance."""
+        # the 'anchor' is the query vector/embedding
         pos_dist = self.cosine_distance(anchor, positive)
         neg_dist = self.cosine_distance(anchor, negative)
 
         loss = F.relu(pos_dist - neg_dist + self.margin)
+        # we return the mean loss across all triplets in the batch
         return loss.mean()
