@@ -3,9 +3,9 @@ Training script for two-towers document retrieval model using MS Marco dataset.
 """
 
 import random
-from typing import Dict, List, Tuple, Optional
+from typing import Dict, List, Tuple, Optional, Union
 
-from datasets import load_dataset, Dataset as HFDataset
+from datasets import load_dataset, Dataset as MapDataset
 import torch
 from torch.utils.data import DataLoader, Dataset
 from sklearn.metrics import ndcg_score
@@ -17,51 +17,43 @@ from model import TwoTowersModel, TripletLoss
 
 class MSMarcoDataset(Dataset):
     """MS Marco dataset that expands each query to include all its positive passages."""
-    
+
     def __init__(self, split: str = "train", max_samples: int = 10000):
         print(f"Loading MS Marco {split} dataset...")
+        # get map-style dataset from Hugging Face
         self.dataset = load_dataset("microsoft/ms_marco", "v1.1", split=split)
-        assert isinstance(self.dataset, HFDataset)  # Runtime check
-        
+        assert isinstance(self.dataset, MapDataset)  # Runtime check
+
         # Expand dataset to include all query-passage pairs
         self.expanded_data = []
         sample_count = 0
-        
         for item in self.dataset:
             query = str(item["query"])
             query_id = str(item["query_id"])
-            
+
             # Add all positive passages for this query
             try:
                 passage_texts = item["passages"]["passage_text"]
                 for passage in passage_texts:
                     if passage.strip():  # Skip empty passages
-                        self.expanded_data.append({
-                            "query": query,
-                            "positive": str(passage),
-                            "query_id": query_id
-                        })
+                        self.expanded_data.append({"query": query, "positive": str(passage), "query_id": query_id})
                         sample_count += 1
-                        
+
                         if max_samples and sample_count >= max_samples:
                             break
             except (KeyError, TypeError):
                 # Fallback: use empty string if no passages
-                self.expanded_data.append({
-                    "query": query,
-                    "positive": "",
-                    "query_id": query_id
-                })
+                self.expanded_data.append({"query": query, "positive": "", "query_id": query_id})
                 sample_count += 1
-            
+
             if max_samples and sample_count >= max_samples:
                 break
-                
+
         print(f"Expanded to {len(self.expanded_data)} query-passage pairs")
-    
+
     def __len__(self) -> int:
         return len(self.expanded_data)
-    
+
     def __getitem__(self, idx: int) -> Dict[str, str]:
         return self.expanded_data[idx]
 
@@ -92,7 +84,7 @@ class TripletDataLoader:
                     break
 
         return queries, positives, negatives
-  
+
     def _get_random_negative(self, batch: List[Dict[str, str]], idx: int) -> tuple[str, int]:
         """Get a random negative sample from the batch, excluding the specified index."""
         neg_idx = random.choice([j for j in range(len(batch)) if j != idx])
@@ -121,19 +113,19 @@ def train_epoch(
     total_loss = 0.0
     num_batches = 0
     for queries, positives, negatives in dataloader:
-        optimizer.zero_grad()
+        optimizer.zero_grad()  # clear old gradients
 
         # Get embeddings
-        query_embeddings = model.encode_queries(queries)
-        positive_embeddings = model.encode_documents(positives)
-        negative_embeddings = model.encode_documents(negatives)
+        query_embeds = model.encode_queries(queries)
+        positive_embeds = model.encode_documents(positives)
+        negative_embeds = model.encode_documents(negatives)
 
         # Compute triplet loss
-        loss = criterion(query_embeddings, positive_embeddings, negative_embeddings)
+        loss = criterion(query_embeds, positive_embeds, negative_embeds)  # compute triplet loss
 
         # Backward pass
-        loss.backward()
-        optimizer.step()
+        loss.backward()  # compute gradients (∇loss wrt parameters)
+        optimizer.step()  # update parameters (i.e. param = param - lr * grad)
 
         total_loss += loss.item()
         num_batches += 1
@@ -148,41 +140,105 @@ def train_epoch(
     return total_loss / num_batches
 
 
-def evaluate_model(model: TwoTowersModel, dataset: MSMarcoDataset, sample_size: int = 100) -> float:
-    """Simple evaluation using NDCG@10."""
+def evaluate_model(
+    model: TwoTowersModel,
+    dataset: MSMarcoDataset,
+    sample_size: int = 200,
+    min_query_groups: int = 20,
+    candidate_pool_size: int = 50,
+) -> float:
+    """
+    Proper evaluation using NDCG@10 with all relevant documents per query.
+
+    This evaluation considers all relevant documents for each query as ground truth,
+    rather than just one positive document. For each query:
+    1. Collect all relevant documents from the dataset
+    2. Create a candidate pool with relevant + irrelevant documents
+    3. Compute NDCG@10 based on how well relevant docs are ranked in top 10
+
+    This gives a more realistic evaluation that matches real-world retrieval scenarios.
+    """
+    # see https://www.evidentlyai.com/ranking-metrics/ndcg-metric
     model.eval()
 
-    # Sample a subset for evaluation
-    indices = random.sample(range(len(dataset)), min(sample_size, len(dataset)))
-    eval_data = [dataset[i] for i in indices]
+    # TODO: is this quite laborious to run every epoch? should we frontload this work?
+    # group by query_id to get multiple relevant documents for each query
+    # we run the below loop until we have sufficient unique queries
+    # (this is a random process so we may still end up with 1 document per query in some cases)
+    query_groups: dict[str, dict[str, Union[str, set[str]]]] = {}
+    sample_multiplier = 1
+    print(f"Sampling documents for evaluation (initial sample size: {sample_size})...")
+    while len(query_groups) < min_query_groups and sample_multiplier <= 10:  # Prevent infinite loop
+        sample_size_current = min(sample_size * sample_multiplier, len(dataset))
+        indices = random.sample(range(len(dataset)), sample_size_current)
+        eval_data = [dataset[i] for i in indices]
+        for item in eval_data:
+            query_id = item["query_id"]
+            if query_id not in query_groups:
+                query_groups[query_id] = {"query": item["query"], "relevant_docs": set()}
+            query_groups[query_id]["relevant_docs"].add(item["positive"])
+        sample_multiplier += 1
 
-    queries = [item["query"] for item in eval_data]
-    documents = [item["positive"] for item in eval_data]
+    # finally we sort sort query groups by no. of relevant docs collected (descending) to get most populated query IDs
+    query_ids = sorted(
+        query_groups.keys(),
+        key=lambda qid: len(query_groups[qid]["relevant_docs"]),
+        reverse=True,
+    )[:min_query_groups]
 
-    with torch.no_grad():
-        query_embeddings = model.encode_queries(queries)
-        doc_embeddings = model.encode_documents(documents)
-
-        # Compute similarities
-        similarities = torch.cosine_similarity(
-            query_embeddings.unsqueeze(1), doc_embeddings.unsqueeze(0), dim=2
-        ).numpy()
-
-    # Calculate NDCG@10 (simplified - assumes perfect relevance for matched pairs)
     ndcg_scores = []
-    for i in range(len(queries)):
-        # Ground truth: the i-th document is relevant to the i-th query
-        true_relevance = np.zeros(len(documents))
-        true_relevance[i] = 1
+    print(f"Evaluating on {min_query_groups} unique queries...")
+    for i, query_id in enumerate(query_ids):
+        query_data = query_groups[query_id]
+        query = query_data["query"]
+        relevant_docs = query_data["relevant_docs"]
 
-        # Predicted relevance scores
-        pred_scores = similarities[i]
+        # Create candidate pool: relevant docs + many more random irrelevant docs
+        irrelevant_docs = set()
+        for other_qid in query_ids:
+            if other_qid != query_id:
+                irrelevant_docs.update(query_groups[other_qid]["relevant_docs"])
+        if len(irrelevant_docs) > candidate_pool_size:
+            irrelevant_docs = set(random.sample(list(irrelevant_docs), candidate_pool_size))
+        all_candidate_docs = list(relevant_docs | irrelevant_docs)
 
-        # Calculate NDCG@10
-        ndcg = ndcg_score([true_relevance], [pred_scores], k=10)
+        # Create ground-truth relevance labels (1 for relevant, 0 for irrelevant)
+        true_relevance = np.array([1] * len(relevant_docs) + [0] * len(irrelevant_docs))
+
+        # Get embeddings and compute similarities
+        with torch.no_grad():
+            query_embed = model.encode_queries([query])  # Shape: (1, embed_dim)
+            doc_embeds = model.encode_documents(all_candidate_docs)  # Shape: (n_docs, embed_dim)
+            # Compute similarities between the query and all candidate documents
+            similarities = torch.cosine_similarity(query_embed, doc_embeds, dim=1).numpy()
+
+        # Calculate NDCG@10 - sklearn expects true_relevance and similarities as 2D arrays (one row per query)
+        ndcg = ndcg_score(true_relevance.reshape(1, -1), similarities.reshape(1, -1), k=10)
         ndcg_scores.append(ndcg)
 
-    return np.mean(ndcg_scores)
+        # Print sample results for first query
+        if i == 0:
+            print("\nSample evaluation results:")
+            print(f"Query: {query}")
+            print(f"Number of relevant docs: {len(relevant_docs)}")
+            print(f"Number of candidate docs: {len(all_candidate_docs)}")
+            print(f"NDCG@10 score for this query: {ndcg:.4f}")
+
+            # Show top-ranked documents
+            ranked_indices = np.argsort(similarities)[::-1][:10]  # Top 10
+            print("Top 10 ranked documents:")
+            for rank, doc_idx in enumerate(ranked_indices):
+                relevance = "RELEVANT" if true_relevance[doc_idx] == 1 else "irrelevant"
+                doc_preview = (
+                    all_candidate_docs[doc_idx][:100] + "..."
+                    if len(all_candidate_docs[doc_idx]) > 100
+                    else all_candidate_docs[doc_idx]
+                )
+                print(f"  {rank + 1}. [{relevance}] {doc_preview}")
+
+    mean_ndcg = float(np.mean(ndcg_scores))
+    print(f"\nMean NDCG@10 across {len(query_ids)} queries: {mean_ndcg:.4f}")
+    return mean_ndcg
 
 
 def run_training(
@@ -229,7 +285,7 @@ def run_training(
 
     # Load datasets - now using expanded dataset for maximum data utilization
     train_dataset = MSMarcoDataset("train", max_samples=max_samples)
-    eval_dataset = MSMarcoDataset("validation", max_samples=100)
+    eval_dataset = MSMarcoDataset("validation", max_samples=1000)
 
     # Create data loader
     train_loader = TripletDataLoader(train_dataset, batch_size=batch_size)

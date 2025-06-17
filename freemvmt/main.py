@@ -89,6 +89,7 @@ def run_sweep(project_name: str = "two-towers-retrieval-sweep"):
             "batch_size": {"values": [16, 32, 64, 128]},
             "learning_rate": {"distribution": "log_uniform_values", "min": 1e-5, "max": 1e-3},
             "max_samples": {"values": [1000, 2000, 5000]},
+            "projection_dim": {"values": [64, 128, 256]},
         },
     }
 
@@ -101,7 +102,12 @@ def run_sweep(project_name: str = "two-towers-retrieval-sweep"):
     print(f"wandb agent {sweep_id}")
 
     # Optionally run a single agent automatically
-    wandb.agent(sweep_id, sweep_train, count=5)
+    wandb.agent(
+        sweep_id=sweep_id,
+        function=sweep_train,
+        project=project_name,
+        count=5,
+    )
 
 
 if __name__ == "__main__":
