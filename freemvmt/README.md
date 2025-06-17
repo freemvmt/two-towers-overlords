@@ -46,7 +46,8 @@ python main.py \
   --projection-dim 64 \
   --max-samples 1000 \
   --accumulation-steps 1 \
-  --num-workers 1
+  --num-workers 1 \
+  --no-comprehensive-test
 
 # compare with heavy duty, tracked GPU job
 python main.py \
@@ -179,6 +180,8 @@ For my second run ([1ukkvqtl](https://wandb.ai/freemvmt-london/two-towers-retrie
 - The worst 2 of 5 results used a margin of `1.0`, while the best used `0.5`
 - The best result was with 8 epochs, 256 batches and 128 projection dim, all of which were the lowest values in the config and which you'd expect to have the opposite correlation (although we must bear in mind the fixed sample size)
 - 5 runs is actually not sufficient to read too many conclusions out of a sweep with so many variables
+
+Also worth noting that both these sweeps are being judged against the `val_ndcg_10` metric, which is our in-epoch validation test. This has a small candidate pool, so is fairly *easy* - therefore we may want to use a comprehensive/much harder final test as the metric against which wandb evaluates a given permutation of hypers.
 
 Now to run an absolute monster sweep...
 
