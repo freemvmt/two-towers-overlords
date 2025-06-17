@@ -32,14 +32,14 @@ Aiming to start with a basic full stack setup (including early deploy), using on
 cd freemvmt && uv sync
 
 # Run training with default settings (includes wandb logging)
-uv run python main.py
+python main.py
 
 # Run training without wandb
-uv run python main.py --no-wandb
+python main.py --no-wandb
 
 # Custom training parameters (args here are good for dev/debug on CPU)
-uv run python main.py --epochs 5 --batch-size 16 --learning-rate 2e-4 --max-samples 5000 --projection-dim 64
 python main.py \
+  --no-wandb \
   --epochs 2 \
   --margin 0.1 \
   --batch-size 128 \
@@ -48,13 +48,18 @@ python main.py \
   --accumulation-steps 1 \
   --num-workers 1
 
-# Run hyperparameter sweep
-uv run python main.py --sweep
+# compare with heavy duty, tracked GPU job
+python main.py \
+  --epochs 3 \
+  --margin 0.1 \
+  --batch-size 256 \
+  --projection-dim 128 \
+  --max-samples 10000 \
+  --accumulation-steps 2 \
+  --num-workers 4
 
-# Run custom sweep configurations
-uv run python sweep_config.py --config basic --count 10
-uv run python sweep_config.py --config extensive --count 20
-uv run python sweep_config.py --config quick --count 5
+# Run hyperparameter sweep
+python main.py --sweep
 ```
 
 
@@ -73,6 +78,7 @@ The project includes comprehensive Weights & Biases integration:
 - **Bayesian optimization**: Intelligent parameter search for better results
 
 ### Setup Wandb
+
 ```bash
 # First time setup
 wandb login
