@@ -14,6 +14,7 @@ import numpy as np
 import wandb
 
 from model import TwoTowersModel, TripletLoss
+from tqdm import tqdm
 
 
 class MSMarcoDataset(Dataset):
@@ -64,7 +65,13 @@ class MSMarcoDataset(Dataset):
 class TripletDataLoader:
     """Creates triplets for training with random negative sampling."""
 
-    def __init__(self, dataset: MSMarcoDataset, batch_size: int = 128, num_workers: int = 4):
+    def __init__(
+        self,
+        dataset: MSMarcoDataset,
+        batch_size: int = 128,
+        num_workers: int = 4,
+        device: Optional[torch.device] = None,
+    ):
         self.dataset = dataset
         self.batch_size = batch_size
         self.dataloader = DataLoader(
@@ -72,7 +79,7 @@ class TripletDataLoader:
             batch_size=batch_size,
             shuffle=True,
             num_workers=num_workers,
-            pin_memory=True,  # Faster GPU transfer
+            pin_memory=True if (device and device.type == "cuda") else False,  # faster GPU transfer
             persistent_workers=True if num_workers > 0 else False,
         )
 
@@ -219,28 +226,45 @@ def evaluate_model(
     sample_size: int = 200,
     min_query_groups: int = 20,
     candidate_pool_size: int = 50,
-) -> float:
+    comprehensive: bool = False,
+    log_wandb: bool = False,
+    wandb_prefix: str = "",
+) -> Union[float, dict[str, float]]:
     """
-    Proper evaluation using NDCG@10 with all relevant documents per query.
+    Evaluate model using NDCG metrics with all relevant documents per query.
 
     This evaluation considers all relevant documents for each query as ground truth,
     rather than just one positive document. For each query:
     1. Collect all relevant documents from the dataset
     2. Create a candidate pool with relevant + irrelevant documents
-    3. Compute NDCG@10 based on how well relevant docs are ranked in top 10
+    3. Compute NDCG based on how well relevant docs are ranked
 
     This gives a more realistic evaluation that matches real-world retrieval scenarios.
+
+    Args:
+        model: The trained two-towers model
+        dataset: The dataset to evaluate on (train/validation/test)
+        sample_size: Number of samples to use from the dataset
+        min_query_groups: Minimum number of unique queries to evaluate on
+        candidate_pool_size: Size of candidate pool for each query
+        comprehensive: If True, performs comprehensive evaluation with detailed output and multiple metrics
+        log_wandb: Whether to log results to wandb
+        wandb_prefix: Prefix for wandb logging keys (e.g., "final_test_", "val_")
+
+    Returns:
+        If comprehensive=False: float (NDCG@10 score)
+        If comprehensive=True: Dict containing detailed metrics
     """
     # see https://www.evidentlyai.com/ranking-metrics/ndcg-metric
     model.eval()
 
-    # TODO: is this quite laborious to run every epoch? should we frontload this work?
-    # group by query_id to get multiple relevant documents for each query
-    # we run the below loop until we have sufficient unique queries
-    # (this is a random process so we may still end up with 1 document per query in some cases)
+    print(f"Sampling documents for evaluation (initial sample size: {sample_size})...")
+
+    # Group by query_id to get multiple relevant documents for each query
+    # We run the below loop until we have sufficient unique queries
     query_groups: dict[str, dict[str, Union[str, set[str]]]] = {}
     sample_multiplier = 1
-    print(f"Sampling documents for evaluation (initial sample size: {sample_size})...")
+    print(f"Grouping data by queries (target: {min_query_groups} unique queries)...")
     while len(query_groups) < min_query_groups and sample_multiplier <= 10:  # Prevent infinite loop
         sample_size_current = min(sample_size * sample_multiplier, len(dataset))
         indices = random.sample(range(len(dataset)), sample_size_current)
@@ -252,21 +276,33 @@ def evaluate_model(
             query_groups[query_id]["relevant_docs"].add(item["positive"])  # type: ignore
         sample_multiplier += 1
 
-    # finally we sort sort query groups by no. of relevant docs collected (descending) to get most populated query IDs
+    # Sort query groups by no. of relevant docs collected (descending) to get most populated query IDs
     query_ids = sorted(
         query_groups.keys(),
         key=lambda qid: len(query_groups[qid]["relevant_docs"]),
         reverse=True,
     )[:min_query_groups]
 
-    ndcg_scores = []
-    print(f"Evaluating on {min_query_groups} unique queries...")
-    for i, query_id in enumerate(query_ids):
+    # Calculate statistics about the evaluation set (needed for both modes)
+    total_relevant_docs = sum(len(query_groups[qid]["relevant_docs"]) for qid in query_ids)
+    avg_relevant_per_query = total_relevant_docs / len(query_ids)
+
+    print(f"Selected {len(query_ids)} queries for comprehensive evaluation")
+    print(f"  Total relevant documents: {total_relevant_docs}")
+    print(f"  Average relevant docs per query: {avg_relevant_per_query:.2f}")
+
+    # Initialize score collections based on evaluation type
+    ndcg_10_scores = []
+    ndcg_5_scores = [] if comprehensive else None
+    ndcg_1_scores = [] if comprehensive else None
+
+    for i, query_id in enumerate(tqdm(query_ids, desc="Evaluating queries")):
         query_data = query_groups[query_id]
         query = query_data["query"]
         relevant_docs = query_data["relevant_docs"]
 
         # Create candidate pool: relevant docs + many more random irrelevant docs
+        # FIXME: if candidate_pool_size == -1, use ALL docs in the dataset (challenge!!)
         irrelevant_docs = set()
         for other_qid in query_ids:
             if other_qid != query_id:
@@ -285,17 +321,24 @@ def evaluate_model(
             # Compute similarities between the query and all candidate documents
             similarities = torch.cosine_similarity(query_embed.cpu(), doc_embeds.cpu(), dim=1).numpy()
 
-        # Calculate NDCG@10 - sklearn expects true_relevance and similarities as 2D arrays (one row per query)
-        ndcg = ndcg_score(true_relevance.reshape(1, -1), similarities.reshape(1, -1), k=10)
-        ndcg_scores.append(ndcg)
+        # Calculate NDCG scores (first reshaping nparrays to 2D for sklearn compatibility)
+        true_relevance_reshaped = true_relevance.reshape(1, -1)
+        similarities_reshaped = similarities.reshape(1, -1)
+        ndcg_10 = ndcg_score(true_relevance_reshaped, similarities_reshaped, k=10)
+        ndcg_10_scores.append(ndcg_10)
+        if comprehensive:
+            ndcg_5 = ndcg_score(true_relevance_reshaped, similarities_reshaped, k=5)
+            ndcg_1 = ndcg_score(true_relevance_reshaped, similarities_reshaped, k=1)
+            ndcg_5_scores.append(ndcg_5)  # type: ignore
+            ndcg_1_scores.append(ndcg_1)  # type: ignore
 
-        # Print sample results for first query
+        # Print sample results for first query (both modes)
         if i == 0:
             print("\nSample evaluation results:")
             print(f"Query: {query}")
             print(f"Number of relevant docs: {len(relevant_docs)}")
             print(f"Number of candidate docs: {len(all_candidate_docs)}")
-            print(f"NDCG@10 score for this query: {ndcg:.4f}")
+            print(f"NDCG@10 score for this query: {ndcg_10:.4f}")
 
             # Show top-ranked documents
             ranked_indices = np.argsort(similarities)[::-1][:10]  # Top 10
@@ -309,9 +352,44 @@ def evaluate_model(
                 )
                 print(f"  {rank + 1}. [{relevance}] {doc_preview}")
 
-    mean_ndcg = float(np.mean(ndcg_scores))
-    print(f"\nMean NDCG@10 across {len(query_ids)} queries: {mean_ndcg:.4f}")
-    return mean_ndcg
+    # Calculate and return results based on evaluation type
+    mean_ndcg_10 = float(np.mean(ndcg_10_scores))
+
+    if not comprehensive:
+        # Simple validation mode - return just NDCG@10
+        print(f"\nMean NDCG@10 across {len(query_ids)} queries: {mean_ndcg_10:.4f}")
+        return mean_ndcg_10
+
+    # Comprehensive mode - calculate detailed metrics and provide comprehensive output
+    results = {
+        f"{wandb_prefix}ndcg_10": mean_ndcg_10,
+        f"{wandb_prefix}ndcg_5": float(np.mean(ndcg_5_scores)),  # type: ignore
+        f"{wandb_prefix}ndcg_1": float(np.mean(ndcg_1_scores)),  # type: ignore
+        f"{wandb_prefix}ndcg_10_std": float(np.std(ndcg_10_scores)),
+        f"{wandb_prefix}queries_evaluated": len(query_ids),
+        f"{wandb_prefix}total_relevant_docs": total_relevant_docs,
+        f"{wandb_prefix}avg_relevant_per_query": avg_relevant_per_query,
+    }
+
+    # Print comprehensive results
+    print("\n" + "=" * 60)
+    print("COMPREHENSIVE EVALUATION RESULTS")
+    print("=" * 60)
+    print("📊 Performance Metrics:")
+    print(f"   NDCG@1:  {results[f'{wandb_prefix}ndcg_1']:.4f}")
+    print(f"   NDCG@5:  {results[f'{wandb_prefix}ndcg_5']:.4f}")
+    print(f"   NDCG@10: {results[f'{wandb_prefix}ndcg_10']:.4f} (±{results[f'{wandb_prefix}ndcg_10_std']:.4f})")
+    print("\n📈 Evaluation Set Coverage:")
+    print(f"   Queries evaluated: {results[f'{wandb_prefix}queries_evaluated']}")
+    print(f"   Total relevant documents: {results[f'{wandb_prefix}total_relevant_docs']}")
+    print(f"   Avg relevant docs/query: {results[f'{wandb_prefix}avg_relevant_per_query']:.2f}")
+
+    # Log to wandb if requested
+    if log_wandb:
+        wandb.log(results)
+        print("✅ Comprehensive test results logged to wandb")
+
+    return results
 
 
 def run_training(
@@ -327,6 +405,8 @@ def run_training(
     accumulation_steps: int = 2,  # Gradient accumulation for effective larger batch sizes
     use_mixed_precision: bool = True,  # Enable mixed precision training
     num_workers: int = 4,  # DataLoader workers for better CPU-GPU pipeline
+    run_comprehensive_test: bool = True,  # Run comprehensive test after training
+    test_samples: int = 10000,  # Number of samples for comprehensive testing
 ) -> TwoTowersModel:
     """Main training function with GPU optimizations and wandb integration."""
     print("Initializing model and data...")
@@ -372,11 +452,11 @@ def run_training(
         wandb.log({"total_parameters": sum(p.numel() for p in model.parameters())})
 
     # Load datasets - now using expanded dataset for maximum data utilization
-    train_dataset = MSMarcoDataset("train", max_samples=max_samples)
-    eval_dataset = MSMarcoDataset("validation", max_samples=1000)
+    train_ds = MSMarcoDataset("train", max_samples=max_samples)
+    val_ds = MSMarcoDataset("validation", max_samples=1000)
 
     # Create data loader with optimizations
-    train_loader = TripletDataLoader(train_dataset, batch_size=batch_size, num_workers=num_workers)
+    train_dl = TripletDataLoader(train_ds, batch_size=batch_size, num_workers=num_workers, device=device)
 
     # GPU optimization settings
     effective_batch_size = batch_size * accumulation_steps
@@ -391,7 +471,6 @@ def run_training(
     scaler = GradScaler(device.type) if use_mixed_precision and device.type == "cuda" else None
 
     print(f"Starting training for {num_epochs} epochs...")
-
     for epoch in range(num_epochs):
         print(f"\nEpoch {epoch + 1}/{num_epochs}")
 
@@ -399,7 +478,7 @@ def run_training(
         if use_mixed_precision and device.type == "cuda" and scaler is not None:
             avg_loss = train_epoch_optimized(
                 model=model,
-                dataloader=train_loader,
+                dataloader=train_dl,
                 criterion=criterion,
                 optimizer=optimizer,
                 device=device,
@@ -408,11 +487,11 @@ def run_training(
                 log_wandb=use_wandb,
             )
         else:
-            avg_loss = train_epoch(model, train_loader, criterion, optimizer, log_wandb=use_wandb)
+            avg_loss = train_epoch(model, train_dl, criterion, optimizer, log_wandb=use_wandb)
         print(f"Average training loss: {avg_loss:.4f}")
 
-        # Evaluation
-        ndcg = evaluate_model(model, eval_dataset)
+        # in-epoch evaluation
+        ndcg = evaluate_model(model, val_ds)
         print(f"Validation NDCG@10: {ndcg:.4f}")
 
         # Log epoch metrics to wandb
@@ -424,6 +503,26 @@ def run_training(
                     "val_ndcg_10": ndcg,
                 }
             )
+
+    # Run comprehensive testing on the full test dataset if enabled (after all epochs)
+    print("\n" + "=" * 60)
+    if run_comprehensive_test:
+        print("TRAINING COMPLETED - Starting comprehensive testing")
+        print("=" * 60)
+        # Load test dataset for final comprehensive evaluation/testing of model
+        test_dataset = MSMarcoDataset("test", max_samples=10_000)
+        _ = evaluate_model(
+            model=model,
+            dataset=test_dataset,
+            min_query_groups=500,
+            candidate_pool_size=-1,  # -1 => use all documents in the dataset as candidates!
+            comprehensive=True,  # Enable comprehensive mode for final eval
+            log_wandb=use_wandb,
+            wandb_prefix="final_test_",  # Prefix for wandb logging
+        )
+    else:
+        print("TRAINING COMPLETED - Skipping comprehensive testing")
+        print("=" * 60)
 
     if use_wandb:
         wandb.finish()

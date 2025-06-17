@@ -29,6 +29,11 @@ def main():
     parser.add_argument("--no-mixed-precision", action="store_true", help="Disable mixed precision training")
     parser.add_argument("--num-workers", type=int, default=4, help="Number of DataLoader workers")
 
+    # Testing arguments
+    parser.add_argument(
+        "--no-comprehensive-test", action="store_true", help="Skip comprehensive testing after training"
+    )
+
     args = parser.parse_args()
 
     if args.sweep:
@@ -45,6 +50,7 @@ def main():
     print(f"  Projection dimension: {args.projection_dim}")
     print(f"  Margin: {args.margin}")
     print(f"  Wandb enabled: {not args.no_wandb}")
+    print(f"  Comprehensive testing: {not args.no_comprehensive_test}")
     print()
 
     # Run training
@@ -60,8 +66,10 @@ def main():
         accumulation_steps=args.accumulation_steps,
         use_mixed_precision=not args.no_mixed_precision,
         num_workers=args.num_workers,
+        run_comprehensive_test=not args.no_comprehensive_test,
     )
 
+    # TODO: save the trained model if we want the weights
     print("\nTraining completed!")
     print(f"Model trained successfully with {sum(p.numel() for p in trained_model.parameters())} parameters.")
 
@@ -89,6 +97,7 @@ def sweep_train():
         use_wandb=True,
         accumulation_steps=config.get("accumulation_steps", 2),
         num_workers=config.get("num_workers", 6),
+        run_comprehensive_test=config.get("run_comprehensive_test", True),  # Enable by default for sweeps
     )
 
     return trained_model
