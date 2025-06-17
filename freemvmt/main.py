@@ -100,13 +100,13 @@ def run_sweep(project_name: str = "two-towers-retrieval"):
         "method": "bayes",  # Can be 'grid', 'random', or 'bayes'
         "metric": {"name": "val_ndcg_10", "goal": "maximize"},
         "parameters": {
-            "margin": {"values": [0.3, 0.5, 1]},
-            "epochs": {"values": [8, 12, 16]},
-            "batch_size": {"values": [256, 512]},
+            "margin": {"values": [0.3, 0.5, 0.7]},
+            "epochs": {"values": [8, 10, 12]},
+            "batch_size": {"values": [256, 512, 1024]},
             "learning_rate": {"values": [1e-3, 1e-4]},
-            "max_samples": {"values": [50000]},  # -1 means use full dataset
-            "projection_dim": {"values": [128, 256, 512]},
-            "accumulation_steps": {"values": [2, 4]},
+            "max_samples": {"values": [50_000, 100_000]},  # -1 means use full dataset
+            "projection_dim": {"values": [128, 256]},
+            "accumulation_steps": {"values": [1, 2, 4]},
         },
     }
 
@@ -123,7 +123,7 @@ def run_sweep(project_name: str = "two-towers-retrieval"):
         sweep_id=sweep_id,
         function=sweep_train,
         project=project_name,
-        count=5,
+        count=30,
     )
 
 
