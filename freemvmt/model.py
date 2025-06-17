@@ -86,6 +86,7 @@ class TwoTowersModel(nn.Module):
         return query_embeddings, doc_embeddings
 
 
+# NB. could swap this out for torch.nn.TripletMarginWithDistanceLoss
 class TripletLoss(nn.Module):
     """Triplet loss with cosine distance."""
 
