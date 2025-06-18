@@ -47,9 +47,10 @@ python main.py \
   --max-samples 1000 \
   --accumulation-steps 1 \
   --num-workers 1 \
-  --no-comprehensive-test
+  --no-comprehensive-test \
+  --no-save
 
-# compare with heavy duty, tracked GPU job
+# compare with heavy duty, tracked GPU job, which saves weights on finish
 python main.py \
   --epochs 12 \
   --margin 0.7 \
