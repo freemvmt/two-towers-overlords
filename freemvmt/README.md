@@ -196,7 +196,7 @@ Also worth noting that all these sweeps are being judged against the `val_ndcg_1
 a) hike the difficulty of the validation check (e.g. by expanding the small candidate pool)
 b) use a *much harder* final test as the metric against which wandb evaluates a given permutation of hyperparams
 
-Then to run an absolute monster sweep...
+Then to run an absolute monster sweep!
 
 
 ## Additional resources
