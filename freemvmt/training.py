@@ -344,16 +344,30 @@ def evaluate_model(
     ndcg_5_scores = [] if comprehensive else None
     ndcg_1_scores = [] if comprehensive else None
 
+    # if candidate_pool_size == -1, we use ALL docs in the dataset (for a challenge!)
+    # we pre-encode them all once and reuse for all queries
+    # TODO: store the vector resulting from a full encoding run in Redis for quick inference
+    pre_encoded_docs = None
+    fixed_candidate_pool = None
+    if candidate_pool_size == -1:
+        print("🚀 Pre-encoding *all* documents for efficiency (this may take a moment)...")
+        fixed_candidate_pool = dataset.get_unique_passages()
+        with torch.no_grad():
+            pre_encoded_docs = model.encode_documents_batched(
+                documents=fixed_candidate_pool,
+                batch_size=batch_size,
+            )
+        print(f"🔥 Pre-encoded {len(fixed_candidate_pool)} documents to reuse for all queries")
+
     for i, query_id in enumerate(tqdm(query_ids, desc="Evaluating queries")):
         query_data: dict[str, Union[str, set[str]]] = query_groups[query_id]
         query = query_data["query"]
         relevant_docs = query_data["relevant_docs"]
 
         # Create candidate pool: relevant docs + many more random irrelevant docs
-        # if candidate_pool_size == -1, we use ALL docs in the dataset (for a challenge!)
         if candidate_pool_size == -1:
-            all_docs = set(dataset.get_unique_passages())
-            irrelevant_docs = all_docs - relevant_docs  # type: ignore
+            candidate_pool = fixed_candidate_pool
+            assert candidate_pool is not None
         else:
             # get all irrelevant docs from within evaluation set (ensuring no overlap with relevant docs)
             irrelevant_docs = set(
@@ -364,20 +378,31 @@ def evaluate_model(
                 if doc not in relevant_docs
             )
             if len(irrelevant_docs) > candidate_pool_size:
-                irrelevant_docs = set(random.sample(list(irrelevant_docs), candidate_pool_size))
-        # we don't make a list from union of sets here to ensure relevant docs come first in the candidate pool
-        candidate_pool = list(relevant_docs) + list(irrelevant_docs)
+                irrelevant_docs = random.sample(list(irrelevant_docs), candidate_pool_size)
+            # we don't make a list from union of sets here to ensure relevant docs come first in the candidate pool
+            candidate_pool = list(relevant_docs) + list(irrelevant_docs)
 
-        # Create ground-truth relevance labels (1 for relevant, 0 for irrelevant)
-        true_relevance = np.array([1] * len(relevant_docs) + [0] * len(irrelevant_docs))
+        # Create ground-truth relevance labels
+        if candidate_pool_size == -1:
+            # For pre-encoded docs, create relevance labels based on document positions
+            true_relevance = np.array([1 if doc in relevant_docs else 0 for doc in candidate_pool])
+        else:
+            # to avoid traversing full candidate pool when we have built the docs by hand
+            true_relevance = np.array([1] * len(relevant_docs) + [0] * len(irrelevant_docs))  # type: ignore
 
         # Get embeddings and compute similarities
         with torch.no_grad():
             query_embed = model.encode_queries([query])  # Shape: (1, embed_dim)  # type: ignore
-            # Use batched encoding for large document collections to avoid memory issues
-            doc_embeds = model.encode_documents_batched(
-                candidate_pool, batch_size=batch_size
-            )  # Shape: (n_docs, embed_dim)
+
+            # Use pre-encoded documents if available, otherwise encode on-demand
+            if candidate_pool_size == -1 and pre_encoded_docs is not None:
+                doc_embeds = pre_encoded_docs  # Use pre-encoded documents
+            else:
+                # Use batched encoding for large document collections to avoid memory issues
+                doc_embeds = model.encode_documents_batched(
+                    candidate_pool, batch_size=batch_size
+                )  # Shape: (n_docs, embed_dim)
+
             # Compute similarities between the query and all candidate documents
             similarities = torch.cosine_similarity(query_embed.cpu(), doc_embeds.cpu(), dim=1).numpy()
 

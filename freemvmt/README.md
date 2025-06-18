@@ -196,3 +196,5 @@ Then to run an absolute monster sweep...
 
 - ShapedAI deep dive on [the two tower model for recommendation systems](https://www.shaped.ai/blog/the-two-tower-model-for-recommendation-systems-a-deep-dive)
 - Wandb explainer and tutorial on [Bayesian hyperparameter optimisation](https://wandb.ai/wandb_fc/articles/reports/What-Is-Bayesian-Hyperparameter-Optimization-With-Tutorial---Vmlldzo1NDQyNzcw#what-are-hyperparameters?)
+- MLOps piece on using Redis for [vector similarity search in prod](https://mlops.community/vector-similarity-search-from-basics-to-production/)
+- 

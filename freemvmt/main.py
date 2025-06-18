@@ -83,9 +83,15 @@ def main():
     print(f"   Model trained successfully with {sum(p.numel() for p in trained_model.parameters())} parameters.")
     summary(trained_model)
     if not args.no_save:
-        path = os.path.join(MODEL_DIR, "weights.pt")
-        torch.save(trained_model.state_dict(), path)
-        print(f"\nModel state saved to: {path}")
+        try:
+            # Ensure the models directory exists
+            os.makedirs(MODEL_DIR, exist_ok=True)
+            path = os.path.join(MODEL_DIR, "weights.pt")
+            torch.save(trained_model.state_dict(), path)
+            print(f"\n✅ Model state saved to: {path}")
+        except Exception as e:
+            print(f"\n❌ Error saving model: {e}")
+            print("Training completed successfully, but model saving failed.")
     else:
         print("\nModel state not saved (--no-save passed as arg)")
 
