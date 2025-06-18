@@ -3,8 +3,16 @@ Main entry point for training the two-towers document retrieval model.
 """
 
 import argparse
+import os
+
+import torch
+from torchinfo import summary
 import wandb
+
 from training import run_training
+
+
+MODEL_DIR = "models"
 
 
 def main():
@@ -20,6 +28,7 @@ def main():
     parser.add_argument("--margin", type=float, default=0.1, help="Margin for triplet loss")
     parser.add_argument("--project-name", type=str, default="two-towers-retrieval", help="Wandb project name")
     parser.add_argument("--no-wandb", action="store_true", help="Disable wandb logging")
+    parser.add_argument("--no-save", action="store_true", help="Don't save weights after training")
     parser.add_argument("--sweep", action="store_true", help="Run hyperparameter sweep with wandb")
 
     # GPU optimization arguments
@@ -69,9 +78,16 @@ def main():
         run_comprehensive_test=not args.no_comprehensive_test,
     )
 
-    # TODO: save the trained model if we want the weights
-    print("\nTraining completed!")
-    print(f"Model trained successfully with {sum(p.numel() for p in trained_model.parameters())} parameters.")
+    # Print model summary and save state
+    print("\n✅ Finished training!")
+    print(f"   Model trained successfully with {sum(p.numel() for p in trained_model.parameters())} parameters.")
+    summary(trained_model)
+    if not args.no_save:
+        path = os.path.join(MODEL_DIR, "weights.pt")
+        torch.save(trained_model.state_dict(), path)
+        print(f"\nModel state saved to: {path}")
+    else:
+        print("\nModel state not saved (--no-save passed as arg)")
 
 
 def sweep_train():
