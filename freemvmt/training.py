@@ -5,7 +5,7 @@ Training script for two-towers document retrieval model using MS Marco dataset.
 import random
 from typing import Tuple, Optional, Union
 
-from datasets import load_dataset
+from datasets import load_dataset, IterableDataset
 import torch
 from torch import autocast, GradScaler
 from torch.utils.data import DataLoader, Dataset
@@ -21,22 +21,33 @@ MsMarcoDatasetItem = dict[str, Union[str, int]]
 Triplet = Tuple[list[str], list[str], list[str]]
 
 
-# this file is littered with 'type: ignore' comments mostly to allay python's concerns about the HF Dataset
+# file is littered with assertions and 'type: ignore' comments to allay Python's concerns about the HF Dataset/poor type analysis
 class MSMarcoDataset(Dataset):
     """MS Marco dataset that expands each query to include all its positive passages."""
 
-    def __init__(self, split: str = "train", max_samples: int = 10_000) -> None:
+    def __init__(
+        self,
+        split: str = "train",
+        max_samples: int = 10_000,
+        random_seed: int = 42,
+    ) -> None:
         print(f"Building MS Marco {split} dataset with at most {max_samples} samples...")
         # get map-style dataset from Hugging Face
         self.dataset = load_dataset("microsoft/ms_marco", "v1.1", split=split)
+        assert not isinstance(self.dataset, IterableDataset)
 
-        # expand record to produce all query-passage pairs (and collect up all unique passages simultaneously)
-        # TODO: should we randomly select items from the dataset? (as it stands, same sample size will be identical every time)
+        # randomly sample from all records in the dataset (with a seed for reproducibility)
+        generator = torch.Generator()
+        generator.manual_seed(random_seed)
+        dataset_indices = torch.randperm(len(self.dataset), generator=generator).tolist()
+
+        # expand each randomly selected record to produce all query-passage pairs
         self.data: list[MsMarcoDatasetItem] = []
         self.docs = set()
         sample_count = 0
-        for item in self.dataset:
-            query = str(item["query"])  # type: ignore
+        for idx in dataset_indices:
+            item = self.dataset[idx]
+            query = str(item["query"])
             query_id = int(item["query_id"])  # type: ignore
 
             # Add all positive passages ('documents') for this query
@@ -51,12 +62,13 @@ class MSMarcoDataset(Dataset):
                                 "positive": doc,
                             }
                         )
+                        # collect up all unique passages seen simultaneously to reduce work
                         self.docs.add(doc)
                         sample_count += 1
                         # traverse full dataset if max_samples is -1
                         if max_samples == -1:
                             continue
-                        # else break off when we reach max_samples
+                        # else break off when we have collected enough samples (here sample == query-doc pair)
                         if max_samples and sample_count >= max_samples:
                             break
             except (KeyError, TypeError):
@@ -122,7 +134,7 @@ class TripletDataLoader:
 
         return queries, positives, negatives
 
-    def _get_random_negative(self, batch: list[MsMarcoDatasetItem], idx: int) -> tuple[str, int]:  # type: ignore
+    def _get_random_negative(self, batch: list[MsMarcoDatasetItem], idx: int) -> tuple[str, int]:
         """Get a random negative sample from the batch, excluding the specified index."""
         neg_idx = random.choice([j for j in range(len(batch)) if j != idx])
         return batch[neg_idx]["positive"], batch[neg_idx]["query_id"]  # type: ignore
@@ -347,7 +359,7 @@ def evaluate_model(
 
         # Get embeddings and compute similarities
         with torch.no_grad():
-            query_embed = model.encode_queries([query])  # type: ignore  # Shape: (1, embed_dim)
+            query_embed = model.encode_queries([query])  # Shape: (1, embed_dim)  # type: ignore
             doc_embeds = model.encode_documents(candidate_pool)  # Shape: (n_docs, embed_dim)
             # Compute similarities between the query and all candidate documents
             similarities = torch.cosine_similarity(query_embed.cpu(), doc_embeds.cpu(), dim=1).numpy()
@@ -358,10 +370,11 @@ def evaluate_model(
         ndcg_10 = ndcg_score(true_relevance_reshaped, similarities_reshaped, k=10)
         ndcg_10_scores.append(ndcg_10)
         if comprehensive:
+            assert ndcg_5_scores is not None and ndcg_1_scores is not None
             ndcg_5 = ndcg_score(true_relevance_reshaped, similarities_reshaped, k=5)
             ndcg_1 = ndcg_score(true_relevance_reshaped, similarities_reshaped, k=1)
-            ndcg_5_scores.append(ndcg_5)  # type: ignore
-            ndcg_1_scores.append(ndcg_1)  # type: ignore
+            ndcg_5_scores.append(ndcg_5)
+            ndcg_1_scores.append(ndcg_1)
 
         # Print sample results for first query (both modes)
         if i == 0:
