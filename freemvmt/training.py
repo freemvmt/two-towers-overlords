@@ -267,7 +267,7 @@ def evaluate_model(
     candidate_pool_size: int = 100,
     comprehensive: bool = False,
     log_wandb: bool = False,
-    wandb_prefix: str = "",
+    wandb_prefix: str = "final_",
     batch_size: int = 128,
 ) -> Union[float, dict[str, float]]:
     """
@@ -609,7 +609,6 @@ def run_training(
             candidate_pool_size=-1,  # -1 => use all documents in the dataset as candidates!
             comprehensive=True,  # Enable comprehensive mode for final eval
             log_wandb=use_wandb,
-            wandb_prefix="final_test_",  # Prefix for wandb logging
             batch_size=batch_size,  # Use same batch size as training
         )
     else:
