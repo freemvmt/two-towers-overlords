@@ -25,6 +25,13 @@ Aiming to start with a basic full stack setup (including early deploy), using on
 - `sweep_config.py`: Wandb hyperparameter sweep configurations
 
 
+## Remote
+
+As usual, we have a handy `setup.sh` script, which should be sourced after cloning the repo.
+
+If using a next-gen Nvidia demon like RTX 5090, we have to pull torch from the nightly builds index, in which case one should `export BEAST_MODE=1` before setup.
+
+
 ## Usage
 
 ```bash
