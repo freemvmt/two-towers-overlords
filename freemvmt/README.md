@@ -51,13 +51,13 @@ python main.py \
 
 # compare with heavy duty, tracked GPU job
 python main.py \
-  --epochs 5 \
-  --margin 0.3 \
-  --batch-size 256 \
-  --projection-dim 128 \
-  --max-samples 10000 \
-  --accumulation-steps 2 \
-  --num-workers 4
+  --epochs 12 \
+  --margin 0.7 \
+  --batch-size 1028 \
+  --projection-dim 256 \
+  --max-samples 100000 \
+  --accumulation-steps 4 \
+  --num-workers 6
 
 # Run hyperparameter sweep
 python main.py --sweep
