@@ -157,9 +157,9 @@ from freemvmt.model import TwoTowersModel
 # Initialize model
 model = TwoTowersModel()
 
-# Encode queries and documents
+# Encode queries and documents (batching if there are many of the latter)
 query_embeddings = model.encode_queries(["What is machine learning?"])
-doc_embeddings = model.encode_documents(["Machine learning is a subset of AI..."])
+doc_embeddings = model.encode_documents_batched(["Machine learning is a subset of AI..."])
 
 # Compute similarity
 import torch

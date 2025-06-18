@@ -17,6 +17,13 @@ from model import TwoTowersModel, TripletLoss
 from tqdm import tqdm
 
 
+def clear_gpu_memory():
+    """Clear GPU memory cache to reduce fragmentation."""
+    if torch.cuda.is_available():
+        torch.cuda.empty_cache()
+        torch.cuda.synchronize()
+
+
 MsMarcoDatasetItem = dict[str, Union[str, int]]
 Triplet = Tuple[list[str], list[str], list[str]]
 
@@ -261,6 +268,7 @@ def evaluate_model(
     comprehensive: bool = False,
     log_wandb: bool = False,
     wandb_prefix: str = "",
+    batch_size: int = 128,
 ) -> Union[float, dict[str, float]]:
     """
     Evaluate model using NDCG metrics with all relevant documents per query.
@@ -282,6 +290,9 @@ def evaluate_model(
         comprehensive: If True, performs comprehensive evaluation with detailed output and multiple metrics
         log_wandb: Whether to log results to wandb
         wandb_prefix: Prefix for wandb logging keys (e.g., "final_test_", "val_")
+        batch_size: Batch size for document encoding to manage memory usage
+        log_wandb: Whether to log results to wandb
+        wandb_prefix: Prefix for wandb logging keys (e.g., "final_test_", "val_")
 
     Returns:
         If comprehensive=False: float (NDCG@10 score)
@@ -290,6 +301,9 @@ def evaluate_model(
     # see https://www.evidentlyai.com/ranking-metrics/ndcg-metric
     print(f"Sampling documents for evaluation (initial sample size: {sample_size})...")
     model.eval()
+
+    # Clear GPU memory before evaluation to maximize available memory
+    clear_gpu_memory()
 
     # Group by query_id to get multiple relevant documents for each query
     # We run the below loop until we have sufficient unique queries
@@ -321,7 +335,7 @@ def evaluate_model(
     total_relevant_docs = sum(len(query_groups[qid]["relevant_docs"]) for qid in query_ids)
     avg_relevant_per_query = total_relevant_docs / len(query_ids)
 
-    print(f"Selected {len(query_ids)} queries for comprehensive evaluation")
+    print(f"Selected {len(query_ids)} queries for evaluation")
     print(f"  Total relevant documents across these queries: {total_relevant_docs}")
     print(f"  Average relevant docs per query: {avg_relevant_per_query:.2f}")
 
@@ -360,7 +374,10 @@ def evaluate_model(
         # Get embeddings and compute similarities
         with torch.no_grad():
             query_embed = model.encode_queries([query])  # Shape: (1, embed_dim)  # type: ignore
-            doc_embeds = model.encode_documents(candidate_pool)  # Shape: (n_docs, embed_dim)
+            # Use batched encoding for large document collections to avoid memory issues
+            doc_embeds = model.encode_documents_batched(
+                candidate_pool, batch_size=batch_size
+            )  # Shape: (n_docs, embed_dim)
             # Compute similarities between the query and all candidate documents
             similarities = torch.cosine_similarity(query_embed.cpu(), doc_embeds.cpu(), dim=1).numpy()
 
@@ -375,6 +392,10 @@ def evaluate_model(
             ndcg_1 = ndcg_score(true_relevance_reshaped, similarities_reshaped, k=1)
             ndcg_5_scores.append(ndcg_5)
             ndcg_1_scores.append(ndcg_1)
+
+        # Clear GPU memory periodically to prevent accumulation
+        if (i + 1) % 50 == 0:
+            clear_gpu_memory()
 
         # Print sample results for first query (both modes)
         if i == 0:
@@ -438,7 +459,7 @@ def evaluate_model(
 
 def run_training(
     num_epochs: int = 3,
-    batch_size: int = 256,  # Increased default batch size for better GPU utilization
+    batch_size: int = 128,
     learning_rate: float = 1e-4,
     max_samples: int = 10000,
     projection_dim: int = 128,
@@ -502,11 +523,10 @@ def run_training(
     train_dl = TripletDataLoader(train_ds, batch_size=batch_size, num_workers=num_workers, device=device)
 
     # GPU optimization settings
-    effective_batch_size = batch_size * accumulation_steps
     print("Training configuration:")
     print(f"  Physical batch size: {batch_size}")
     print(f"  Gradient accumulation steps: {accumulation_steps}")
-    print(f"  Effective batch size: {effective_batch_size}")
+    print(f"  Effective batch size: {batch_size * accumulation_steps}")
     print(f"  Mixed precision: {use_mixed_precision}")
     print(f"  DataLoader workers: {num_workers}")
 
@@ -534,7 +554,7 @@ def run_training(
         print(f"Average training loss: {avg_loss:.4f}")
 
         # in-epoch evaluation
-        ndcg = evaluate_model(model, val_ds)
+        ndcg = evaluate_model(model, val_ds, batch_size=batch_size)
         print(f"Validation NDCG@10: {ndcg:.4f}")
 
         # Log epoch metrics to wandb
@@ -554,14 +574,18 @@ def run_training(
         print("=" * 60)
         # Load test dataset for final comprehensive evaluation/testing of model
         test_dataset = MSMarcoDataset("test", max_samples=10_000)
+
+        # For very large comprehensive test with all documents, use min_query_groups~500, candidate_pool_size=-1
+        # But this may require more GPU memory than available, depending on environment
         _ = evaluate_model(
             model=model,
             dataset=test_dataset,
-            min_query_groups=500,
+            min_query_groups=200,
             candidate_pool_size=-1,  # -1 => use all documents in the dataset as candidates!
             comprehensive=True,  # Enable comprehensive mode for final eval
             log_wandb=use_wandb,
             wandb_prefix="final_test_",  # Prefix for wandb logging
+            batch_size=batch_size,  # Use same batch size as training
         )
     else:
         print("TRAINING COMPLETED - Skipping comprehensive testing")

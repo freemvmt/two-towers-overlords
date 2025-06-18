@@ -79,9 +79,25 @@ class TwoTowersModel(nn.Module):
         """Encode documents into embedding vectors."""
         return self.document_tower(documents)
 
+    def encode_documents_batched(self, documents: list[str], batch_size: int = 128) -> torch.Tensor:
+        """Encode documents in batches to avoid memory issues with eval of large document collections."""
+        if len(documents) <= batch_size:
+            return self.encode_documents(documents)
+
+        embeddings = []
+        for i in range(0, len(documents), batch_size):
+            batch_docs = documents[i : i + batch_size]
+            batch_embeddings = self.encode_documents(batch_docs)
+            embeddings.append(batch_embeddings.cpu())  # Move to CPU to free GPU memory
+
+        # Concatenate all embeddings and move back to model device
+        all_embeddings = torch.cat(embeddings, dim=0)
+        return all_embeddings.to(next(self.parameters()).device)
+
     def forward(self, queries: list[str], documents: list[str]) -> Tuple[torch.Tensor, torch.Tensor]:
         """Forward pass returning query and document embeddings."""
         query_embeddings = self.encode_queries(queries)
+        # the forward pass is subject to training batch size control, so no need to use batching method
         doc_embeddings = self.encode_documents(documents)
         return query_embeddings, doc_embeddings
 
