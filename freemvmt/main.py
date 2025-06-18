@@ -129,13 +129,13 @@ def run_sweep(project_name: str = "two-towers-retrieval"):
     """Run hyperparameter sweep with wandb."""
     sweep_config = {
         "method": "bayes",  # Can be 'grid', 'random', or 'bayes'
-        "metric": {"name": "val_ndcg_10", "goal": "maximize"},
+        "metric": {"name": "final_ndcg_10", "goal": "maximize"},
         "parameters": {
             "margin": {"values": [0.3, 0.5, 0.7]},
-            "epochs": {"values": [9, 12, 15]},
+            "epochs": {"values": [9, 12, 15, 18]},
             "batch_size": {"values": [256, 512, 1024, 2048]},
-            "learning_rate": {"values": [1e-3, 1e-4]},
-            "max_samples": {"values": [100_000]},  # -1 means use full dataset
+            "learning_rate": {"values": [1e-2, 1e-3, 1e-4]},
+            "max_samples": {"values": [100_000, 200_000]},  # -1 means use full dataset
             "projection_dim": {"values": [128, 256, 512]},
             "accumulation_steps": {"values": [2, 4]},
         },
