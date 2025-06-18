@@ -169,22 +169,27 @@ similarity = torch.cosine_similarity(query_embeddings, doc_embeddings)
 
 ## Sweeping
 
-Running sweeps with wandb turns out to be super powerful! The first one I ran [uodzb69z](https://wandb.ai/freemvmt-london/two-towers-retrieval/sweeps/uodzb69z/workspace?nw=nwuserfreemvmt). In general CSVs, buffers from tmux sessions, and images of the trajectories can be found in the `sweeps/` dir. On this first sweep, I could see that:
+Running sweeps with wandb turns out to be super powerful! The first one I ran [uodzb69z](https://wandb.ai/freemvmt-london/two-towers-retrieval/sweeps/uodzb69z/workspace). In general CSVs, buffers from tmux sessions, and images of the trajectories can be found in the `sweeps/` dir. On this first sweep, I could see that:
 
 - All the best results were for 8 epochs with 256 dimensions in the projection layer (perhaps unsurprisingly)
 - However, variable batch sizes, learning rates and margins all produced good results
 - Also, wandb seemed to decide very quickly that 4 accumulation steps was too many, although the same run was also the quickest (which I would expect, since this relates to GPU optimisation)
 
-For my second run ([1ukkvqtl](https://wandb.ai/freemvmt-london/two-towers-retrieval/sweeps/1ukkvqtl?nw=nwuserfreemvmt)), I decided to control the number of samples at `50_000`, because my intuition was that big differences in the raw size of the dataset would skew my results, and I wanted to tune my hypers without worrying about that. Some thoughts:
+For my second run ([1ukkvqtl](https://wandb.ai/freemvmt-london/two-towers-retrieval/sweeps/1ukkvqtl)), I decided to control the number of samples at `50_000`, because my intuition was that big differences in the raw size of the dataset would skew my results, and I wanted to tune my hypers without worrying about that. Some thoughts:
 
 - The immediate result that jumps out is more epochs no longer guarantees better results - 16 was certainly too many for this sample size
 - The worst 2 of 5 results used a margin of `1.0`, while the best used `0.5`
 - The best result was with 8 epochs, 256 batches and 128 projection dim, all of which were the lowest values in the config and which you'd expect to have the opposite correlation (although we must bear in mind the fixed sample size)
 - 5 runs is actually not sufficient to read too many conclusions out of a sweep with so many variables
 
-Also worth noting that both these sweeps are being judged against the `val_ndcg_10` metric, which is our in-epoch validation test. This has a small candidate pool, so is fairly *easy* - therefore we may want to use a comprehensive/much harder final test as the metric against which wandb evaluates a given permutation of hypers.
+Another run ([yo9idsvy](https://wandb.ai/freemvmt-london/two-towers-retrieval/sweeps/yo9idsvy)) unseated a previous conclusion about accumulation steps being negatively correlated - in this sweep wandb determined this hyperparam to be the most importance in producing good results. This also seemed to be the first time that we could say something meaningful about the learning rate; specifically, that `1e-3` beats `1e-4`.
 
-Now to run an absolute monster sweep...
+Also worth noting that all these sweeps are being judged against the `val_ndcg_10` metric, which is our in-epoch validation test. In the latest, *all* of them are doing very well against it (`> 0.975`), which suggests that it is *too easy*. Therefore, I decided to:
+
+a) hike the difficulty of the validation check (e.g. by expanding the small candidate pool)
+b) use a *much harder* final test as the metric against which wandb evaluates a given permutation of hyperparams
+
+Then to run an absolute monster sweep...
 
 
 ## Additional resources
