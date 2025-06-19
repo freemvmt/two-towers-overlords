@@ -252,6 +252,7 @@ class DocumentSearchEngine:
         print(f"Ingesting {len(documents)} documents...")
 
         # Encode all documents in batches
+        print("Encoding documents into embeddings...")
         with torch.no_grad():
             all_embeddings = self.model.encode_documents_batched(
                 documents=documents,
@@ -259,9 +260,11 @@ class DocumentSearchEngine:
             )
 
         # Convert embeddings to numpy for Redis storage
+        print("Converting embeddings to numpy arrays...")
         embeddings_np = all_embeddings.cpu().numpy()
 
         # Prepare documents for bulk insertion
+        print("Preparing documents for bulk insertion...")
         data = []
         for i, (doc_text, embedding) in enumerate(zip(documents, embeddings_np)):
             data.append(
