@@ -46,25 +46,26 @@ python main.py --no-wandb
 
 # Custom training parameters (args here are good for dev/debug on CPU)
 python main.py \
-  --no-wandb \
-  --epochs 1 \
+  --max-samples 10000 \
+  --batch-size 256 \
+  --epochs 2 \
+  --learning-rate 0.001 \
+  --projection-dim 64 \
   --margin 0.3 \
-  --batch-size 64 \
-  --projection-dim 32 \
-  --max-samples 1000 \
-  --accumulation-steps 1 \
-  --num-workers 1 \
+  --num-workers 2 \
+  --no-wandb \
+  --no-save \
   --no-comprehensive-test \
-  --no-save
+  --no-mixed-precision
 
 # compare with heavy duty, tracked GPU job, which saves weights on finish
 python main.py \
-  --epochs 12 \
-  --margin 0.7 \
-  --batch-size 1028 \
-  --projection-dim 256 \
-  --max-samples 100000 \
-  --accumulation-steps 4 \
+  --max-samples 200000 \
+  --batch-size 2048 \
+  --epochs 15 \
+  --learning-rate 0.0001 \
+  --projection-dim 512 \
+  --margin 0.5 \
   --num-workers 6
 
 # Run hyperparameter sweep
@@ -196,7 +197,40 @@ Also worth noting that all these sweeps are being judged against the `val_ndcg_1
 a) hike the difficulty of the validation check (e.g. by expanding the small candidate pool)
 b) use a *much harder* final test as the metric against which wandb evaluates a given permutation of hyperparams
 
-Then to run an absolute monster sweep!
+Then I ran an absolute monster sweep! [8x5w5jxn](https://wandb.ai/freemvmt-london/two-towers-retrieval/sweeps/8x5w5jxn/workspace) suggests as reliable hyperparams to try against full runs, we should stick to a formula along the lines of...
+
+- *A projection dimension of `512` (in this experiment, more was better, but jumping to `1024` seems drastic?)
+- A margin of `0.5` (`0.4`, which we haven't tested, could be good)
+- Only `2` accumulation steps - the results are consistently mixed on this, so let's just freeze it
+- Batch size of `2048` (or `1024` for a less stonky GPU)
+- *Learning rate of `1e-4` (`1e-2` is too high and should be avoided, but we should potentially consider `1e-5`)
+- We likely need `15` epochs or more (especially for full dataset)
+
+i.e. if we wanted to use the *flowing* approach on the full dataset, we might run:
+
+```
+python main.py \
+  --batch-size 2048 \
+  --epochs 15 \
+  --learning-rate 0.0001 \
+  --projection-dim 512 \
+  --margin 0.5 \
+  --num-workers 6
+```
+
+These points speak to `flowing_sweep`, which was the best run by a margin (still only just peaking about `0.5` for our eval metric). However, `iconic_sweep` is also of interest! It performed very well on `200_000` samples (i.e. harder), with a proj. dim of `128` and only `9` epochs of training! This might be explained by the faster learning rate of `1e-3`. Interestingly, it also used a margin of `0.3` (whereas the other top results used `0.5`) and managed to make the best use of GPU memory (with an effective batch size of `2048 * 4 = 8192`). This suggests that if we want to do quicker runs to test new hyperparams, or the effect of replacing the average pooling tower with an RNN, we could use the *iconic* approach:
+
+```
+python main.py \
+  --batch-size 2048 \
+  --epochs 9 \
+  --learning-rate 0.001 \
+  --projection-dim 128 \
+  --margin 0.3 \
+  --num-workers 6
+```
+
+Going to do one final sweep to home in on margin and learning rate.
 
 
 ## Additional resources
