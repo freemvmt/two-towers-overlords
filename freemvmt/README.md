@@ -313,7 +313,7 @@ NB. If for some reason the wrong projection dimension value is being read out of
 | `--batch-size` | `1024` | Batch size for document processing |
 | `--top-k` | `10` | Number of search results to return |
 | `--projection-dim` | `None` | Model embedding dimension |
-| `--model-path` | `None` | Path to trained model weights |
+| `--model` | `None` | Name of weights file in models/ dir (ending `.pt`/`.pth`) |
 | `--redis-url` | `redis://localhost:6379` | Redis connection URL |
 
 ### Index Schema
