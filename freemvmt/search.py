@@ -5,10 +5,18 @@ This module provides functionality to:
 1. Build a Redis vector search index with document embeddings
 2. Search for nearest neighbors given a query
 3. Handle document ingestion and query processing
+
+Interface Design:
+- Two distinct modes: INDEX BUILDING and SEARCH
+- INDEX BUILDING: python search.py --build-index [--model-path MODEL]
+- SEARCH: python search.py "query text"
+- Model consistency enforced: --model-path only allowed with --build-index
+- Auto-model selection: uses best trained model by default
 """
 
 import argparse
 import os
+import re
 from typing import Any, Optional
 
 import torch
@@ -21,11 +29,91 @@ from model import TwoTowersModel
 from training import MSMarcoDataset
 
 
-def create_index_schema(projection_dim: int = 128) -> IndexSchema:
+MODELS_DIR = "models"
+WEIGHTS_OVERRIDE = "weights.pt"
+DEFAULT_INDEX_NAME = "default_index"
+DEFAULT_PROJ_DIM = 512
+
+
+def find_best_model(models_dir: str = MODELS_DIR) -> Optional[tuple[str, str]]:
+    """
+    Find the model file with the highest number of epochs, unless there is a file
+    with the name given by WEIGHTS_OVERRIDE present, in which case that file is returned directly.
+
+    Args:
+        models_dir: Directory containing model files (relative to freemvmt/)
+
+    Returns:
+        Path to the best model file, or None if no models found
+    """
+    if not os.path.exists(models_dir) or not os.path.isdir(models_dir):
+        print(f"❌ Models directory '{models_dir}' does not exist or is not a directory")
+        return None
+
+    model_files = []
+    for filename in os.listdir(models_dir):
+        if filename.endswith(".pt"):
+            # Extract epoch from filename like "e9.lr3.d512.m3.pt" (see MODEL_FILENAME_TEMPLATE in main.py)
+            match = re.match(r"^e(\d+)", filename)
+            if match:
+                epochs = int(match.group(1))
+                path = os.path.join(models_dir, filename)
+                model_files.append((epochs, path, filename))
+        elif filename in (WEIGHTS_OVERRIDE):
+            print(f"🔍 Best model selection overridden by presence of {WEIGHTS_OVERRIDE} file in {models_dir}")
+            return os.path.join(models_dir, filename), filename
+
+    if not model_files:
+        print(f"ℹ️ No trained models found in '{models_dir}'")
+        return None
+
+    # Sort by epochs in descending order and return the best model
+    model_files.sort(key=lambda x: x[0], reverse=True)
+    best_epochs, best_path, best_filename = model_files[0]
+
+    print(f"🎯 Auto-selected best model: {best_filename} (trained for {best_epochs} epochs)")
+    return best_path, best_filename
+
+
+def get_projection_dim_from_model(model_path: str) -> int:
+    """
+    Extract projection dimension from saved model state dict
+    (rather than require it be passed w/ every command).
+
+    Args:
+        model_path: Path to the saved model file
+
+    Returns:
+        The projection dimension used by the model
+    """
+    try:
+        state_dict = torch.load(model_path, map_location="cpu", weights_only=True)
+
+        # Look for the projection layer's output dimension
+        # The projection layer is: nn.Linear(embedding_dim, projection_dim) -> nn.ReLU() -> nn.Linear(projection_dim, projection_dim)
+        # So we want the output dimension of the final linear layer
+        if "query_tower.projection.2.weight" in state_dict:
+            # Shape is [projection_dim, projection_dim] for the final layer
+            projection_dim = state_dict["query_tower.projection.2.weight"].shape[0]
+            print(f"🔍 Detected projection dimension: {projection_dim}")
+            return projection_dim
+        else:
+            print("⚠️ Could not find projection layer in model state dict, using default dimension")
+            return 128
+
+    except Exception as e:
+        print(f"⚠️ Error reading model file {model_path}: {e}")
+        return 128
+
+
+def create_index_schema(
+    index_name: str,
+    projection_dim: int = 128,
+) -> IndexSchema:
     """Create Redis vector search index schema."""
     schema_dict = {
         "index": {
-            "name": "document_index",
+            "name": index_name,
             "prefix": "doc:",
             "storage_type": "hash",
         },
@@ -57,35 +145,61 @@ class DocumentSearchEngine:
 
     def __init__(
         self,
-        model_path: Optional[str] = None,
-        projection_dim: int = 128,
+        model_filename: Optional[str] = None,
+        projection_dim: Optional[int] = None,
         redis_url: str = "redis://localhost:6379",
-        index_name: str = "document_index",
     ):
         """
         Initialize the search engine.
 
         Args:
-            model_path: Path to saved model weights (optional)
-            projection_dim: Dimension of the model's projection layer
+            model_filename: Filename of saved model weights in /models (optional)
+            projection_dim: Dimension of the model's projection layer (auto-detected if None)
             redis_url: Redis connection URL
-            index_name: Name of the Redis search index
         """
-        self.projection_dim = projection_dim
         self.redis_url = redis_url
-        self.index_name = index_name
 
         # Initialize Redis client
         self.redis_client = Redis.from_url(redis_url)
 
-        # Initialize model
-        self.model = TwoTowersModel(projection_dim=projection_dim)
-        if model_path and os.path.exists(model_path):
-            print(f"Loading model weights from {model_path}")
-            self.model.load_state_dict(torch.load(model_path, map_location="cpu"))
+        # Find model weights if available
+        model_path = None
+        model_filename = None
+        if model_filename is None:
+            result = find_best_model()
+            if result:
+                model_path, model_filename = result
+                print(f"🔍 Using auto-selected model: {model_filename}")
+        # if a specific model filename is provided, we check it exists and has appropriate extension
+        elif model_filename and model_filename.endswith((".pt", ".pth")):
+            path = os.path.join(MODELS_DIR, model_filename)
+            if os.path.exists(path):
+                model_path = path
+                model_filename = model_filename
+            print(f"🔍 Using custom model: {model_filename}")
         else:
-            print("Using untrained model (random weights)")
+            print("❌ Custom model provided but either not found to exist, or not ending with .pt/.pth")
 
+        # init index name, using model filename if available
+        self.index_name = os.path.splitext(model_filename)[0] if model_filename else DEFAULT_INDEX_NAME
+
+        # Auto-detect projection dimension from model if not provided
+        if projection_dim is None:
+            if model_path:
+                self.projection_dim = get_projection_dim_from_model(model_path)
+            else:
+                print(f"ℹ️ No model available for dimension detection, using default projection dim: {DEFAULT_PROJ_DIM}")
+                self.projection_dim = DEFAULT_PROJ_DIM
+        else:
+            self.projection_dim = projection_dim
+
+        # Initialize model and load weights if available
+        self.model = TwoTowersModel(projection_dim=self.projection_dim)
+        if model_path:
+            print(f"🔍 Loading model weights from: {model_path}")
+            self.model.load_state_dict(torch.load(model_path, map_location="cpu", weights_only=True))
+        else:
+            print("ℹ️ No model weights provided or found - using untrained model with random weights")
         self.model.eval()
 
         # Set up device
@@ -98,7 +212,10 @@ class DocumentSearchEngine:
 
     def _setup_search_index(self):
         """Set up Redis search index with the appropriate schema."""
-        schema = create_index_schema(self.projection_dim)
+        schema = create_index_schema(
+            index_name=self.index_name,
+            projection_dim=self.projection_dim,
+        )
 
         try:
             # Try to create the index
@@ -227,30 +344,49 @@ class DocumentSearchEngine:
 
 
 def build_document_index(
-    max_docs: int = 10000,
+    max_docs: int = -1,
     batch_size: int = 1024,
-    model_path: Optional[str] = None,
-    projection_dim: int = 128,
+    model_filename: Optional[str] = None,
+    projection_dim: Optional[int] = None,
 ):
     """Build the document index from MS Marco dataset."""
-    print("Building document index from MS Marco dataset...")
+    print("Building document index from *all* MS Marco datasets...")
 
     # Initialize search engine
     engine = DocumentSearchEngine(
-        model_path=model_path,
+        model_filename=model_filename,
         projection_dim=projection_dim,
     )
 
-    # Load dataset and get unique documents
-    print(f"Loading MS Marco dataset (max {max_docs} documents)...")
-    dataset = MSMarcoDataset("train", max_samples=max_docs)
-    unique_docs = dataset.get_unique_passages()
+    if max_docs == -1:
+        # Load ALL documents from all three dataset splits
+        print("Loading ALL documents from train, validation, and test splits...")
+        all_unique_docs = set()
 
-    # Limit to max_docs if specified
-    if max_docs > 0 and len(unique_docs) > max_docs:
-        unique_docs = unique_docs[:max_docs]
+        for split in ["train", "validation", "test"]:
+            print(f"  Loading {split} split...")
+            try:
+                dataset = MSMarcoDataset(split, max_samples=-1)  # -1 means load all
+                split_docs = dataset.get_unique_passages()
+                all_unique_docs.update(split_docs)
+                print(f"    Added {len(split_docs)} documents from {split} split")
+            except Exception as e:
+                print(f"    Warning: Could not load {split} split: {e}")
+                continue
 
-    print(f"Found {len(unique_docs)} unique documents")
+        unique_docs = list(all_unique_docs)
+        print(f"Total unique documents across all splits: {len(unique_docs)}")
+    else:
+        # Load limited documents from train split only
+        print(f"Loading MS Marco train dataset (max {max_docs} documents)...")
+        dataset = MSMarcoDataset("train", max_samples=max_docs)
+        unique_docs = dataset.get_unique_passages()
+
+        # Limit to max_docs if specified
+        if max_docs > 0 and len(unique_docs) > max_docs:
+            unique_docs = unique_docs[:max_docs]
+
+        print(f"Found {len(unique_docs)} unique documents")
 
     # Ingest documents
     engine.ingest_documents(unique_docs, batch_size=batch_size, clear_existing=True)
@@ -262,18 +398,26 @@ def build_document_index(
     return engine
 
 
-def search_documents(query: str, top_k: int = 10, model_path: Optional[str] = None):
-    """Search for documents similar to the given query."""
+def search_documents(
+    query: str,
+    top_k: int = 10,
+    model_filename: Optional[str] = None,
+    projection_dim: Optional[int] = None,
+):
+    """Search for documents similar to the given query using auto-selected model."""
     print(f"Searching for: '{query}'")
     print("-" * 50)
 
     # Initialize search engine
-    engine = DocumentSearchEngine(model_path=model_path)
+    engine = DocumentSearchEngine(
+        model_filename=model_filename,
+        projection_dim=projection_dim,
+    )
 
     # Check if index exists and has documents
     info = engine.get_index_info()
     if info.get("num_docs", 0) == 0:
-        print("❌ No documents found in index. Please run with --build-index first.")
+        print("❌ No documents found in index. Please run with --build-index first (or simultaneously)")
         return
 
     print(f"Searching index with {info.get('num_docs', 0)} documents...")
@@ -303,38 +447,54 @@ def main():
     parser.add_argument("--index-info", action="store_true", help="Show index information")
 
     # Configuration
-    parser.add_argument("--model-path", type=str, help="Path to saved model weights")
-    parser.add_argument("--projection-dim", type=int, default=128, help="Model projection dimension")
-    parser.add_argument("--max-docs", type=int, default=10000, help="Maximum documents to index")
+    parser.add_argument(
+        "--model",
+        type=str,
+        default=None,
+        help="Filename for saved model weights in /models dir (optional, auto-selects best model if not provided)",
+    )
+    parser.add_argument(
+        "--dims", type=int, default=None, help="Model projection dimension (auto-detected from model if not provided)"
+    )
+    parser.add_argument(
+        "--max-docs", type=int, default=-1, help="Maximum documents to index (-1 for all documents from all splits)"
+    )
     parser.add_argument("--batch-size", type=int, default=1024, help="Batch size for processing")
     parser.add_argument("--top-k", type=int, default=10, help="Number of results to return")
     parser.add_argument("--redis-url", type=str, default="redis://localhost:6379", help="Redis URL")
 
     args = parser.parse_args()
 
-    # Handle different actions
+    # Handle different actions in appropriate order
     if args.build_index:
+        # Build index (optionally with specific model)
         build_document_index(
             max_docs=args.max_docs,
             batch_size=args.batch_size,
-            model_path=args.model_path,
-            projection_dim=args.projection_dim,
+            model_filename=args.model,
+            projection_dim=args.dims,
         )
-    elif args.index_info:
-        engine = DocumentSearchEngine(model_path=args.model_path, projection_dim=args.projection_dim)
+        print("\n✅ Index built successfully!")
+
+    if args.index_info:
+        # Show index information
+        engine = DocumentSearchEngine(
+            model_filename=args.model,
+            projection_dim=args.dims,
+        )
         info = engine.get_index_info()
-        print(f"Index Information: {info}")
-    elif args.query:
+        print(f"\nIndex info: {info}")
+
+    if args.query:
+        # Search index (may have been pre-existing or built in the same run)
         search_documents(
             query=args.query,
             top_k=args.top_k,
-            model_path=args.model_path,
+            model_filename=args.model,
+            projection_dim=args.dims,
         )
     else:
-        # Default demo query if no arguments provided
-        demo_query = "machine learning algorithms for text classification"
-        print("No query provided. Running demo search...")
-        search_documents(query=demo_query, top_k=args.top_k, model_path=args.model_path)
+        raise ValueError("No valid action provided - please provide a query, --build-index, or --index-info")
 
 
 if __name__ == "__main__":

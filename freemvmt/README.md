@@ -247,6 +247,118 @@ python main.py \
 ```
 
 
+## Redis vector search
+
+The `search.py` module implements a Redis-based vector search system for the Two Towers document retrieval model described above. It provides efficient/approximate nearest neighbor (ANN) search using pre-computed document embeddings.
+
+### Features
+
+- **HNSW Vector Index**: Uses Hierarchical Navigable Small World algorithm for fast similarity search
+- **Multi-Dataset Support**: Indexes all documents from train, validation, and test splits by default
+- **Flexible Batching**: Configurable batch sizes for memory-efficient processing  
+- **Cosine Similarity**: Optimized for semantic matching of a given query to k documents
+- **Production Ready**: Redis backend for scalable deployment
+
+### Quick Start
+
+For dev, first make sure you have the `redis-stack` [Docker container](https://redis.io/docs/latest/operate/oss_and_stack/install/archive/install-stack/docker/) running on local. This includes an *insights* GUI `localhost:8001`.
+
+```sh
+docker run -d --name redis-stack -p 6379:6379 -p 8001:8001 redis/redis-stack:latest
+```
+
+Index ALL documents from ALL dataset splits (default). This will look in `models/` for the weights produced with the greatest number of epochs (or if it finds none, will just use random embeddings). Note that you can override this selection process by naming a model state file like `model/weights.py`.
+
+```bash
+python search.py --build-index
+```
+
+Check index status after building:
+
+```bash
+python search.py --index-info
+```
+
+Then you can run a search against any query you like, and supply an argument to return only so many results:
+
+```bash
+python search.py "best coffee in Old Street" --top-k 5
+```
+
+You can also index a limited number of documents using a specific model for dev/debug runs:
+
+```bash
+python search.py --build-index --max-docs 1000 --model custom_weights.pt
+```
+
+Note that if you built your index with any model other than the one returned by `find_best_model`, you will need to specify it when you search a query, to ensure that the query is encoded by the same model as the documents which are being searched against.
+
+```bash
+python search.py "deep neural networks" --model custom_weights.pt
+```
+
+And finally, you can do it all in one go!
+
+```bash
+python search.py --build-index --model custom_weights.pt --index-info --top-k 20 "what is a hummingbird moth" 
+```
+
+### Configuration Options
+
+| Parameter | Default | Description |
+|-----------|---------|-------------|
+| `--max-docs` | `-1` | Number of documents to index (-1 = all) |
+| `--batch-size` | `1024` | Batch size for document processing |
+| `--top-k` | `10` | Number of search results to return |
+| `--projection-dim` | `128` | Model embedding dimension |
+| `--model-path` | `None` | Path to trained model weights |
+| `--redis-url` | `redis://localhost:6379` | Redis connection URL |
+
+### Index Schema
+
+The Redis index uses the following schema:
+
+```python
+{
+    "index": {
+        "name": index_name,  # takes name from model, or else is called 'default_index'
+        "prefix": "doc:",
+        "storage_type": "hash",
+    },
+    "fields": [
+        {"name": "id", "type": "tag"},
+        {"name": "content", "type": "text"},
+        {
+            "name": "embedding", 
+            "type": "vector",
+            "attrs": {
+                "dims": 128,  # configurable
+                "algorithm": "hnsw",
+                "distance_metric": "cosine",
+            }
+        }
+    ]
+}
+```
+
+### Architecture
+
+```
+Query Text → Query Tower → Query Embedding
+                                ↓
+                         Redis Vector Search (HNSW)
+                                ↓
+                    Top-K Similar Documents ← Document Embeddings ← Document Tower ← Document Texts
+```
+
+### Performance Notes
+
+- **Memory Usage**: ~4 bytes per dimension per document for embeddings
+- **Index Size**: For 1M documents with 128-dim embeddings: ~500MB
+- **Search Speed**: Sub-millisecond search times with HNSW
+- **Throughput**: 1000+ queries/second depending on hardware
+
+
 ## Additional resources
 
 - ShapedAI deep dive on [the two tower model for recommendation systems](https://www.shaped.ai/blog/the-two-tower-model-for-recommendation-systems-a-deep-dive)

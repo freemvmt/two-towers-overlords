@@ -13,7 +13,8 @@ import wandb
 from training import run_training
 
 
-MODEL_DIR = "models"
+MODELS_DIR = "models"
+MODEL_FILENAME_TEMPLATE = "e{epochs}.lr{learning_rate}.d{projection_dim}.m{margin}.pt"
 
 
 def main():
@@ -89,12 +90,15 @@ def main():
     if not args.no_save:
         try:
             # Ensure the models directory exists
-            os.makedirs(MODEL_DIR, exist_ok=True)
+            os.makedirs(MODELS_DIR, exist_ok=True)
             # encode the filename with the core hyperparams for clarity
-            filename = (
-                f"e{args.epochs}.lr{int(log10(args.learning_rate))}.d{args.projection_dim}.m{int(args.margin * 10)}.pt"
+            filename = MODEL_FILENAME_TEMPLATE.format(
+                epochs=args.epochs,
+                learning_rate=int(log10(args.learning_rate)),
+                projection_dim=args.projection_dim,
+                margin=int(args.margin * 10),
             )
-            path = os.path.join(MODEL_DIR, filename)
+            path = os.path.join(MODELS_DIR, filename)
             torch.save(trained_model.state_dict(), path)
             print(f"\n✅ Model state saved to: {path}")
         except Exception as e:
