@@ -18,6 +18,7 @@ class AveragePoolingTower(nn.Module):
         # we export TOKENIZERS_PARALLELISM=false to avoid the tokenizer clashing with the DL workers
         self.tokenizer = AutoTokenizer.from_pretrained(model_name)
         self.pretrained_model = AutoModel.from_pretrained(model_name)
+        # our off the shelf word embeddings clock in at 384 dims!
         self.embedding_dim = self.pretrained_model.config.hidden_size
 
         # Freeze the pre-trained model (we just want word embeddings for free)
