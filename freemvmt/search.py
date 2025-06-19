@@ -16,6 +16,7 @@ Interface Design:
 
 import argparse
 import os
+import random
 import re
 from typing import Any, Optional
 
@@ -32,7 +33,7 @@ from training import MSMarcoDataset
 MODELS_DIR = "models"
 WEIGHTS_OVERRIDE = "weights.pt"
 DEFAULT_INDEX_NAME = "default_index"
-DEFAULT_PROJ_DIM = 512
+DEFAULT_PROJ_DIM = 128
 
 
 def find_best_model(models_dir: str = MODELS_DIR) -> Optional[tuple[str, str]]:
@@ -91,7 +92,7 @@ def get_projection_dim_from_model(model_path: str) -> int:
 
         # Look for the projection layer's output dimension
         # The projection layer is: nn.Linear(embedding_dim, projection_dim) -> nn.ReLU() -> nn.Linear(projection_dim, projection_dim)
-        # So we want the output dimension of the final linear layer
+        # So we want the output dimension of the final linear layer (of either tower)
         if "query_tower.projection.2.weight" in state_dict:
             # Shape is [projection_dim, projection_dim] for the final layer
             projection_dim = state_dict["query_tower.projection.2.weight"].shape[0]
@@ -99,16 +100,16 @@ def get_projection_dim_from_model(model_path: str) -> int:
             return projection_dim
         else:
             print("⚠️ Could not find projection layer in model state dict, using default dimension")
-            return 128
+            return DEFAULT_PROJ_DIM
 
     except Exception as e:
         print(f"⚠️ Error reading model file {model_path}: {e}")
-        return 128
+        return DEFAULT_PROJ_DIM
 
 
 def create_index_schema(
     index_name: str,
-    projection_dim: int = 128,
+    projection_dim: int = DEFAULT_PROJ_DIM,
 ) -> IndexSchema:
     """Create Redis vector search index schema."""
     schema_dict = {
@@ -169,7 +170,6 @@ class DocumentSearchEngine:
             result = find_best_model()
             if result:
                 model_path, model_filename = result
-                print(f"🔍 Using auto-selected model: {model_filename}")
         # if a specific model filename is provided, we check it exists and has appropriate extension
         elif model_filename and model_filename.endswith((".pt", ".pth")):
             path = os.path.join(MODELS_DIR, model_filename)
@@ -218,11 +218,8 @@ class DocumentSearchEngine:
         )
 
         try:
-            # Try to create the index
-            self.search_index = SearchIndex(schema=schema)
-            self.search_index.connect(redis_url=self.redis_url)
-
-            # Check if index already exists, if not create it
+            # Check if index already exists, and create it if not
+            self.search_index = SearchIndex(schema=schema, redis_client=self.redis_client)
             if not self.search_index.exists():
                 print(f"Creating new search index: {self.index_name}")
                 self.search_index.create(overwrite=False)
@@ -364,7 +361,6 @@ def build_document_index(
         all_unique_docs = set()
 
         for split in ["train", "validation", "test"]:
-            print(f"  Loading {split} split...")
             try:
                 dataset = MSMarcoDataset(split, max_samples=-1)  # -1 means load all
                 split_docs = dataset.get_unique_passages()
@@ -382,9 +378,9 @@ def build_document_index(
         dataset = MSMarcoDataset("train", max_samples=max_docs)
         unique_docs = dataset.get_unique_passages()
 
-        # Limit to max_docs if specified
+        # ensure we are limiting to max_docs (sampling them at random for more fun!)
         if max_docs > 0 and len(unique_docs) > max_docs:
-            unique_docs = unique_docs[:max_docs]
+            unique_docs = random.sample(unique_docs, max_docs)
 
         print(f"Found {len(unique_docs)} unique documents")
 
@@ -464,6 +460,10 @@ def main():
     parser.add_argument("--redis-url", type=str, default="redis://localhost:6379", help="Redis URL")
 
     args = parser.parse_args()
+    if not (args.query or args.build_index or args.index_info):
+        print("ℹ️ No action specified. Use --build-index, --index-info, or provide a query.")
+        parser.print_help()
+        return
 
     # Handle different actions in appropriate order
     if args.build_index:
@@ -493,8 +493,6 @@ def main():
             model_filename=args.model,
             projection_dim=args.dims,
         )
-    else:
-        raise ValueError("No valid action provided - please provide a query, --build-index, or --index-info")
 
 
 if __name__ == "__main__":

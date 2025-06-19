@@ -303,6 +303,8 @@ And finally, you can do it all in one go!
 python search.py --build-index --model custom_weights.pt --index-info --top-k 20 "what is a hummingbird moth" 
 ```
 
+NB. If for some reason the wrong projection dimension value is being read out of the model state, you can override with a flag, e.g. `--dims 512`.
+
 ### Configuration Options
 
 | Parameter | Default | Description |
@@ -310,7 +312,7 @@ python search.py --build-index --model custom_weights.pt --index-info --top-k 20
 | `--max-docs` | `-1` | Number of documents to index (-1 = all) |
 | `--batch-size` | `1024` | Batch size for document processing |
 | `--top-k` | `10` | Number of search results to return |
-| `--projection-dim` | `128` | Model embedding dimension |
+| `--projection-dim` | `None` | Model embedding dimension |
 | `--model-path` | `None` | Path to trained model weights |
 | `--redis-url` | `redis://localhost:6379` | Redis connection URL |
 
@@ -332,7 +334,7 @@ The Redis index uses the following schema:
             "name": "embedding", 
             "type": "vector",
             "attrs": {
-                "dims": 128,  # configurable
+                "dims": 128,  # also pulled from model, or else set at 128
                 "algorithm": "hnsw",
                 "distance_metric": "cosine",
             }

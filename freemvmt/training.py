@@ -39,6 +39,10 @@ class MSMarcoDataset(Dataset):
         random_seed: int = 42,
     ) -> None:
         print(f"Building MS Marco {split} dataset with at most {max_samples} samples...")
+        # validate max_samples
+        if max_samples < -1 or max_samples == 0:
+            raise ValueError("max_samples must be -1 (use full dataset) or > 0 (limit to that many samples)")
+
         # get map-style dataset from Hugging Face
         self.dataset = load_dataset("microsoft/ms_marco", "v1.1", split=split)
         assert not isinstance(self.dataset, IterableDataset)
@@ -76,12 +80,12 @@ class MSMarcoDataset(Dataset):
                         if max_samples == -1:
                             continue
                         # else break off when we have collected enough samples (here sample == query-doc pair)
-                        if max_samples and sample_count >= max_samples:
+                        if max_samples > 0 and sample_count >= max_samples:
                             break
             except (KeyError, TypeError):
                 print(f"Error while building query-doc pairs for record: {item}")
                 continue
-            if max_samples and sample_count >= max_samples:
+            if max_samples > 0 and sample_count >= max_samples:
                 break
 
         # save list of unique docs as list
