@@ -21,6 +21,7 @@ import re
 from typing import Any, Optional
 
 import torch
+from tqdm import tqdm
 from redis import Redis
 from redisvl.index import SearchIndex
 from redisvl.query import VectorQuery
@@ -251,13 +252,28 @@ class DocumentSearchEngine:
 
         print(f"Ingesting {len(documents)} documents...")
 
-        # Encode all documents in batches
+        # Encode all documents in batches with progress tracking
         print("Encoding documents into embeddings...")
         with torch.no_grad():
-            all_embeddings = self.model.encode_documents_batched(
-                documents=documents,
-                batch_size=batch_size,
-            )
+            if len(documents) <= batch_size:
+                # Small batch, encode directly
+                all_embeddings = self.model.encode_documents(documents)
+            else:
+                # Large batch, encode with progress bar
+                embeddings = []
+                num_batches = (len(documents) + batch_size - 1) // batch_size
+
+                for i in tqdm(
+                    range(0, len(documents), batch_size), desc="Encoding document batches", total=num_batches
+                ):
+                    batch_docs = documents[i : i + batch_size]
+                    batch_embeddings = self.model.encode_documents(batch_docs)
+                    embeddings.append(batch_embeddings.cpu())  # Move to CPU to free GPU memory
+
+                # Concatenate all embeddings
+                print("Concatenating embeddings...")
+                all_embeddings = torch.cat(embeddings, dim=0)
+                all_embeddings = all_embeddings.to(next(self.model.parameters()).device)
 
         # Convert embeddings to numpy for Redis storage
         print("Converting embeddings to numpy arrays...")
@@ -266,7 +282,9 @@ class DocumentSearchEngine:
         # Prepare documents for bulk insertion
         print("Preparing documents for bulk insertion...")
         data = []
-        for i, (doc_text, embedding) in enumerate(zip(documents, embeddings_np)):
+        for i, (doc_text, embedding) in tqdm(
+            enumerate(zip(documents, embeddings_np)), desc="Preparing documents", total=len(documents)
+        ):
             data.append(
                 {
                     "id": str(i),
@@ -275,10 +293,14 @@ class DocumentSearchEngine:
                 }
             )
 
-        # Bulk insert documents
+        # Bulk insert documents with progress tracking
         print("Inserting documents into Redis...")
         if self.search_index:
-            self.search_index.load(data, id_field="id")
+            # could load everything at once, but we batch it to show progress (sanity!)
+            total_batches = (len(data) + batch_size - 1) // batch_size
+            for i in tqdm(range(0, len(data), batch_size), desc="Inserting into Redis", total=total_batches):
+                batch_data = data[i : i + batch_size]
+                self.search_index.load(batch_data, id_field="id")
             print(f"✅ Successfully ingested {len(documents)} documents")
         else:
             raise RuntimeError("Search index not initialized")
@@ -305,13 +327,18 @@ class DocumentSearchEngine:
             vector_field_name="embedding",
             return_fields=["id", "content"],
             num_results=top_k,
+            normalize_vector_distance=True,  # returns distance values in [0, 1] instead of [0, 2]
         )
 
         # Execute search
         if not self.search_index:
             raise RuntimeError("Search index not initialized")
 
+        print(f"Searching index '{self.index_name}' for top {top_k} results...")
         results = self.search_index.query(vector_query)
+
+        print("RESULTS!")
+        print(results)
 
         # Format results
         formatted = []
@@ -320,8 +347,8 @@ class DocumentSearchEngine:
                 {
                     "id": result.get("id"),
                     "content": result.get("content"),
-                    "score": float(result.get("vector_score", 0.0)),
-                    "distance": 1.0 - float(result.get("vector_score", 0.0)),  # convert similarity -> distance
+                    "score": float(result.get("vector_distance", 0.0)),
+                    "distance": 1.0 - float(result.get("vector_distance", 0.0)),  # convert similarity -> distance
                 }
             )
         return formatted
@@ -458,6 +485,7 @@ def main():
     parser.add_argument(
         "--max-docs", type=int, default=-1, help="Maximum documents to index (-1 for all documents from all splits)"
     )
+    # note that a batch size of 1024 surfed close to the wind on RTX 4090, so may overflow on e.g. a 3090
     parser.add_argument("--batch-size", type=int, default=1024, help="Batch size for processing")
     parser.add_argument("--top-k", type=int, default=10, help="Number of results to return")
     parser.add_argument("--redis-url", type=str, default="redis://localhost:6379", help="Redis URL")
@@ -470,6 +498,7 @@ def main():
 
     # Handle different actions in appropriate order
     if args.build_index:
+        print("🔨 Building document index...")
         # Build index (optionally with specific model)
         build_document_index(
             max_docs=args.max_docs,
@@ -480,6 +509,7 @@ def main():
         print("\n✅ Index built successfully!")
 
     if args.index_info:
+        print("ℹ️ Showing index information...")
         # Show index information
         engine = DocumentSearchEngine(
             model_filename=args.model,
@@ -489,6 +519,7 @@ def main():
         print(f"\nIndex info: {info}")
 
     if args.query:
+        print("🔍 Searching for documents related to your query...")
         # Search index (may have been pre-existing or built in the same run)
         search_documents(
             query=args.query,

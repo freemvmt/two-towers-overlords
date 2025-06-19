@@ -31,11 +31,12 @@ else
   uv sync
 fi
 
-# if RUN_REDIS env var is set, run a deamonized redis server on the remote
+# if RUN_REDIS env var is set, run a redis server in a tmux session on the remote
 if [[ "$RUN_REDIS" == "1" ]]; then
   echo "🚀 RUN_REDIS is set - installing and starting Redis server in the background"
   apt-get install -y redis-server
-  redis-server --daemonize yes
+  # alternatively, background redis like `redis-server /etc/redis/redis.conf --daemonize yes`
+  tmux new-session -d -s redis 'redis-server /etc/redis/redis.conf'
 fi
 
 # finally, activate virtual environment for running python scripts
