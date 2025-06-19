@@ -3,6 +3,7 @@ Main entry point for training the two-towers document retrieval model.
 """
 
 import argparse
+from math import log10
 import os
 
 import torch
@@ -89,7 +90,11 @@ def main():
         try:
             # Ensure the models directory exists
             os.makedirs(MODEL_DIR, exist_ok=True)
-            path = os.path.join(MODEL_DIR, "weights.pt")
+            # encode the filename with the core hyperparams for clarity
+            filename = (
+                f"e{args.epochs}.lr{int(log10(args.learning_rate))}.d{args.projection_dim}.m{int(args.margin * 10)}.pt"
+            )
+            path = os.path.join(MODEL_DIR, filename)
             torch.save(trained_model.state_dict(), path)
             print(f"\n✅ Model state saved to: {path}")
         except Exception as e:

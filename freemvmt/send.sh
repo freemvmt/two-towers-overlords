@@ -7,5 +7,5 @@ else
     REMOTE="$1"
 fi
 
-scp ~/.ssh/id_ed25519 "$REMOTE":~/.ssh/id_ed25519"
-scp ssh.sh "$REMOTE":ssh.sh"
+scp ~/.ssh/id_ed25519 "$REMOTE:~/.ssh/id_ed25519"
+scp ssh.sh "$REMOTE:ssh.sh"
