@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# run like `source setup.sh` (on remote) to ensure active shell is set up with venv
+# run like `source setup.sh` on any remote to ensure active shell is set up with venv
 
 # ensure we have all the utils we need
 apt update
