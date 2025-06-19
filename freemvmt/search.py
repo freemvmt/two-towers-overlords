@@ -337,9 +337,6 @@ class DocumentSearchEngine:
         print(f"Searching index '{self.index_name}' for top {top_k} results...")
         results = self.search_index.query(vector_query)
 
-        print("RESULTS!")
-        print(results)
-
         # Format results
         formatted = []
         for result in results:
@@ -347,7 +344,7 @@ class DocumentSearchEngine:
                 {
                     "id": result.get("id"),
                     "content": result.get("content"),
-                    "score": float(result.get("vector_distance", 0.0)),
+                    "score": float(result.get("vector_distance", 0.0)),  # cosine similarity between query and given doc
                     "distance": 1.0 - float(result.get("vector_distance", 0.0)),  # convert similarity -> distance
                 }
             )

@@ -35,8 +35,9 @@ fi
 if [[ "$RUN_REDIS" == "1" ]]; then
   echo "🚀 RUN_REDIS is set - installing and starting Redis server in the background"
   apt-get install -y redis-server
-  # alternatively, background redis like `redis-server /etc/redis/redis.conf --daemonize yes`
+  # run redis in a tmux session so we can attach to see logs / stop it
   tmux new-session -d -s redis 'redis-server /etc/redis/redis.conf'
+  # alternatively, run redis in the background like `redis-server /etc/redis/redis.conf --daemonize yes`
 fi
 
 # finally, activate virtual environment for running python scripts
