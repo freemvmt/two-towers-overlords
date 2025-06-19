@@ -18,30 +18,33 @@ MODEL_DIR = "models"
 def main():
     """Main function to run training with command-line arguments."""
     parser = argparse.ArgumentParser(description="Train two-towers document retrieval model")
-    parser.add_argument("--epochs", type=int, default=3, help="Number of training epochs")
-    parser.add_argument("--batch-size", type=int, default=128, help="Batch size for training")
-    parser.add_argument("--learning-rate", type=float, default=1e-4, help="Learning rate")
+    # size of dataset to use (-1 for full dataset) and batch size
     parser.add_argument(
-        "--max-samples", type=int, default=10_000, help="Maximum number of training samples (for faster development)"
+        "--max-samples", type=int, default=100_000, help="Maximum number of training samples (for faster development)"
     )
+    parser.add_argument("--batch-size", type=int, default=1024, help="Batch size for training")
+
+    # hyperparams proper (assume a small but effective run as default, modelled on iconic sweep)
+    parser.add_argument("--epochs", type=int, default=9, help="Number of training epochs")
+    parser.add_argument("--learning-rate", type=float, default=1e-3, help="Learning rate")
     parser.add_argument("--projection-dim", type=int, default=128, help="Project dimension for each tower")
-    parser.add_argument("--margin", type=float, default=0.1, help="Margin for triplet loss")
+    parser.add_argument("--margin", type=float, default=0.3, help="Margin for triplet loss")
+
+    # logistics / switches
     parser.add_argument("--project-name", type=str, default="two-towers-retrieval", help="Wandb project name")
     parser.add_argument("--no-wandb", action="store_true", help="Disable wandb logging")
     parser.add_argument("--no-save", action="store_true", help="Don't save weights after training")
     parser.add_argument("--sweep", action="store_true", help="Run hyperparameter sweep with wandb")
-
-    # GPU optimization arguments
-    parser.add_argument(
-        "--accumulation-steps", type=int, default=1, help="Gradient accumulation steps for larger effective batch size"
-    )
-    parser.add_argument("--no-mixed-precision", action="store_true", help="Disable mixed precision training")
-    parser.add_argument("--num-workers", type=int, default=4, help="Number of DataLoader workers")
-
-    # Testing arguments
     parser.add_argument(
         "--no-comprehensive-test", action="store_true", help="Skip comprehensive testing after training"
     )
+
+    # GPU optimization
+    parser.add_argument(
+        "--accumulation-steps", type=int, default=2, help="Gradient accumulation steps for larger effective batch size"
+    )
+    parser.add_argument("--no-mixed-precision", action="store_true", help="Disable mixed precision training")
+    parser.add_argument("--num-workers", type=int, default=4, help="Number of DataLoader workers")
 
     args = parser.parse_args()
 
@@ -117,8 +120,8 @@ def sweep_train():
         margin=config.margin,
         project_name="two-towers-retrieval",
         use_wandb=True,
-        accumulation_steps=config.get("accumulation_steps", 4),
-        num_workers=config.get("num_workers", 6),
+        accumulation_steps=config.get("accumulation_steps", 2),
+        num_workers=config.get("num_workers", 4),
         run_comprehensive_test=config.get("run_comprehensive_test", True),  # Enable by default for sweeps
     )
 
@@ -128,16 +131,15 @@ def sweep_train():
 def run_sweep(project_name: str = "two-towers-retrieval"):
     """Run hyperparameter sweep with wandb."""
     sweep_config = {
-        "method": "bayes",  # Can be 'grid', 'random', or 'bayes'
+        "method": "grid",  # Can be 'grid', 'random', or 'bayes'
         "metric": {"name": "final_ndcg_10", "goal": "maximize"},
         "parameters": {
-            "margin": {"values": [0.3, 0.5, 0.7]},
-            "epochs": {"values": [9, 12, 15, 18]},
-            "batch_size": {"values": [256, 512, 1024, 2048]},
-            "learning_rate": {"values": [1e-2, 1e-3, 1e-4]},
-            "max_samples": {"values": [100_000, 200_000]},  # -1 means use full dataset
-            "projection_dim": {"values": [128, 256, 512]},
-            "accumulation_steps": {"values": [2, 4]},
+            "margin": {"values": [0.3, 0.4, 0.5]},
+            "epochs": {"values": [15]},
+            "batch_size": {"values": [2048]},
+            "learning_rate": {"values": [1e-4, 1e-5]},
+            "max_samples": {"values": [100_000]},  # -1 means use full dataset
+            "projection_dim": {"values": [512]},
         },
     }
 
@@ -154,7 +156,7 @@ def run_sweep(project_name: str = "two-towers-retrieval"):
         sweep_id=sweep_id,
         function=sweep_train,
         project=project_name,
-        count=20,
+        count=6,
     )
 
 
