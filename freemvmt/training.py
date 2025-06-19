@@ -107,7 +107,7 @@ class TripletDataLoader:
     def __init__(
         self,
         dataset: MSMarcoDataset,
-        batch_size: int = 128,
+        batch_size: int = 1024,
         num_workers: int = 4,
         device: Optional[torch.device] = None,
     ):
@@ -268,7 +268,7 @@ def evaluate_model(
     comprehensive: bool = False,
     log_wandb: bool = False,
     wandb_prefix: str = "final_",
-    batch_size: int = 128,
+    batch_size: int = 1024,
 ) -> Union[float, dict[str, float]]:
     """
     Evaluate model using NDCG metrics with all relevant documents per query.
@@ -484,7 +484,7 @@ def evaluate_model(
 
 def run_training(
     num_epochs: int = 3,
-    batch_size: int = 128,
+    batch_size: int = 1024,
     learning_rate: float = 1e-4,
     max_samples: int = 10000,
     projection_dim: int = 128,

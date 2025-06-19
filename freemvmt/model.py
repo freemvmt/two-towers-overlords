@@ -79,7 +79,11 @@ class TwoTowersModel(nn.Module):
         """Encode documents into embedding vectors."""
         return self.document_tower(documents)
 
-    def encode_documents_batched(self, documents: list[str], batch_size: int = 128) -> torch.Tensor:
+    def encode_documents_batched(
+        self,
+        documents: list[str],
+        batch_size: int = 1024,
+    ) -> torch.Tensor:
         """Encode documents in batches to avoid memory issues with eval of large document collections."""
         if len(documents) <= batch_size:
             return self.encode_documents(documents)
@@ -90,7 +94,7 @@ class TwoTowersModel(nn.Module):
             batch_embeddings = self.encode_documents(batch_docs)
             embeddings.append(batch_embeddings.cpu())  # Move to CPU to free GPU memory
 
-        # Concatenate all embeddings and move back to model device
+        # Concatenate all embeddings
         all_embeddings = torch.cat(embeddings, dim=0)
         return all_embeddings.to(next(self.parameters()).device)
 

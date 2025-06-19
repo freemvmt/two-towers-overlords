@@ -65,7 +65,7 @@ python main.py \
   --epochs 15 \
   --learning-rate 0.0001 \
   --projection-dim 512 \
-  --margin 0.5 \
+  --margin 0.3 \
   --num-workers 6
 
 # Run hyperparameter sweep
@@ -218,7 +218,9 @@ python main.py \
   --num-workers 6
 ```
 
-These points speak to `flowing_sweep`, which was the best run by a margin (still only just peaking about `0.5` for our eval metric). However, `iconic_sweep` is also of interest! It performed very well on `200_000` samples (i.e. harder), with a proj. dim of `128` and only `9` epochs of training! This might be explained by the faster learning rate of `1e-3`. Interestingly, it also used a margin of `0.3` (whereas the other top results used `0.5`) and managed to make the best use of GPU memory (with an effective batch size of `2048 * 4 = 8192`). This suggests that if we want to do quicker runs to test new hyperparams, or the effect of replacing the average pooling tower with an RNN, we could use the *iconic* approach:
+These points speak to `flowing_sweep`, which was the best run by a margin (still only just peaking about `0.5` for our eval metric). However, `iconic_sweep` is also of interest! It performed very well on `200_000` samples (i.e. harder), with a proj. dim of `128` and only `9` epochs of training! This might be explained by the faster learning rate of `1e-3`. Interestingly, it also used a margin of `0.3` (whereas the other top results used `0.5`) and managed to make the best use of GPU memory (with an effective batch size of `2048 * 4 = 8192`).
+
+This suggests that if we want to do quicker runs to test new hyperparams, or the effect of replacing the average pooling tower with an RNN, we could use the *iconic* approach:
 
 ```
 python main.py \
@@ -230,7 +232,19 @@ python main.py \
   --num-workers 6
 ```
 
-Going to do one final sweep to home in on margin and learning rate.
+Finally, I did one final sweep ([1zh189kd](https://wandb.ai/freemvmt-london/two-towers-retrieval/sweeps/1zh189kd)) to home in on margin and learning rate, controlling all other params (e.g. 15 epochs, 512 dims) and using `grid` mode to cover all options. The clear result was that learning rate was super important, and should certainly be the higher value of `1e-4` - `1e-5` is simply too slow. A margin of `0.3` also came out on top, although it seems to be much less important than LR.
+
+This suggests a near-optimal setup for a full run (with avg. pooling towers, that is), might be:
+
+```
+python main.py \
+  --batch-size 2048 \
+  --epochs 15 \
+  --learning-rate 0.0001 \
+  --projection-dim 512 \
+  --margin 0.3 \
+  --num-workers 6
+```
 
 
 ## Additional resources
