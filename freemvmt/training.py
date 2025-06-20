@@ -76,9 +76,7 @@ class MSMarcoDataset(Dataset):
                         # collect up all unique passages seen simultaneously to reduce work
                         self.docs.add(doc)
                         sample_count += 1
-                        # traverse full dataset if max_samples is -1
-                        if max_samples == -1:
-                            continue
+                        # traverse full dataset if max_samples == -1 (and therefore never satisfies max_samples > 0)
                         # else break off when we have collected enough samples (here sample == query-doc pair)
                         if max_samples > 0 and sample_count >= max_samples:
                             break
