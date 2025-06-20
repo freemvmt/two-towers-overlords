@@ -1,0 +1,2521 @@
+Validation NDCG@10: 0.9842
+
+Epoch 3/15
+Batch 0, Loss: 0.1051, GPU Memory: 0.22GB allocated, 4.72GB reserved
+Batch 4, Loss: 0.1139, GPU Memory: 0.22GB allocated, 8.71GB reserved
+Batch 9, Loss: 0.1240, GPU Memory: 0.21GB allocated, 8.71GB reserved
+Average training loss: 0.1029
+Sampling documents for evaluation (initial sample size: 200)...
+Grouping data by queries (target: 20 unique queries)...
+Selected 20 queries for evaluation
+  Total relevant documents across these queries: 72
+  Average relevant docs per query: 3.60
+Evaluating queries:   0%|
+         | 0/20 [00:00<?, ?it/s]
+Sample evaluation results:
+Query: cost of radon mitigation on a slab foundation
+Number of relevant docs: 5
+Number of candidate docs: 72
+NDCG@10 score for this query: 0.9144
+Top 10 ranked documents:
+  1. [RELEVANT] The average cost for a certified or licensed mitigation contractor to lower rad
+on levels in a slab o...
+  2. [RELEVANT] crawlspace (shallow unfinished space under 1st floor)=ventilation. Basement and
+ Slab-on-Grade Houses...
+  3. [irrelevant] Posted. Your building costs per square meter vary according to where you live
+ unfortunately. You can...
+  4. [RELEVANT] 1 Drain tile suction system: caps are placed on the sump pump baskets. 2  The p
+ump continues to drai...
+  5. [irrelevant] Therefore, if you have an 800 square foot garage you actually need 8 square o
+f shingles. Typically a...
+  6. [irrelevant] 1 The discounted “Metered Mail” category for First Class Mail Letters (1 oz.)
+, which includes online...
+  7. [RELEVANT] MITIGATION FOR SLAB FOUNDATIONS. **To get a definition, place your cursor over
+the BURGUNDY words.**...
+  8. [irrelevant] BUILDING A BUILDING B. Example of how building Cost per square meter can vary
+. Area on plan = 400m L...
+  9. [RELEVANT] If your home has a radon problem, it can be fixed by installing a radon mitigat
+ion system in the hom...
+  10. [irrelevant] Choose pallets that show no sign of deterioration. Although they might be ea
+sier to disassemble, the...
+Evaluating queries: 100%|██████████████████████████████████████████████████████████████████████
+| 20/20 [00:00<00:00, 53.62it/s]
+
+Mean NDCG@10 across 20 queries: 0.9900
+Validation NDCG@10: 0.9900
+
+Epoch 4/15
+Batch 0, Loss: 0.0889, GPU Memory: 0.22GB allocated, 5.23GB reserved
+Batch 4, Loss: 0.0971, GPU Memory: 0.22GB allocated, 9.41GB reserved
+Batch 9, Loss: 0.0977, GPU Memory: 0.21GB allocated, 9.41GB reserved
+Average training loss: 0.0884
+Sampling documents for evaluation (initial sample size: 200)...
+Grouping data by queries (target: 20 unique queries)...
+Selected 20 queries for evaluation
+  Total relevant documents across these queries: 70
+  Average relevant docs per query: 3.50
+Evaluating queries:   0%|
+         | 0/20 [00:00<?, ?it/s]
+Sample evaluation results:
+Query: cost for postage stamp
+Number of relevant docs: 6
+Number of candidate docs: 70
+NDCG@10 score for this query: 1.0000
+Top 10 ranked documents:
+  1. [RELEVANT] Postal Service seeks 50-cent stamp prices. Mired in red ink, the U.S. Postal Se
+rvice is warning it w...
+  2. [RELEVANT] The increase will make first-class mail postage cost 46 cents, the Associated P
+ress said. The Postal...
+  3. [RELEVANT] Postal Service says stamp prices are going up. Stamp prices are going up by 1 c
+ent starting in Janua...
+  4. [RELEVANT] 1 Each additional ounce will cost $0.22 (up one cent from 2014). 2  The discoun
+ted “Metered Mail” ca...
+  5. [RELEVANT] Letters destined for Canada and Mexico-for the (1) ounce first class letter cos
+t $1.20 as of May 31s...
+  6. [RELEVANT] 1 USPS Tracking when purchased online will cost $0.36 in 2015, compared to $0.2
+3 in 2014. 2  Postage...
+  7. [irrelevant] 1 Concrete is typically measured by cubic yards (3’x3’x3’). 2  An average cos
+t for a cubic yard of c...
+  8. [irrelevant] Get an INSTANT estimate of the cost to Install a Concrete Pad! Our free calcu
+lator uses recent, trus...
+  9. [irrelevant] Best Answer: A yard of concrete will cover about 80 square feet when poured a
+bout 4 inches thick. So...
+  10. [irrelevant] 1 Slab granite countertops--solid pieces of granite custom cut to the width
+and shape of a counterto...
+Evaluating queries: 100%|██████████████████████████████████████████████████████████████████████
+| 20/20 [00:00<00:00, 58.00it/s]
+
+Mean NDCG@10 across 20 queries: 0.9689
+Validation NDCG@10: 0.9689
+
+Epoch 5/15
+Batch 0, Loss: 0.0788, GPU Memory: 0.22GB allocated, 6.65GB reserved
+Batch 4, Loss: 0.0776, GPU Memory: 0.22GB allocated, 6.65GB reserved
+Batch 9, Loss: 0.0791, GPU Memory: 0.21GB allocated, 6.65GB reserved
+Average training loss: 0.0807
+Sampling documents for evaluation (initial sample size: 200)...
+Grouping data by queries (target: 20 unique queries)...
+Selected 20 queries for evaluation
+  Total relevant documents across these queries: 69
+  Average relevant docs per query: 3.45
+Evaluating queries:   0%|
+         | 0/20 [00:00<?, ?it/s]
+Sample evaluation results:
+Query: average salary for financial analyst in rhode island
+Number of relevant docs: 5
+Number of candidate docs: 69
+NDCG@10 score for this query: 1.0000
+Top 10 ranked documents:
+  1. [RELEVANT] Within Rhode Island there is a lot of variation in Financial Analyst I salaries
+. These variations de...
+  2. [RELEVANT] Preparing for your future... Explore Rhode Island business career salaries. Fin
+d the career that int...
+  3. [RELEVANT] 1 Senior managers/directors in tax services earned salaries within the range of
+ $95,500 and $198,000...
+  4. [RELEVANT] Average incomes in Florida are $75,000. Average salaries in Michigan and Pennsy
+lvania are $73,000 pe...
+  5. [RELEVANT] This is reflected in 2015 salary statistics from Robert Half, which showed a sa
+lary range for CFOs a...
+  6. [irrelevant] Take the PayScale Survey to find out how location influences pay for this job
+. X Total Pay combines ...
+  7. [irrelevant] Within Oregon there is a lot of variation in Pharmacist salaries. These varia
+tions depend on on a wi...
+  8. [irrelevant] This will add nearly 69,700 pharmacist jobs at pharmacies all across the Unit
+ed States from 2010 – 2...
+  9. [irrelevant] Read more on salaries and benefits here. According to the BLS, carpenters ear
+ned a median salary of ...
+  10. [irrelevant] (Australia). A Carpenter in Melbourne, Victoria earns an average wage of AU$
+28.96 per hour. A skill ...
+Evaluating queries: 100%|██████████████████████████████████████████████████████████████████████
+| 20/20 [00:00<00:00, 55.05it/s]
+
+Mean NDCG@10 across 20 queries: 0.9714
+Validation NDCG@10: 0.9714
+
+Epoch 6/15
+Batch 0, Loss: 0.0809, GPU Memory: 0.22GB allocated, 5.36GB reserved
+Batch 4, Loss: 0.0708, GPU Memory: 0.22GB allocated, 8.16GB reserved
+Batch 9, Loss: 0.0759, GPU Memory: 0.21GB allocated, 9.79GB reserved
+Average training loss: 0.0753
+Sampling documents for evaluation (initial sample size: 200)...
+Grouping data by queries (target: 20 unique queries)...
+Selected 20 queries for evaluation
+  Total relevant documents across these queries: 70
+  Average relevant docs per query: 3.50
+Evaluating queries:   0%|
+         | 0/20 [00:00<?, ?it/s]
+Sample evaluation results:
+Query: how many carbs should a diabetic eat daily
+Number of relevant docs: 6
+Number of candidate docs: 70
+NDCG@10 score for this query: 1.0000
+Top 10 ranked documents:
+  1. [RELEVANT] Counting carbohydrates is important because carbohydrates you eat make your blo
+od sugar levels go up...
+  2. [RELEVANT] The amount of carbs you can eat depends on your age, sex, height, weight, and a
+ctivity level. On ave...
+  3. [RELEVANT] ‎02-14-2015 02:13 AM. Stressed wrote: I was diagnosed with Type 2 Diabetes about
+ 11 years ago. The D...
+  4. [RELEVANT] Carb grams/meal range (3 meals per day): 60–103 grams. *Based on 45%–65% of cal
+ories from carbohydra...
+  5. [RELEVANT] Carb grams/day range*: 180–308 grams. Carb grams/meal range (3 meals per day):
+60–103 grams. *Based ...
+  6. [RELEVANT] The Dietary Guidelines for Americans recommends that carbohydrates make up 45 t
+o 65 percent of your ...
+  7. [irrelevant] And it's less than 140 mg/dL 2 hours after eating. During the day, levels ten
+d to be at their lowest...
+  8. [irrelevant] How Blood Sugar Affects Your Body. When you have diabetes, your blood sugar (
+glucose) levels are con...
+  9. [irrelevant] Check your blood sugar level. Check your blood sugar level before, during and
+ after exercise, especi...
+  10. [irrelevant] Physical activity. Exercise or just increasing exertion can lead to altering
+ blood glucose levels: 1...
+Evaluating queries: 100%|██████████████████████████████████████████████████████████████████████
+| 20/20 [00:00<00:00, 43.16it/s]
+
+Mean NDCG@10 across 20 queries: 0.9940
+Validation NDCG@10: 0.9940
+
+Epoch 7/15
+Batch 0, Loss: 0.0747, GPU Memory: 0.22GB allocated, 4.68GB reserved
+Batch 4, Loss: 0.0644, GPU Memory: 0.22GB allocated, 8.48GB reserved
+Batch 9, Loss: 0.0702, GPU Memory: 0.21GB allocated, 11.65GB reserved
+Average training loss: 0.0715
+Sampling documents for evaluation (initial sample size: 200)...
+Grouping data by queries (target: 20 unique queries)...
+Selected 20 queries for evaluation
+  Total relevant documents across these queries: 70
+  Average relevant docs per query: 3.50
+Evaluating queries:   0%|
+         | 0/20 [00:00<?, ?it/s]
+Sample evaluation results:
+Query: what is the cost to maintain a pool
+Number of relevant docs: 6
+Number of candidate docs: 70
+NDCG@10 score for this query: 1.0000
+Top 10 ranked documents:
+  1. [RELEVANT] On average, pool maintenance costs $256, with most homeowners spending between
+$132 and $381. This d...
+  2. [RELEVANT] Clearly, then, the monthly ownership costs of a swimming pool is $100 or more e
+very month. Still, th...
+  3. [RELEVANT] · just now. Report Abuse. You will probably spend $100-$300 a year on the chemi
+cals to maintain the ...
+  4. [RELEVANT] You can maintain the pool yourself for just a few dollars a month in chemicals
+from Pinch a Penny or...
+  5. [RELEVANT] Lisa Reeves, Agent, Tampa, FL. The cost of maintaining a pool is usually minima
+l. The time it takes ...
+  6. [RELEVANT] Just take a water sample and they will tell you what chemicals you need. As far
+ as using a company t...
+  7. [irrelevant] The cost of a mitigation system may vary according to the home's design, size
+, foundation, construct...
+  8. [irrelevant] The average cost for a certified or licensed mitigation contractor to lower r
+adon levels in a slab o...
+  9. [irrelevant] A quality radon reduction (mitigation) system is often able to reduce the ann
+ual average radon level...
+  10. [irrelevant] 2. Don't overspend on the tuxedo. The average cost of renting a tuxedo is $1
+41, according to Wedding...
+Evaluating queries: 100%|██████████████████████████████████████████████████████████████████████
+| 20/20 [00:00<00:00, 53.11it/s]
+
+Mean NDCG@10 across 20 queries: 0.9817
+Validation NDCG@10: 0.9817
+
+Epoch 8/15
+Batch 0, Loss: 0.0654, GPU Memory: 0.22GB allocated, 4.62GB reserved
+Batch 4, Loss: 0.0667, GPU Memory: 0.22GB allocated, 7.33GB reserved
+Batch 9, Loss: 0.0636, GPU Memory: 0.21GB allocated, 7.33GB reserved
+Average training loss: 0.0687
+Sampling documents for evaluation (initial sample size: 200)...
+Grouping data by queries (target: 20 unique queries)...
+Selected 20 queries for evaluation
+  Total relevant documents across these queries: 71
+  Average relevant docs per query: 3.55
+Evaluating queries:   0%|
+         | 0/20 [00:00<?, ?it/s]
+Sample evaluation results:
+Query: what is RIGHT UPPER extremities
+Number of relevant docs: 5
+Number of candidate docs: 71
+NDCG@10 score for this query: 0.9818
+Top 10 ranked documents:
+  1. [RELEVANT] Muscles of the Upper Extremity. The muscles of the upper extremity include thos
+e that attach the sca...
+  2. [RELEVANT] Bones of the Upper Extremity. The Upper Limb. •The “Arm” bone is called the Hum
+erus, the largest, lo...
+  3. [RELEVANT] Causes of Similar Symptoms to Paresthesia of the upper extremity. Research the
+causes of these sympt...
+  4. [RELEVANT] Paresthesia of the upper extremity: is the tingling, prickin or numbness of the
+ upper extremity with...
+  5. [irrelevant] Location of the Pharynx. It starts from the back of the mouth and nose and ex
+tends down into the eso...
+  6. [irrelevant] The pharynx is the uppermost part of the alimentary tract and commonly referr
+ed to as the throat. It...
+  7. [RELEVANT] Edema in this case is due to lymphatic obstruction. Right upper extremity DVT.
+Note diffuse swelling...
+  8. [irrelevant] The oropharynx extends from the back of the mouth and carries ingested food a
+nd drinks from the mout...
+  9. [irrelevant] Pharynx. The Pharynx is the main resonating chamber for the voice. The term T
+hroat generally refers ...
+  10. [irrelevant] Squatting is an action of occupying an abandoned or unoccupied area of land
+or a building – usually ...
+Evaluating queries: 100%|██████████████████████████████████████████████████████████████████████
+| 20/20 [00:00<00:00, 56.46it/s]
+
+Mean NDCG@10 across 20 queries: 0.9923
+Validation NDCG@10: 0.9923
+
+Epoch 9/15
+Batch 0, Loss: 0.0648, GPU Memory: 0.22GB allocated, 5.30GB reserved
+Batch 4, Loss: 0.0643, GPU Memory: 0.22GB allocated, 5.30GB reserved
+Batch 9, Loss: 0.0638, GPU Memory: 0.21GB allocated, 8.10GB reserved
+Average training loss: 0.0657
+Sampling documents for evaluation (initial sample size: 200)...
+Grouping data by queries (target: 20 unique queries)...
+Selected 20 queries for evaluation
+  Total relevant documents across these queries: 70
+  Average relevant docs per query: 3.50
+Evaluating queries:   0%|
+         | 0/20 [00:00<?, ?it/s]
+Sample evaluation results:
+Query: is the pharynx located before the mouth ?
+Number of relevant docs: 5
+Number of candidate docs: 70
+NDCG@10 score for this query: 1.0000
+Top 10 ranked documents:
+  1. [RELEVANT] Pharynx. The Pharynx is the main resonating chamber for the voice. The term Thr
+oat generally refers ...
+  2. [RELEVANT] In humans the pharynx is part of the digestive system and also of the conductin
+g zone of the respira...
+  3. [RELEVANT] Location of the Pharynx. It starts from the back of the mouth and nose and exte
+nds down into the eso...
+  4. [RELEVANT] The esophagus is a muscular tube that connects the pharynx to the stomach. It i
+s approximately 25.4 ...
+  5. [RELEVANT] Esophagus. The esophagus is a collapsible muscular tube that serves as a passag
+eway between the phar...
+  6. [irrelevant] Carpal tunnel syndrome (CTS) is a medical condition in which the median nerve
+ is compressed as it tr...
+  7. [irrelevant] Carpal tunnel syndrome is a condition in which there is excessive pressure on
+ the median nerve. This...
+  8. [irrelevant] Carpal tunnel syndrome is a common condition caused by compression of the med
+ian nerve as it passes ...
+  9. [irrelevant] DESCRIPTION. Carpal tunnel syndrome is essentially a pinched nerve in the wri
+st. There is a space in...
+  10. [irrelevant] The most common type of this effusion is congestive heart failure. Exudative
+ effusions are caused by...
+Evaluating queries: 100%|██████████████████████████████████████████████████████████████████████
+| 20/20 [00:00<00:00, 56.17it/s]
+
+Mean NDCG@10 across 20 queries: 0.9887
+Validation NDCG@10: 0.9887
+
+Epoch 10/15
+Batch 0, Loss: 0.0600, GPU Memory: 0.22GB allocated, 4.49GB reserved
+Batch 4, Loss: 0.0633, GPU Memory: 0.22GB allocated, 8.64GB reserved
+Batch 9, Loss: 0.0684, GPU Memory: 0.21GB allocated, 10.76GB reserved
+Average training loss: 0.0640
+Sampling documents for evaluation (initial sample size: 200)...
+Grouping data by queries (target: 20 unique queries)...
+Selected 20 queries for evaluation
+  Total relevant documents across these queries: 68
+  Average relevant docs per query: 3.40
+Evaluating queries:   0%|
+         | 0/20 [00:00<?, ?it/s]
+Sample evaluation results:
+Query: what is a mussel?
+Number of relevant docs: 4
+Number of candidate docs: 68
+NDCG@10 score for this query: 1.0000
+Top 10 ranked documents:
+  1. [RELEVANT] mus•sel. any bivalve mollusk, esp. an edible marine bivalve of the family Mytil
+idae and a freshwater...
+  2. [RELEVANT] 1. mussel-black marine bivalves usually steamed in wine. edible mussel, Mytilus
+ edulis-a mussel with...
+  3. [RELEVANT] 10 most extreme places on Earth. A mussel is a type of bivalve mollusk that can
+ be found in fresh wa...
+  4. [RELEVANT] The Nutrition of Mussels. Mussels are mollusks found in fresh water and salt wa
+ter habitats. They ar...
+  5. [irrelevant] The word throat is used for the parts of the neck anterior to the vertebral c
+olumn, especially the p...
+  6. [irrelevant] Butterfly stroke is the least used swimming stroke and probably the most stre
+nuous of all four swimm...
+  7. [irrelevant] The throat, or pharynx, is a funnel-shaped tube located in the posterior of t
+he mouth. The pharynx c...
+  8. [irrelevant] It makes up the part of the throat situated immediately posterior to the nasa
+l cavity, posterior to ...
+  9. [irrelevant] The muscles that you use during a freestyle swim are different from the muscl
+es used with other swim...
+  10. [irrelevant] The esophagus is a muscular tube that connects the pharynx to the stomach. I
+t is approximately 25.4 ...
+Evaluating queries: 100%|██████████████████████████████████████████████████████████████████████
+| 20/20 [00:00<00:00, 50.20it/s]
+
+Mean NDCG@10 across 20 queries: 0.9910
+Validation NDCG@10: 0.9910
+
+Epoch 11/15
+Batch 0, Loss: 0.0692, GPU Memory: 0.22GB allocated, 5.65GB reserved
+Batch 4, Loss: 0.0659, GPU Memory: 0.22GB allocated, 5.66GB reserved
+Batch 9, Loss: 0.0646, GPU Memory: 0.21GB allocated, 5.66GB reserved
+Average training loss: 0.0621
+Sampling documents for evaluation (initial sample size: 200)...
+Grouping data by queries (target: 20 unique queries)...
+Selected 20 queries for evaluation
+  Total relevant documents across these queries: 70
+  Average relevant docs per query: 3.50
+Evaluating queries:   0%|
+         | 0/20 [00:00<?, ?it/s]
+Sample evaluation results:
+Query: what is RIGHT UPPER extremities
+Number of relevant docs: 5
+Number of candidate docs: 70
+NDCG@10 score for this query: 0.8688
+Top 10 ranked documents:
+  1. [RELEVANT] Muscles of the Upper Extremity. The muscles of the upper extremity include thos
+e that attach the sca...
+  2. [RELEVANT] Bones of the Upper Extremity. The Upper Limb. •The “Arm” bone is called the Hum
+erus, the largest, lo...
+  3. [RELEVANT] Abstract. Background: Similar upper extremity symptoms can present with varied
+physiologic etiologie...
+  4. [RELEVANT] Causes of Similar Symptoms to Paresthesia of the upper extremity. Research the
+causes of these sympt...
+  5. [irrelevant] Arterial circulation is the part of your circulatory system that involves art
+eries, like the aorta a...
+  6. [irrelevant] Arteries carry blood away from the heart. Pulmonary arteries transport blood
+that has a low oxygen c...
+  7. [irrelevant] Arteries (from Greek ἀρτηρία (artēria) , meaning windpipe, artery) are blood
+vessels that carry bloo...
+  8. [irrelevant] Homeostasis in a general sense refers to stability, balance or equilibrium. I
+t is the body's attempt...
+  9. [irrelevant] This is called the pulmonary circulation. From your pulmonic valve, blood tra
+vels to the pulmonary a...
+  10. [irrelevant] Body Systems and Homeostasis. The internal environment of the body is tissue
+ fluid, which bathes all...
+Evaluating queries: 100%|██████████████████████████████████████████████████████████████████████
+| 20/20 [00:00<00:00, 53.58it/s]
+
+Mean NDCG@10 across 20 queries: 0.9875
+Validation NDCG@10: 0.9875
+
+Epoch 12/15
+Batch 0, Loss: 0.0626, GPU Memory: 0.22GB allocated, 5.60GB reserved
+Batch 4, Loss: 0.0596, GPU Memory: 0.22GB allocated, 8.46GB reserved
+Batch 9, Loss: 0.0622, GPU Memory: 0.21GB allocated, 10.38GB reserved
+Average training loss: 0.0604
+Sampling documents for evaluation (initial sample size: 200)...
+Grouping data by queries (target: 20 unique queries)...
+Selected 20 queries for evaluation
+  Total relevant documents across these queries: 72
+  Average relevant docs per query: 3.60
+Evaluating queries:   0%|
+         | 0/20 [00:00<?, ?it/s]
+Sample evaluation results:
+Query: what muscles are used for swimming freestyle
+Number of relevant docs: 6
+Number of candidate docs: 72
+NDCG@10 score for this query: 1.0000
+Top 10 ranked documents:
+  1. [RELEVANT] The muscles that you use during a freestyle swim are different from the muscles
+ used with other swim...
+  2. [RELEVANT] Pecs & Abs. As you swim, the front part of your body's trunk helps with most of
+ the movements. Your ...
+  3. [RELEVANT] Muscles Used in the Backstroke. Even though you're swimming on your back, you u
+se your abdominals in...
+  4. [RELEVANT] Freestyle/Front Crawl. Freestyle is one of the most popular swimming strokes us
+ed in training, so it...
+  5. [RELEVANT] Backstroke is a another stroke which exercise almost identical muscle groups as
+ freestyle, with the ...
+  6. [RELEVANT] Butterfly stroke is the least used swimming stroke and probably the most strenu
+ous of all four swimm...
+  7. [irrelevant] Muscles of the Upper Extremity. The muscles of the upper extremity include th
+ose that attach the sca...
+  8. [irrelevant] The ventral root (motor root) of each spinal nerve consists of axons from mot
+or neurons whose cell b...
+  9. [irrelevant] From Wikipedia, the free encyclopedia. The dorsal root of spinal nerve (or po
+sterior root of spinal ...
+  10. [irrelevant] Page: 1 2 3 4. ROOTS OF THE SPINAL NERVES Thirty-one pairs of spinal nerves
+connect the cord with th...
+Evaluating queries: 100%|██████████████████████████████████████████████████████████████████████
+| 20/20 [00:00<00:00, 54.67it/s]
+
+Mean NDCG@10 across 20 queries: 0.9817
+Validation NDCG@10: 0.9817
+
+Epoch 13/15
+Batch 0, Loss: 0.0575, GPU Memory: 0.22GB allocated, 5.47GB reserved
+Batch 4, Loss: 0.0596, GPU Memory: 0.22GB allocated, 5.47GB reserved
+Batch 9, Loss: 0.0611, GPU Memory: 0.21GB allocated, 5.47GB reserved
+Average training loss: 0.0595
+Sampling documents for evaluation (initial sample size: 200)...
+Grouping data by queries (target: 20 unique queries)...
+Selected 20 queries for evaluation
+  Total relevant documents across these queries: 68
+  Average relevant docs per query: 3.40
+Evaluating queries:   0%|
+         | 0/20 [00:00<?, ?it/s]
+Sample evaluation results:
+Query: what is a meerkat in english
+Number of relevant docs: 5
+Number of candidate docs: 68
+NDCG@10 score for this query: 1.0000
+Top 10 ranked documents:
+  1. [RELEVANT] The word meerkat is Dutch for lake cat, but although the suricata is a feliform
+, it is not of the ca...
+  2. [RELEVANT] 1 Over the past year, we have been making a film on meerkats in the southern Ka
+lahari. 2  There are ...
+  3. [RELEVANT] Collins Concise English Dictionary © HarperCollins Publishers:: meerkat /ˈmɪəˌk
+aet/ ˈmɪəˌkæt n any o...
+  4. [RELEVANT] : any of several African mongooses; especially: a burrowing highly social prima
+rily insectivorous ma...
+  5. [RELEVANT] noun. 1  any of several South African mongooses, esp Suricata suricatta (slende
+r-tailed meerkat or s...
+  6. [irrelevant] The leader of the Bhikkhus will give a name to the child, or if the father de
+sires that the name be ...
+  7. [irrelevant] At the naming ceremony, friends and family of the parents gather, usually for
+ a nice brunch, and the...
+  8. [irrelevant] Hindu. There are several ceremonies to do with the birth of a child in Hindui
+sm. Before the birth, p...
+  9. [irrelevant] Qatar (pronounced KAH-ter) occupies a small peninsula that extends into the P
+ersian Gulf from the ea...
+  10. [irrelevant] Dear Polly, Royal jelly sounds like a condiment fit for a queen — and that’s
+ not too far from the tr...
+Evaluating queries: 100%|██████████████████████████████████████████████████████████████████████
+| 20/20 [00:00<00:00, 55.46it/s]
+
+Mean NDCG@10 across 20 queries: 0.9984
+Validation NDCG@10: 0.9984
+
+Epoch 14/15
+Batch 0, Loss: 0.0646, GPU Memory: 0.22GB allocated, 4.76GB reserved
+Batch 4, Loss: 0.0531, GPU Memory: 0.22GB allocated, 7.62GB reserved
+Batch 9, Loss: 0.0519, GPU Memory: 0.21GB allocated, 7.62GB reserved
+Average training loss: 0.0584
+Sampling documents for evaluation (initial sample size: 200)...
+Grouping data by queries (target: 20 unique queries)...
+Selected 20 queries for evaluation
+  Total relevant documents across these queries: 71
+  Average relevant docs per query: 3.55
+Evaluating queries:   0%|
+         | 0/20 [00:00<?, ?it/s]
+Sample evaluation results:
+Query: definition of constitutional amendments
+Number of relevant docs: 5
+Number of candidate docs: 71
+NDCG@10 score for this query: 1.0000
+Top 10 ranked documents:
+  1. [RELEVANT] Constitutional amendment. A constitutional amendment is a formal change to the
+text of the written c...
+  2. [RELEVANT] A constitutional amendment refers to the modification of the Constitution of a
+nation or state. In m...
+  3. [RELEVANT] The means by which an alteration to the U.S. Constitution, whether a modificati
+on, deletion, or addi...
+  4. [RELEVANT] No matter which method is used for the proposal of a constitutional amendment,
+Congress retains the ...
+  5. [RELEVANT] This is the complete list of the thirty-three amendments to the United States C
+onstitution which hav...
+  6. [irrelevant] solemnly. Use solemnly in a sentence. LINK / CITE ADD TO WORD LIST. adverb. S
+olemnly is defined as s...
+  7. [irrelevant] Organic matter will improve your soil structure and will add nutrients to the
+ soil. Vegetables need ...
+  8. [irrelevant] Nutrients Your Garden Needs. Only plants can transform air and water into foo
+d.... Vegetable garden ...
+  9. [irrelevant] Your rights when buying by credit card. If you use your credit card to buy so
+mething, such as goods ...
+  10. [irrelevant] Accumulating points on your driving record is costly. Your insurance premium
+s will go up, and after ...
+Evaluating queries: 100%|██████████████████████████████████████████████████████████████████████
+| 20/20 [00:00<00:00, 57.10it/s]
+
+Mean NDCG@10 across 20 queries: 0.9861
+Validation NDCG@10: 0.9861
+
+Epoch 15/15
+Batch 0, Loss: 0.0591, GPU Memory: 0.22GB allocated, 4.38GB reserved
+Batch 4, Loss: 0.0562, GPU Memory: 0.22GB allocated, 9.98GB reserved
+Batch 9, Loss: 0.0619, GPU Memory: 0.21GB allocated, 9.98GB reserved
+Average training loss: 0.0573
+Sampling documents for evaluation (initial sample size: 200)...
+Grouping data by queries (target: 20 unique queries)...
+Selected 20 queries for evaluation
+  Total relevant documents across these queries: 71
+  Average relevant docs per query: 3.55
+Evaluating queries:   0%|
+         | 0/20 [00:00<?, ?it/s]
+Sample evaluation results:
+Query: game development cost breakdown
+Number of relevant docs: 5
+Number of candidate docs: 71
+NDCG@10 score for this query: 1.0000
+Top 10 ranked documents:
+  1. [RELEVANT] New research suggests development budgets are soaring dangerously fast. The ave
+rage development budg...
+  2. [RELEVANT] Games for Xbox 360 and PS3 cost between USD 20 million and USD 30 million to ma
+ke. In 2002, as game ...
+  3. [RELEVANT] View full size image. With the news of higher losses at every major publisher t
+his year, many fans w...
+  4. [RELEVANT] ...and the final development proforma. The total development cost for a typical
+ storage condo develo...
+  5. [RELEVANT] Commercial game development began in the 1970s with the advent of first generat
+ion video game consol...
+  6. [irrelevant] Belt Repair Costs. The cost to replace a belt in need of repair on a washing
+machine varies. Prices ...
+  7. [irrelevant] Tweet. Static IP addressing is for one customer on one IP address and Dynamic
+ IP addressing assigns ...
+  8. [irrelevant] (And you know if you get a new washer, you're going to need a new dryer too!)
+ If you fixed the washe...
+  9. [irrelevant] This chart describes the expected percentage of people who perform the job of
+ Quality Manager that m...
+  10. [irrelevant] Average Aerospace Quality Manager Salaries. The average salary for aerospace
+ quality manager jobs is...
+Evaluating queries: 100%|██████████████████████████████████████████████████████████████████████
+| 20/20 [00:00<00:00, 52.95it/s]
+
+Mean NDCG@10 across 20 queries: 0.9985
+Validation NDCG@10: 0.9985
+
+============================================================
+TRAINING COMPLETED - Starting comprehensive testing
+============================================================
+Building MS Marco test dataset with at most 10000 samples...
+Built test dataset with 10000 query-document pairs, including 9950 unique passages
+Sampling documents for evaluation (initial sample size: 200)...
+Grouping data by queries (target: 200 unique queries)...
+Selected 200 queries for evaluation
+  Total relevant documents across these queries: 308
+  Average relevant docs per query: 1.54
+🚀 Pre-encoding *all* documents for efficiency (this may take a moment)...
+🔥 Pre-encoded 9950 documents to reuse for all queries
+Evaluating queries:   0%|
+        | 0/200 [00:00<?, ?it/s]
+Sample evaluation results:
+Query: rhein name meaning
+Number of relevant docs: 4
+Number of candidate docs: 9950
+NDCG@10 score for this query: 0.7877
+Top 10 ranked documents:
+  1. [RELEVANT] ©Copyright 2004 - 2015 Meaning-of-Names.com-Powered by Swigity, LLC Meaning of
+Rhein Last Name-Surna...
+  2. [RELEVANT] Rhein Name Meaning. topographic name for someone who lived by the Rhine river,
+which is first record...
+  3. [irrelevant] Erik /erik/ [2 sylls.] as a boys' name is of Old Norse, Old French and Old Ge
+rman origin, and the na...
+  4. [irrelevant] Last name origins & meanings: 1  German: topographic name for someone who liv
+ed by the Rhine river, ...
+  5. [RELEVANT] You can find out where the majority of the Rhein families were living before th
+ey immigrated to the ...
+  6. [irrelevant] Meanings and history of the name Burke: | Edit. English surname from an Old E
+nglish root meaning for...
+  7. [irrelevant] English and Scottish: from a Celtic personal name of great antiquity and obsc
+urity. In England the p...
+  8. [irrelevant] Ayden /ay-den/ [2 sylls.] as a boys' name (also used less widely as girls' na
+me Ayden) is of Gaelic ...
+  9. [irrelevant] Surnames usually originated from one of the five following sources: (although
+ the same surname may h...
+  10. [irrelevant] Alexei is an unusual first name for men. Alexei is an equally unusual surnam
+e for both adults and ch...
+Evaluating queries: 100%|████████████████████████████████████████████████████████████████████|
+200/200 [00:03<00:00, 57.36it/s]
+
+============================================================
+COMPREHENSIVE EVALUATION RESULTS
+============================================================
+📊 Performance Metrics:
+   NDCG@1:  0.1700
+   NDCG@5:  0.3516
+   NDCG@10: 0.4439 (±0.2893)
+
+📈 Evaluation Set Coverage:
+   Queries evaluated: 200
+   Total relevant documents: 308
+   Avg relevant docs/query: 1.54
+
+✅ Comprehensive test results logged to wandb
+wandb:
+wandb:
+wandb: Run history:
+wandb:               avg_train_loss █▃▂▂▁▁▁▁▁▁▁▁▁▁▁
+wandb:                        batch ▆█▂▂▄▇▃▅▆▇█▁▄▅▄▄▅▂▇▇▃▅█▃▄▂▄▅▁▃▁▂▃▆▄█▃▄▅█
+wandb:                   batch_loss ██▇▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                        epoch ▁▁▂▃▃▃▄▅▅▅▆▇▇▇█
+wandb: final_avg_relevant_per_query ▁
+wandb:                 final_ndcg_1 ▁
+wandb:                final_ndcg_10 ▁
+wandb:            final_ndcg_10_std ▁
+wandb:                 final_ndcg_5 ▁
+wandb:      final_queries_evaluated ▁
+wandb:    final_total_relevant_docs ▁
+wandb:         gpu_memory_allocated ▁███████████████████████████████████████
+wandb:          gpu_memory_reserved ▅▅▅▃▃▆▆▃▅▅▁▅██▆▃▃▃▃▅▄▄▅▅▂▂▃▄▅▃▄▄▄▄▄▅▁▄▄▅
+wandb:             total_parameters ▁
+wandb:                  val_ndcg_10 ▁▆▇▅▅█▆▇▇▇▇▆█▇█
+wandb:
+wandb: Run summary:
+wandb:               avg_train_loss 0.05735
+wandb:                        batch 191
+wandb:                   batch_loss 0.05949
+wandb:                        epoch 15
+wandb: final_avg_relevant_per_query 1.54
+wandb:                 final_ndcg_1 0.17
+wandb:                final_ndcg_10 0.44394
+wandb:            final_ndcg_10_std 0.28932
+wandb:                 final_ndcg_5 0.35155
+wandb:      final_queries_evaluated 200
+wandb:    final_total_relevant_docs 308
+wandb:         gpu_memory_allocated 0.21688
+wandb:          gpu_memory_reserved 16.17533
+wandb:             total_parameters 46345984
+wandb:                  val_ndcg_10 0.99855
+wandb:
+wandb: 🚀 View run sandy-sweep-18 at: https://wandb.ai/freemvmt-london/two-towers-retrieval/run
+s/9vrva1pc
+wandb: ⭐️ View project at: https://wandb.ai/freemvmt-london/two-towers-retrieval
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20250618_214321-9vrva1pc/logs
+wandb: Agent Starting Run: zgdn2bex with config:
+wandb:  accumulation_steps: 2
+wandb:  batch_size: 2048
+wandb:  epochs: 18
+wandb:  learning_rate: 0.0001
+wandb:  margin: 0.5
+wandb:  max_samples: 100000
+wandb:  projection_dim: 512
+wandb: Tracking run with wandb version 0.20.2rc20250616
+wandb: Run data is saved locally in /workspace/two-towers-overlords/freemvmt/wandb/run-20250618
+_220445-zgdn2bex
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run scarlet-sweep-19
+wandb: ⭐️ View project at https://wandb.ai/freemvmt-london/two-towers-retrieval
+wandb: 🧹 View sweep at https://wandb.ai/freemvmt-london/two-towers-retrieval/sweeps/8x5w5jxn
+wandb: 🚀 View run at https://wandb.ai/freemvmt-london/two-towers-retrieval/runs/zgdn2bex
+Running training with hyperparameters:
+Initializing model and data...
+Using device: cuda
+GPU: NVIDIA GeForce RTX 5090
+Memory: 33.7GB
+Building MS Marco train dataset with at most 100000 samples...
+Built train dataset with 100000 query-document pairs, including 98086 unique passages
+Building MS Marco validation dataset with at most 1000 samples...
+Built validation dataset with 1000 query-document pairs, including 997 unique passages
+Training configuration:
+  Physical batch size: 2048
+  Gradient accumulation steps: 2
+  Effective batch size: 4096
+  Mixed precision: True
+  DataLoader workers: 6
+Starting training for 18 epochs...
+
+Epoch 1/18
+Batch 0, Loss: 0.5001, GPU Memory: 0.21GB allocated, 9.68GB reserved
+Batch 4, Loss: 0.4978, GPU Memory: 0.22GB allocated, 17.88GB reserved
+Batch 9, Loss: 0.4959, GPU Memory: 0.22GB allocated, 27.50GB reserved
+Average training loss: 0.4823
+Sampling documents for evaluation (initial sample size: 200)...
+Grouping data by queries (target: 20 unique queries)...
+Selected 20 queries for evaluation
+  Total relevant documents across these queries: 73
+  Average relevant docs per query: 3.65
+Evaluating queries:   0%|
+         | 0/20 [00:00<?, ?it/s]
+Sample evaluation results:
+Query: how much does a librarian assistant make
+Number of relevant docs: 5
+Number of candidate docs: 73
+NDCG@10 score for this query: 0.9068
+Top 10 ranked documents:
+  1. [RELEVANT] (United States). A Library Assistant earns an average wage of $13.09 per hour.
+Most people with this...
+  2. [irrelevant] Lower-Paying Jobs. Sometimes trained culinary chefs, particularly at the star
+t of their careers, may...
+  3. [RELEVANT] Salary by Industry. The federal government was on average the highest-paying em
+ployer of librarians ...
+  4. [RELEVANT] By state, the highest salary for librarians in 2011 was reported by the Distric
+t of Columbia, where ...
+  5. [RELEVANT] When looking into a job as an assistant librarian, it is always important to be
+ knowledgeable of sal...
+  6. [RELEVANT] Job Outlook. Employment of library technicians and assistants is projected to g
+row 12 percent from 2...
+  7. [irrelevant] Salary Breakdown. One of the major differences in what chefs get paid is thei
+r job description. Acco...
+  8. [irrelevant] 1 Executive Chef: ... 2  A kitchen’s highest in command is also its highest p
+aid. 3  Based on a 2009...
+  9. [irrelevant] How many hours does an average American sleep in their lifetime? The average
+American lives 74.1 yea...
+  10. [irrelevant] For most stacked cakes, you typically don't want to store them in the fridge
+ once they're iced, beca...
+Evaluating queries: 100%|██████████████████████████████████████████████████████████████████████
+| 20/20 [00:00<00:00, 55.57it/s]
+
+Mean NDCG@10 across 20 queries: 0.4890
+Validation NDCG@10: 0.4890
+
+Epoch 2/18
+Batch 0, Loss: 0.4480, GPU Memory: 0.22GB allocated, 8.98GB reserved
+Batch 4, Loss: 0.4356, GPU Memory: 0.22GB allocated, 23.09GB reserved
+Batch 9, Loss: 0.4181, GPU Memory: 0.22GB allocated, 26.92GB reserved
+Average training loss: 0.3128
+Sampling documents for evaluation (initial sample size: 200)...
+Grouping data by queries (target: 20 unique queries)...
+Selected 20 queries for evaluation
+  Total relevant documents across these queries: 71
+  Average relevant docs per query: 3.55
+Evaluating queries:   0%|
+         | 0/20 [00:00<?, ?it/s]
+Sample evaluation results:
+Query: what is cutting horses
+Number of relevant docs: 5
+Number of candidate docs: 71
+NDCG@10 score for this query: 0.7720
+Top 10 ranked documents:
+  1. [RELEVANT] One of the world's fastest growing equine sports, cutting, offers tremendous ex
+citement and drama fo...
+  2. [RELEVANT] Ranchers used the cutting horse to seperate individual cattle and move them int
+o corrals or pens. Wh...
+  3. [irrelevant] 1 Stine as the television episode's host. 2  In Grady's room, there is a skat
+eboard featuring the ma...
+  4. [irrelevant] A plantar wart also known as veruca, myrmecia and veruca plantaris is a wart
+caused by the human pap...
+  5. [irrelevant] goosebumps the werewolf of fever swamp. Follow goosebumps the werewolf of fev
+er swamp to get e-mail ...
+  6. [RELEVANT] Professional cutting horse competition during the Houston Rodeo and world BBQ c
+hampionships on Febru...
+  7. [irrelevant] Homeostasis. The biological definition of homeostasis is “the tendency of an
+organism or cell to reg...
+  8. [irrelevant] I've read their articles on occasion, seen one of their editors on MSNBC, and
+ I really can't figure ...
+  9. [irrelevant] vs. JBuilder. A static IP address is a number (in the form of a dotted quad)
+that is assigned to a c...
+  10. [RELEVANT] 1 One of the most common misconceptions about training a cutting horse is the
+amount of time it take...
+Evaluating queries: 100%|██████████████████████████████████████████████████████████████████████
+| 20/20 [00:00<00:00, 55.95it/s]
+
+Mean NDCG@10 across 20 queries: 0.8096
+Validation NDCG@10: 0.8096
+
+Epoch 3/18
+Batch 0, Loss: 0.1702, GPU Memory: 0.22GB allocated, 10.28GB reserved
+Batch 4, Loss: 0.1639, GPU Memory: 0.22GB allocated, 15.74GB reserved
+Batch 9, Loss: 0.1601, GPU Memory: 0.22GB allocated, 18.87GB reserved
+Average training loss: 0.1276
+Sampling documents for evaluation (initial sample size: 200)...
+Grouping data by queries (target: 20 unique queries)...
+Selected 20 queries for evaluation
+  Total relevant documents across these queries: 70
+  Average relevant docs per query: 3.50
+Evaluating queries:   0%|
+         | 0/20 [00:00<?, ?it/s]
+Sample evaluation results:
+Query: what is a muscle in the body
+Number of relevant docs: 5
+Number of candidate docs: 70
+NDCG@10 score for this query: 0.8753
+Top 10 ranked documents:
+  1. [RELEVANT] The muscular system is responsible for the movement of the human body. Attached
+ to the bones of the ...
+  2. [RELEVANT] Muscles are how we move and live. All movement in the body is controlled by mus
+cles. Some muscles wo...
+  3. [irrelevant] The upper limb or upper extremity is the region in an animal extending from t
+he deltoid region to th...
+  4. [irrelevant] Esophagus. The esophagus is a collapsible muscular tube that serves as a pass
+ageway between the phar...
+  5. [irrelevant] In formal usage, the term arm only refers to the structures from the shoulder
+ to the elbow, explicit...
+  6. [irrelevant] Muscles of the Upper Extremity. The muscles of the upper extremity include th
+ose that attach the sca...
+  7. [RELEVANT] From time to time, you'll see lists of interesting facts about the human body.
+Many times these list...
+  8. [RELEVANT] The rest of the muscles make up the tongue’s body. They’re what give it the abi
+lity to contort into ...
+  9. [RELEVANT] Nevertheless, the exact number is difficult to define because different sources
+ group muscles differ...
+  10. [irrelevant] Pharynx. The Pharynx is the main resonating chamber for the voice. The term
+Throat generally refers ...
+Evaluating queries: 100%|██████████████████████████████████████████████████████████████████████
+| 20/20 [00:00<00:00, 46.15it/s]
+
+Mean NDCG@10 across 20 queries: 0.9552
+Validation NDCG@10: 0.9552
+
+Epoch 4/18
+Batch 0, Loss: 0.0961, GPU Memory: 0.22GB allocated, 9.94GB reserved
+Batch 4, Loss: 0.0879, GPU Memory: 0.22GB allocated, 15.54GB reserved
+Batch 9, Loss: 0.0881, GPU Memory: 0.22GB allocated, 15.54GB reserved
+Average training loss: 0.0779
+Sampling documents for evaluation (initial sample size: 200)...
+Grouping data by queries (target: 20 unique queries)...
+Selected 20 queries for evaluation
+  Total relevant documents across these queries: 71
+  Average relevant docs per query: 3.55
+Evaluating queries:   0%|
+         | 0/20 [00:00<?, ?it/s]
+Sample evaluation results:
+Query: what does solemnly mean
+Number of relevant docs: 5
+Number of candidate docs: 71
+NDCG@10 score for this query: 0.9818
+Top 10 ranked documents:
+  1. [RELEVANT] solemnly. Use solemnly in a sentence. LINK / CITE ADD TO WORD LIST. adverb. Sol
+emnly is defined as s...
+  2. [RELEVANT] solemnly. adv → feierlich; walk → gemessenen Schrittes, wuerdevoll; würdevoll,
+look, warn → plead; e...
+  3. [RELEVANT] solemnly. adv → feierlich; walk → gemessenen Schrittes, wuerdevoll; würdevoll,
+look, warn → plead; e...
+  4. [RELEVANT] • SOLEMN (adjective). The adjective SOLEMN has 2 senses: 1. dignified and sombe
+r in manner or charac...
+  5. [irrelevant] Best Answer: Mixed. It's officially called Socialism with Chinese Characteris
+tics in Chinese textboo...
+  6. [irrelevant] Report Abuse. Static IP refers to the way your ISP allows you to connect to t
+he internet. With stati...
+  7. [RELEVANT] Their is the  possessive pronoun of them or themselves. …  They're is a contrac
+tion or shortening of...
+  8. [irrelevant] Ruth Fitzgerald was born in Bridgend, South Wales. She grew up in a happy, ch
+aotic family with far t...
+  9. [irrelevant] An IP address is an address assigned to a device on the Internet. It is analo
+gous to postal address ...
+  10. [irrelevant] Welcome to the Harborne google satellite map! This place is situated in Birm
+ingham, West Midlands, E...
+Evaluating queries: 100%|██████████████████████████████████████████████████████████████████████
+| 20/20 [00:00<00:00, 55.16it/s]
+
+Mean NDCG@10 across 20 queries: 0.9664
+Validation NDCG@10: 0.9664
+
+Epoch 5/18
+Batch 0, Loss: 0.0654, GPU Memory: 0.22GB allocated, 10.90GB reserved
+Batch 4, Loss: 0.0637, GPU Memory: 0.22GB allocated, 20.44GB reserved
+Batch 9, Loss: 0.0640, GPU Memory: 0.22GB allocated, 20.44GB reserved
+Average training loss: 0.0583
+Sampling documents for evaluation (initial sample size: 200)...
+Grouping data by queries (target: 20 unique queries)...
+Selected 20 queries for evaluation
+  Total relevant documents across these queries: 70
+  Average relevant docs per query: 3.50
+Evaluating queries:   0%|
+         | 0/20 [00:00<?, ?it/s]
+Sample evaluation results:
+Query: how much does it cost to repair a washer machine
+Number of relevant docs: 5
+Number of candidate docs: 70
+NDCG@10 score for this query: 1.0000
+Top 10 ranked documents:
+  1. [RELEVANT] How much does it cost to repair a washer? It will cost $60 to $85 an hour to hi
+re a professional to ...
+  2. [RELEVANT] Overview: Time, tools and savings. Repairing a washing machine may sound compli
+cated, but these mach...
+  3. [RELEVANT] Cost to Repair a Dryer. Your dryer saves you time and keeps you from having to
+hang clothes out on a...
+  4. [RELEVANT] A top load washing machine costs $250 to $1,200. Sizes range from 2.5 Cubic fee
+t to 5.2 cubic feet. ...
+  5. [RELEVANT] Periodically check the hoses, and if they look worn, replace them with new burs
+t-resistant metal mes...
+  6. [irrelevant] A Carpenter in Melbourne, Victoria earns an average wage of AU$28.96 per hour
+. A skill in renovation...
+  7. [irrelevant] Top Low Cost Franchises Under $100K. The following list includes franchise op
+portunities starting at...
+  8. [irrelevant] For example the median expected annual pay for a typical Carpenter I in the U
+nited States is $39,688...
+  9. [irrelevant] Back to top Salary details Salary details Carpenters and joiners can expect t
+o make between $500 and...
+  10. [irrelevant] At Nerd Force, which has a franchise fee of $12,000 for the first territory
+and $8,000 for each addi...
+Evaluating queries: 100%|██████████████████████████████████████████████████████████████████████
+| 20/20 [00:00<00:00, 55.84it/s]
+
+Mean NDCG@10 across 20 queries: 0.9937
+Validation NDCG@10: 0.9937
+
+Epoch 6/18
+Batch 0, Loss: 0.0505, GPU Memory: 0.22GB allocated, 11.04GB reserved
+Batch 4, Loss: 0.0552, GPU Memory: 0.22GB allocated, 11.04GB reserved
+Batch 9, Loss: 0.0470, GPU Memory: 0.22GB allocated, 11.04GB reserved
+Average training loss: 0.0490
+Sampling documents for evaluation (initial sample size: 200)...
+Grouping data by queries (target: 20 unique queries)...
+Selected 20 queries for evaluation
+  Total relevant documents across these queries: 69
+  Average relevant docs per query: 3.45
+Evaluating queries:   0%|
+         | 0/20 [00:00<?, ?it/s]
+Sample evaluation results:
+Query: what is hopsack material
+Number of relevant docs: 5
+Number of candidate docs: 69
+NDCG@10 score for this query: 1.0000
+Top 10 ranked documents:
+  1. [RELEVANT] Hopsack refers to a fabric that is loosely woven. The technique involved in wea
+ving hopsack fabric r...
+  2. [RELEVANT] Hopsack is one of my go-to fabrics in the Spring and Summer. It’s not technical
+ly a fabric, it’s a m...
+  3. [RELEVANT] Hopsack or Basketweave, woven upholstery fabric. Hopsack is a distinctive woven
+ fabric with a promin...
+  4. [RELEVANT] Hopsack (like Basketweave) is a woven upholstery fabric. Hopsack is a distincti
+ve woven fabric with ...
+  5. [RELEVANT] A loosely woven and coarse piece of fabric, hopsack linen offers a lot of versa
+tility. Made of 55% l...
+  6. [irrelevant] The philosophy behind organic gardening promotes using only naturally occurri
+ng materials to manage ...
+  7. [irrelevant] The word blitzkrieg is German for 'lightning war.' It was a tactic that was b
+ased on speed and surpr...
+  8. [irrelevant] During the years of World War 2, Germany utilized a tactic called Blitzkrieg
+which proved to be high...
+  9. [irrelevant] Please try again later. If you have an organic vegetable garden you need to a
+dd nutrients to replace...
+  10. [irrelevant] Therefore, if you have an 800 square foot garage you actually need 8 square
+of shingles. Typically a...
+Evaluating queries: 100%|██████████████████████████████████████████████████████████████████████
+| 20/20 [00:00<00:00, 55.82it/s]
+
+Mean NDCG@10 across 20 queries: 0.9851
+Validation NDCG@10: 0.9851
+
+Epoch 7/18
+Batch 0, Loss: 0.0484, GPU Memory: 0.22GB allocated, 10.51GB reserved
+Batch 4, Loss: 0.0415, GPU Memory: 0.22GB allocated, 10.52GB reserved
+Batch 9, Loss: 0.0439, GPU Memory: 0.22GB allocated, 16.06GB reserved
+Average training loss: 0.0427
+Sampling documents for evaluation (initial sample size: 200)...
+Grouping data by queries (target: 20 unique queries)...
+Selected 20 queries for evaluation
+  Total relevant documents across these queries: 73
+  Average relevant docs per query: 3.65
+Evaluating queries:   0%|
+         | 0/20 [00:00<?, ?it/s]
+Sample evaluation results:
+Query: what is static ip
+Number of relevant docs: 6
+Number of candidate docs: 73
+NDCG@10 score for this query: 1.0000
+Top 10 ranked documents:
+  1. [RELEVANT] A Static IP addres s is a fixed IP address that is configured on the settings o
+f a computer or route...
+  2. [RELEVANT] Best Answer: A static IP address is a number (in the form of a dotted quad) tha
+t is assigned to a co...
+  3. [RELEVANT] vs. JBuilder. A static IP address is a number (in the form of a dotted quad) th
+at is assigned to a c...
+  4. [RELEVANT] An Internet Protocol address (IP address) is a numerical label assigned to each
+ device (e.g., comput...
+  5. [RELEVANT] An IP address is an address assigned to a device on the Internet. It is analogo
+us to postal address ...
+  6. [RELEVANT] Tweet. Static IP addressing is for one customer on one IP address and Dynamic I
+P addressing assigns ...
+  7. [irrelevant] The Ohio Department of Taxation's role in the municipal income tax is limited
+ to administration of t...
+  8. [irrelevant] Most Popular. “If you want to stump a Democrat, ask them to name an accomplis
+hment of Hillary Clinto...
+  9. [irrelevant] Best Answer: Mixed. It's officially called Socialism with Chinese Characteris
+tics in Chinese textboo...
+  10. [irrelevant] RITA (Regional Income Tax Agency), is an income tax (in addition to the stat
+e and county tax) that i...
+Evaluating queries: 100%|██████████████████████████████████████████████████████████████████████
+| 20/20 [00:00<00:00, 41.57it/s]
+
+Mean NDCG@10 across 20 queries: 0.9773
+Validation NDCG@10: 0.9773
+
+Epoch 8/18
+Batch 0, Loss: 0.0397, GPU Memory: 0.22GB allocated, 9.67GB reserved
+Batch 4, Loss: 0.0396, GPU Memory: 0.22GB allocated, 15.03GB reserved
+Batch 9, Loss: 0.0396, GPU Memory: 0.22GB allocated, 18.15GB reserved
+Average training loss: 0.0379
+Sampling documents for evaluation (initial sample size: 200)...
+Grouping data by queries (target: 20 unique queries)...
+Selected 20 queries for evaluation
+  Total relevant documents across these queries: 75
+  Average relevant docs per query: 3.75
+Evaluating queries:   0%|
+         | 0/20 [00:00<?, ?it/s]
+Sample evaluation results:
+Query: benefits of eating protein for breakfast
+Number of relevant docs: 7
+Number of candidate docs: 75
+NDCG@10 score for this query: 1.0000
+Top 10 ranked documents:
+  1. [RELEVANT] Having protein with breakfast can optimize your brain's ability to send message
+s to the rest of your...
+  2. [RELEVANT] Warning. While a high-protein breakfast offers a number of health benefits, it
+is important to choos...
+  3. [RELEVANT] A second study in the AJCN, analyzed the effect of a high protein breakfast (58
+.1 percent) versus a ...
+  4. [RELEVANT] Breakfast is often described as the most important meal of the day, and rightfu
+lly so -- it not only...
+  5. [RELEVANT] When the subjects ate a high protein breakfast (35 grams) versus skipping the m
+eal or eating a low p...
+  6. [RELEVANT] In this study, the scientists found that after a high-protein meal, there was a
+ significant drop in ...
+  7. [RELEVANT] 4. Eating breakfast benefits blood sugar and cholesterol levels. A small study
+found that when lean,...
+  8. [irrelevant] This mineral is also lost with vomiting and diarrhea. Sources: Potassium is f
+ound in a wide range of...
+  9. [irrelevant] The most important use of potassium is to treat the symptoms of hypokalemia (
+low potassium), which i...
+  10. [irrelevant] Leave the meat behind and whip up a warm and flavourful vegetarian tourtiere
+, packed with vegetables...
+Evaluating queries: 100%|██████████████████████████████████████████████████████████████████████
+| 20/20 [00:00<00:00, 51.66it/s]
+
+Mean NDCG@10 across 20 queries: 0.9706
+Validation NDCG@10: 0.9706
+
+Epoch 9/18
+Batch 0, Loss: 0.0355, GPU Memory: 0.22GB allocated, 10.99GB reserved
+Batch 4, Loss: 0.0375, GPU Memory: 0.22GB allocated, 16.72GB reserved
+Batch 9, Loss: 0.0374, GPU Memory: 0.22GB allocated, 20.94GB reserved
+Average training loss: 0.0350
+Sampling documents for evaluation (initial sample size: 200)...
+Grouping data by queries (target: 20 unique queries)...
+Selected 20 queries for evaluation
+  Total relevant documents across these queries: 70
+  Average relevant docs per query: 3.50
+Evaluating queries:   0%|
+         | 0/20 [00:00<?, ?it/s]
+Sample evaluation results:
+Query: what helps maintain homeostasis
+Number of relevant docs: 6
+Number of candidate docs: 70
+NDCG@10 score for this query: 1.0000
+Top 10 ranked documents:
+  1. [RELEVANT] 3. Sugar: Sugar levels within the body are also regulated to maintain homeostas
+is. The pancreas secr...
+  2. [RELEVANT] Homeostasis occurs at a cellular level, and blood carries cells so it helps to
+maintain the full bod...
+  3. [RELEVANT] When equilibrium within the body is maintained, homeostasis is said to occur. T
+he human body maintai...
+  4. [RELEVANT] All the organ systems of the body work together to maintain homeostasis within
+the body. Before we l...
+  5. [RELEVANT] Not to be confused with hemostasis. Homeostasis or homoeostasis (homeo- + -stas
+is) is the property o...
+  6. [RELEVANT] Homeostasis in a general sense refers to stability, balance or equilibrium. It
+is the body's attempt...
+  7. [irrelevant] Please try again later. If you have an organic vegetable garden you need to a
+dd nutrients to replace...
+  8. [irrelevant] Carb grams/meal range (3 meals per day): 60–103 grams. *Based on 45%–65% of c
+alories from carbohydra...
+  9. [irrelevant] Organic matter will improve your soil structure and will add nutrients to the
+ soil. Vegetables need ...
+  10. [irrelevant] Carb grams/day range*: 180–308 grams. Carb grams/meal range (3 meals per day
+): 60–103 grams. *Based ...
+Evaluating queries: 100%|██████████████████████████████████████████████████████████████████████
+| 20/20 [00:00<00:00, 41.06it/s]
+
+Mean NDCG@10 across 20 queries: 1.0000
+Validation NDCG@10: 1.0000
+
+Epoch 10/18
+Batch 0, Loss: 0.0366, GPU Memory: 0.22GB allocated, 10.64GB reserved
+Batch 4, Loss: 0.0312, GPU Memory: 0.22GB allocated, 16.13GB reserved
+Batch 9, Loss: 0.0335, GPU Memory: 0.22GB allocated, 19.39GB reserved
+Average training loss: 0.0321
+Sampling documents for evaluation (initial sample size: 200)...
+Grouping data by queries (target: 20 unique queries)...
+Selected 20 queries for evaluation
+  Total relevant documents across these queries: 68
+  Average relevant docs per query: 3.40
+Evaluating queries:   0%|
+         | 0/20 [00:00<?, ?it/s]
+Sample evaluation results:
+Query: how long to cook pork steaks in oven
+Number of relevant docs: 5
+Number of candidate docs: 68
+NDCG@10 score for this query: 1.0000
+Top 10 ranked documents:
+  1. [RELEVANT] Preheat oven at 350 degrees. Sprinkle meat on both sides with salt, pepper, mea
+t tenderizer, garlic ...
+  2. [RELEVANT] 1 Place the pork steaks in the skillet, cover, and cook 8 to 10 minutes on each
+ side, Remove cover, ...
+  3. [RELEVANT] COMPLETE PORK STEAK DINNER IN ONE PAN. Flour the pork steak or chops and ... on
+ top. Cover with alum...
+  4. [RELEVANT] Pork steak is kind of tough, so it softens up with longer cooking. I cook mine
+for two hours at 350 ...
+  5. [RELEVANT] 1 Bake pork chops 30 minutes in the preheated oven. 2  Turn, and spread with re
+maining sauce. 3  Con...
+  6. [irrelevant] When to Order Rehearsal Dinner Invitations. Wedding rehearsal dinner invitati
+ons can be very formal ...
+  7. [irrelevant] Rehearsal dinner invitations can be handwritten or sent online. If you're hav
+ing a low-key rehearsal...
+  8. [irrelevant] Are rehearsal dinner invites necessary? Or does word of mouth suffice? We don
+'t have a whole lot of ...
+  9. [irrelevant] MySQL Import: How to restore your MySQL database from a backup. To restore (i
+mport) a database via p...
+  10. [irrelevant] Harborne has a thriving restaurant scene, including a Michelin-starred resta
+urant – making it the pe...
+Evaluating queries: 100%|██████████████████████████████████████████████████████████████████████
+| 20/20 [00:00<00:00, 57.22it/s]
+
+Mean NDCG@10 across 20 queries: 0.9909
+Validation NDCG@10: 0.9909
+
+Epoch 11/18
+Batch 0, Loss: 0.0303, GPU Memory: 0.22GB allocated, 10.44GB reserved
+Batch 4, Loss: 0.0289, GPU Memory: 0.22GB allocated, 10.44GB reserved
+Batch 9, Loss: 0.0294, GPU Memory: 0.22GB allocated, 15.86GB reserved
+Average training loss: 0.0301
+Sampling documents for evaluation (initial sample size: 200)...
+Grouping data by queries (target: 20 unique queries)...
+Selected 20 queries for evaluation
+  Total relevant documents across these queries: 68
+  Average relevant docs per query: 3.40
+Evaluating queries:   0%|
+         | 0/20 [00:00<?, ?it/s]
+Sample evaluation results:
+Query: what is static ip
+Number of relevant docs: 6
+Number of candidate docs: 68
+NDCG@10 score for this query: 1.0000
+Top 10 ranked documents:
+  1. [RELEVANT] A Static IP addres s is a fixed IP address that is configured on the settings o
+f a computer or route...
+  2. [RELEVANT] Report Abuse. Static IP refers to the way your ISP allows you to connect to the
+ internet. With stati...
+  3. [RELEVANT] A static IP address is an IP address that was manually configured for a device,
+ verses one that was ...
+  4. [RELEVANT] An IP address is an address assigned to a device on the Internet. It is analogo
+us to postal address ...
+  5. [RELEVANT] An Internet Protocol address (IP address) is a numerical label assigned to each
+ device (e.g., comput...
+  6. [RELEVANT] Tweet. Static IP addressing is for one customer on one IP address and Dynamic I
+P addressing assigns ...
+  7. [irrelevant] Incite. To arouse; urge; provoke; encourage; spur on; goad; stir up; instigat
+e; set in motion; as in...
+  8. [irrelevant] DEFINITION of 'Volatility'. 1. A statistical measure of the dispersion of ret
+urns for a given securi...
+  9. [irrelevant] Distance. How far from end to end. Or from one point to another. Example: the
+ length of this guitar ...
+  10. [irrelevant] (a) the person incited; (b) the inciter; or. (c) both the inciter and the pe
+rson incited-. if the in...
+Evaluating queries: 100%|██████████████████████████████████████████████████████████████████████
+| 20/20 [00:00<00:00, 56.23it/s]
+
+Mean NDCG@10 across 20 queries: 0.9825
+Validation NDCG@10: 0.9825
+
+Epoch 12/18
+Batch 0, Loss: 0.0275, GPU Memory: 0.22GB allocated, 9.75GB reserved
+Batch 4, Loss: 0.0282, GPU Memory: 0.22GB allocated, 15.17GB reserved
+Batch 9, Loss: 0.0287, GPU Memory: 0.22GB allocated, 19.01GB reserved
+Average training loss: 0.0280
+Sampling documents for evaluation (initial sample size: 200)...
+Grouping data by queries (target: 20 unique queries)...
+Selected 20 queries for evaluation
+  Total relevant documents across these queries: 75
+  Average relevant docs per query: 3.75
+Evaluating queries:   0%|
+         | 0/20 [00:00<?, ?it/s]
+Sample evaluation results:
+Query: what helps maintain homeostasis
+Number of relevant docs: 5
+Number of candidate docs: 75
+NDCG@10 score for this query: 0.9896
+Top 10 ranked documents:
+  1. [RELEVANT] 3. Sugar: Sugar levels within the body are also regulated to maintain homeostas
+is. The pancreas secr...
+  2. [RELEVANT] Body Systems and Homeostasis. The internal environment of the body is tissue fl
+uid, which bathes all...
+  3. [RELEVANT] Homeostasis in a general sense refers to stability, balance or equilibrium. It
+is the body's attempt...
+  4. [RELEVANT] Not to be confused with hemostasis. Homeostasis or homoeostasis (homeo- + -stas
+is) is the property o...
+  5. [irrelevant] When the disease is active, Crohn's disease sufferers often lose weight becau
+se nausea, fear of abdo...
+  6. [RELEVANT] Human homeostasis 1 Human homeostasis Human homeostasis refers to the body's ab
+ility to physiologica...
+  7. [irrelevant] 1 People with this type of Crohn's disease suffer nausea, weight loss, and lo
+ss of appetite. 2  In a...
+  8. [irrelevant] 1 Ileocolitis: Ileocolitis is the most common type of Crohn's disease. 2  It
+affects the small intes...
+  9. [irrelevant] ‎02-14-2015 02:13 AM. Stressed wrote: I was diagnosed with Type 2 Diabetes abo
+ut 11 years ago. The D...
+  10. [irrelevant] Carb grams/day range*: 180–308 grams. Carb grams/meal range (3 meals per day
+): 60–103 grams. *Based ...
+Evaluating queries: 100%|██████████████████████████████████████████████████████████████████████
+| 20/20 [00:00<00:00, 54.43it/s]
+
+Mean NDCG@10 across 20 queries: 0.9931
+Validation NDCG@10: 0.9931
+
+Epoch 13/18
+Batch 0, Loss: 0.0276, GPU Memory: 0.22GB allocated, 9.74GB reserved
+Batch 4, Loss: 0.0278, GPU Memory: 0.22GB allocated, 9.74GB reserved
+Batch 9, Loss: 0.0269, GPU Memory: 0.22GB allocated, 22.15GB reserved
+Average training loss: 0.0265
+Sampling documents for evaluation (initial sample size: 200)...
+Grouping data by queries (target: 20 unique queries)...
+Selected 20 queries for evaluation
+  Total relevant documents across these queries: 71
+  Average relevant docs per query: 3.55
+Evaluating queries:   0%|
+         | 0/20 [00:00<?, ?it/s]
+Sample evaluation results:
+Query: cost of radon mitigation on a slab foundation
+Number of relevant docs: 5
+Number of candidate docs: 71
+NDCG@10 score for this query: 1.0000
+Top 10 ranked documents:
+  1. [RELEVANT] A quality radon reduction (mitigation) system is often able to reduce the annua
+l average radon level...
+  2. [RELEVANT] In houses that have a basement or a slab-on-grade foundation, radon is usually
+reduced by one of fou...
+  3. [RELEVANT] Your house type will affect the kind of radon reduction system that will work b
+est. Houses are gener...
+  4. [RELEVANT] If your home has a radon problem, it can be fixed by installing a radon mitigat
+ion system in the hom...
+  5. [RELEVANT] Radon mitigation is any process or system used to reduce radon concentrations i
+n the breathing zones...
+  6. [irrelevant] An XSPC reservoir, or any of the quality water cooling reservoirs at Sidewind
+er Computers, increase ...
+  7. [irrelevant] Barathea, sometimes spelled barrathea, is a soft fabric, with a hopsack twill
+ weave giving a surface...
+  8. [irrelevant] FrozenCPU has the largest selection of pc liquid cooling and pc water cooling
+ parts and systems for ...
+  9. [irrelevant] A water cooling reservoir is essential for a properly built water cooling sys
+tem. Along with a quali...
+  10. [irrelevant] Judge Judy's diamond stud earrings appear to be about 5-6 carats each. Based
+ on color and clarity I ...
+Evaluating queries: 100%|██████████████████████████████████████████████████████████████████████
+| 20/20 [00:00<00:00, 43.82it/s]
+
+Mean NDCG@10 across 20 queries: 0.9949
+Validation NDCG@10: 0.9949
+
+Epoch 14/18
+Batch 0, Loss: 0.0266, GPU Memory: 0.22GB allocated, 9.82GB reserved
+Batch 4, Loss: 0.0286, GPU Memory: 0.22GB allocated, 15.24GB reserved
+Batch 9, Loss: 0.0249, GPU Memory: 0.22GB allocated, 15.24GB reserved
+Average training loss: 0.0251
+Sampling documents for evaluation (initial sample size: 200)...
+Grouping data by queries (target: 20 unique queries)...
+Selected 20 queries for evaluation
+  Total relevant documents across these queries: 75
+  Average relevant docs per query: 3.75
+Evaluating queries:   0%|
+         | 0/20 [00:00<?, ?it/s]
+Sample evaluation results:
+Query: what was so important for where the bull run battle was at'
+Number of relevant docs: 6
+Number of candidate docs: 75
+NDCG@10 score for this query: 1.0000
+Top 10 ranked documents:
+  1. [RELEVANT] The First Battle of Bull Run was fought on July 21st 1861. Bull Run was the fir
+st major battle of th...
+  2. [RELEVANT] Bull Run. The first battle of Bull Run was fought on July 21st 1861. This was t
+he first major land b...
+  3. [RELEVANT] The First Battle of Bull Run, also known as First Manassas (the name used by Co
+nfederate forces), wa...
+  4. [RELEVANT] The First Battle of Bull Run (also known as the First Manassas) was fought on J
+uly 21, 1861. It was ...
+  5. [RELEVANT] The battle of 2nd Bull Run, or 2nd Manassas in Confederate terminology, was imp
+ortant for a number o...
+  6. [RELEVANT] The First Battle of Bull Run (also known as the First Battle of Manassas, July
+21, 1861) The First B...
+  7. [irrelevant] Ranchers used the cutting horse to seperate individual cattle and move them i
+nto corrals or pens. Wh...
+  8. [irrelevant] I think you're referring to the sport of cutting with horses. Cutting is a We
+stern event that origin...
+  9. [irrelevant] Cheapest Greek Theatre Parking: As an alternative to the Greek's designated l
+ots, we recommend parki...
+  10. [irrelevant] Your pectoral muscles, side muscles and obliques pull your arms through the
+water and back out. In a...
+Evaluating queries: 100%|██████████████████████████████████████████████████████████████████████
+| 20/20 [00:00<00:00, 45.74it/s]
+
+Mean NDCG@10 across 20 queries: 0.9965
+Validation NDCG@10: 0.9965
+
+Epoch 15/18
+Batch 0, Loss: 0.0252, GPU Memory: 0.22GB allocated, 9.76GB reserved
+Batch 4, Loss: 0.0261, GPU Memory: 0.22GB allocated, 15.09GB reserved
+Batch 9, Loss: 0.0260, GPU Memory: 0.22GB allocated, 18.15GB reserved
+Average training loss: 0.0245
+Sampling documents for evaluation (initial sample size: 200)...
+Grouping data by queries (target: 20 unique queries)...
+Selected 20 queries for evaluation
+  Total relevant documents across these queries: 70
+  Average relevant docs per query: 3.50
+Evaluating queries:   0%|
+         | 0/20 [00:00<?, ?it/s]
+Sample evaluation results:
+Query: what are the native bird species of Guam?
+Number of relevant docs: 6
+Number of candidate docs: 70
+NDCG@10 score for this query: 1.0000
+Top 10 ranked documents:
+  1. [RELEVANT] The limestone and ravine forests of Guam have historically supported fourteen s
+pecies of terrestrial...
+  2. [RELEVANT] From Wikipedia, the free encyclopedia. This is a list of the bird species recor
+ded in Guam. The avif...
+  3. [RELEVANT] Fifty species ofpasserines have been introduced in Hawaii, and those birds make
+ up most of theland b...
+  4. [RELEVANT] Distribution. The Mariana Fruit-dove is endemic to the Mariana Islands of Guam,
+ Rota, Agiguan, Tinia...
+  5. [RELEVANT] This snake became Guam's new top predator and ate its way through a buffet of t
+he island's bird comm...
+  6. [RELEVANT] To date, there has only been one report of a snake on Rota, though there is con
+cern that the snake c...
+  7. [irrelevant] Giant sequoias are the world's largest single trees and largest living thing
+by volume. Giant sequoi...
+  8. [irrelevant] Redwood is a rapidly growing tree, and some individual trees have been measur
+ed at more than 360 fee...
+  9. [irrelevant] Redwoods are remarkably fire-tolerant and long-lived; 500 years is an average
+ life span, but some ar...
+  10. [irrelevant] A cutting horse is an athletic and willing animal possessing an innate cow s
+ense and ability to resp...
+Evaluating queries: 100%|██████████████████████████████████████████████████████████████████████
+| 20/20 [00:00<00:00, 54.95it/s]
+
+Mean NDCG@10 across 20 queries: 0.9949
+Validation NDCG@10: 0.9949
+
+Epoch 16/18
+Batch 0, Loss: 0.0252, GPU Memory: 0.22GB allocated, 9.76GB reserved
+Batch 4, Loss: 0.0225, GPU Memory: 0.22GB allocated, 17.16GB reserved
+Batch 9, Loss: 0.0272, GPU Memory: 0.22GB allocated, 17.16GB reserved
+Average training loss: 0.0235
+Sampling documents for evaluation (initial sample size: 200)...
+Grouping data by queries (target: 20 unique queries)...
+Selected 20 queries for evaluation
+  Total relevant documents across these queries: 66
+  Average relevant docs per query: 3.30
+Evaluating queries:   0%|
+         | 0/20 [00:00<?, ?it/s]
+Sample evaluation results:
+Query: who invented cotton candy
+Number of relevant docs: 4
+Number of candidate docs: 66
+NDCG@10 score for this query: 1.0000
+Top 10 ranked documents:
+  1. [RELEVANT] The earliest we could trace Cotton Candy back to was 1897. Two Tennessee candy
+makers, William Morri...
+  2. [RELEVANT] Scandinavia. USA/Canada. Cotton candy was invented in 1897 by William Morrison
+and John C. Wharton, ...
+  3. [RELEVANT] History of Cotton Candy. Originally called Fairy Floss, the process of making C
+otton Candy was inven...
+  4. [RELEVANT] Made by heating sugar and spinning the liquified sugar out through tiny holes w
+here it re-solidifies...
+  5. [irrelevant] Most Popular. “If you want to stump a Democrat, ask them to name an accomplis
+hment of Hillary Clinto...
+  6. [irrelevant] Apple blossoms are fragrant. The majority of apple tree (Malus) blossoms begi
+n as pink buds and bloo...
+  7. [irrelevant] But it seems rather self-evident that a news organization run by someone with
+ such clear-cut politic...
+  8. [irrelevant] Overtones Music Studio is a place where you are invited to come experience mu
+sic for life. Overtones...
+  9. [irrelevant] play Oxygen enters the atmosphere. Stromatolites pump oxygen into the early a
+tmosphere. Dr Iain Stew...
+  10. [irrelevant] 1 Bricks that are larger than the traditional brick can cost upwards of $900
+ per 1,000 bricks. 2  On...
+Evaluating queries: 100%|██████████████████████████████████████████████████████████████████████
+| 20/20 [00:00<00:00, 56.97it/s]
+
+Mean NDCG@10 across 20 queries: 0.9820
+Validation NDCG@10: 0.9820
+
+Epoch 17/18
+Batch 0, Loss: 0.0233, GPU Memory: 0.22GB allocated, 10.78GB reserved
+Batch 4, Loss: 0.0210, GPU Memory: 0.22GB allocated, 16.44GB reserved
+Batch 9, Loss: 0.0235, GPU Memory: 0.22GB allocated, 16.44GB reserved
+Average training loss: 0.0225
+Sampling documents for evaluation (initial sample size: 200)...
+Grouping data by queries (target: 20 unique queries)...
+Selected 20 queries for evaluation
+  Total relevant documents across these queries: 70
+  Average relevant docs per query: 3.50
+Evaluating queries:   0%|
+         | 0/20 [00:00<?, ?it/s]
+Sample evaluation results:
+Query: what is mineral potassium
+Number of relevant docs: 5
+Number of candidate docs: 70
+NDCG@10 score for this query: 1.0000
+Top 10 ranked documents:
+  1. [RELEVANT] Potassium is a mineral found in foods. It is also an electrolyte, which conduct
+s electrical impulses...
+  2. [RELEVANT] It is one of the main blood minerals called electrolytes (the others are sodium
+ and chloride), which...
+  3. [RELEVANT] Potassium is a mineral that plays many critical roles in the body. Food sources
+ of potassium include...
+  4. [RELEVANT] Potassium is a very important mineral for the proper function of all cells, tis
+sues, and organs in t...
+  5. [RELEVANT] Having too much potassium in the blood is called hyperkalemia; having too littl
+e is known as hypokal...
+  6. [irrelevant] Much like vitamin D, calcium aids in your bone health, fingernails and hair.
+Calcium supplements are...
+  7. [irrelevant] Polycythemia vera (pol-e-sigh-THEE-me-uh VEER-uh) is a slow-growing type of b
+lood cancer in which yo...
+  8. [irrelevant] Polycythemia vera (PV) is a bone marrow disorder in which the body produces a
+n excessive amount of r...
+  9. [irrelevant] Vitamins and other Nutrients for Nails. Like hair, the condition of your nail
+s is a good indicator o...
+  10. [irrelevant] The body requires the following vital vitamins for nails; otherwise it could
+ lead to brittle nails: ...
+Evaluating queries: 100%|██████████████████████████████████████████████████████████████████████
+| 20/20 [00:00<00:00, 53.08it/s]
+
+Mean NDCG@10 across 20 queries: 1.0000
+Validation NDCG@10: 1.0000
+
+Epoch 18/18
+Batch 0, Loss: 0.0205, GPU Memory: 0.22GB allocated, 10.10GB reserved
+Batch 4, Loss: 0.0227, GPU Memory: 0.22GB allocated, 15.45GB reserved
+Batch 9, Loss: 0.0205, GPU Memory: 0.22GB allocated, 18.65GB reserved
+Average training loss: 0.0219
+Sampling documents for evaluation (initial sample size: 200)...
+Grouping data by queries (target: 20 unique queries)...
+Selected 20 queries for evaluation
+  Total relevant documents across these queries: 69
+  Average relevant docs per query: 3.45
+Evaluating queries:   0%|
+         | 0/20 [00:00<?, ?it/s]
+Sample evaluation results:
+Query: what affects blood glucose levels
+Number of relevant docs: 5
+Number of candidate docs: 69
+NDCG@10 score for this query: 0.9512
+Top 10 ranked documents:
+  1. [RELEVANT] The blood sugar concentration or blood glucose level is the amount of glucose (
+sugar) present in the...
+  2. [RELEVANT] Physical activity. Exercise or just increasing exertion can lead to altering bl
+ood glucose levels: 1...
+  3. [irrelevant] Counting carbohydrates is important because carbohydrates you eat make your b
+lood sugar levels go up...
+  4. [RELEVANT] A. Normally, insulin is released from the pancreas when the amount of sugar (gl
+ucose) in the blood i...
+  5. [RELEVANT] Diabetes drugs aren't the only medications that affect blood sugar. The followi
+ng is a list of drugs...
+  6. [RELEVANT] 1 Fasting plasma glucose test. 2  The doctor tests your blood sugar level after
+ fasting for 8 hours ...
+  7. [irrelevant] Carb grams/day range*: 259–455 grams. Carb grams/meal range (3 meals per day)
+: 86–151 grams. *Based ...
+  8. [irrelevant] Carb grams/day range*: 180–308 grams. Carb grams/meal range (3 meals per day)
+: 60–103 grams. *Based ...
+  9. [irrelevant] The Dietary Guidelines for Americans recommends that carbohydrates make up 45
+ to 65 percent of your ...
+  10. [irrelevant] The body naturally produces growth hormone (HGH or simply GH) in the pituita
+ry gland, and, as its na...
+Evaluating queries: 100%|██████████████████████████████████████████████████████████████████████
+| 20/20 [00:00<00:00, 54.67it/s]
+
+Mean NDCG@10 across 20 queries: 0.9950
+Validation NDCG@10: 0.9950
+
+============================================================
+TRAINING COMPLETED - Starting comprehensive testing
+============================================================
+Building MS Marco test dataset with at most 10000 samples...
+Built test dataset with 10000 query-document pairs, including 9950 unique passages
+Sampling documents for evaluation (initial sample size: 200)...
+Grouping data by queries (target: 200 unique queries)...
+Selected 200 queries for evaluation
+  Total relevant documents across these queries: 309
+  Average relevant docs per query: 1.54
+🚀 Pre-encoding *all* documents for efficiency (this may take a moment)...
+🔥 Pre-encoded 9950 documents to reuse for all queries
+Evaluating queries:   0%|
+        | 0/200 [00:00<?, ?it/s]
+Sample evaluation results:
+Query: cost for engraving
+Number of relevant docs: 4
+Number of candidate docs: 9950
+NDCG@10 score for this query: 0.5995
+Top 10 ranked documents:
+  1. [irrelevant] You want 2 lines of text and a 5 x 5 photo engraved on the front. The estimat
+ed cost would be $32.75...
+  2. [irrelevant] 1 Higher end jewelry engraving services such as CelticJewelry.com offers engr
+aving services that ran...
+  3. [RELEVANT] 1 On average, jewelry engraving can cost anywhere from $10 to $100 depending on
+ the complexity of th...
+  4. [irrelevant] Pricing will be charged based on time and complexity requirements, and quoted
+ on a project basis. De...
+  5. [RELEVANT] Average Engraving Costs. Concrete engraving runs in the $3 - $6 per square foot
+ range. Very large jo...
+  6. [irrelevant] 1 For example, a 25-word engraving job on a granite tombstone could cost $200
+ to $350 while a larger...
+  7. [RELEVANT] The cost of engraving a tombstone will widely vary depending on who is performi
+ng the procedure, the...
+  8. [RELEVANT] 1 Some people may charge per word. 2  For example, a 25-word engraving job on a
+ granite tombstone co...
+  9. [irrelevant] 1 For example, a 25-word engraving job on a granite tombstone could cost $200
+ to $350 while a larger...
+  10. [irrelevant] 1 For example, a headstone designed like a heart will cost $1,500 to $4,500
+more than a square shape...
+Evaluating queries: 100%|████████████████████████████████████████████████████████████████████|
+200/200 [00:03<00:00, 58.62it/s]
+
+============================================================
+COMPREHENSIVE EVALUATION RESULTS
+============================================================
+📊 Performance Metrics:
+   NDCG@1:  0.2100
+   NDCG@5:  0.3779
+   NDCG@10: 0.4667 (±0.2893)
+
+📈 Evaluation Set Coverage:
+   Queries evaluated: 200
+   Total relevant documents: 309
+   Avg relevant docs/query: 1.54
+
+✅ Comprehensive test results logged to wandb
+wandb:
+wandb:
+wandb: Run history:
+wandb:               avg_train_loss █▅▃▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                        batch ▁▅█▁▃▃▆█▃█▅▆▁▆█▃▆█▁▅▃▆▅▆█▅▆▅▆▁▅█▃▅▆▆█▁▃█
+wandb:                   batch_loss ████▇▃▃▃▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                        epoch ▁▁▂▂▃▃▃▄▄▅▅▆▆▆▇▇██
+wandb: final_avg_relevant_per_query ▁
+wandb:                 final_ndcg_1 ▁
+wandb:                final_ndcg_10 ▁
+wandb:            final_ndcg_10_std ▁
+wandb:                 final_ndcg_5 ▁
+wandb:      final_queries_evaluated ▁
+wandb:    final_total_relevant_docs ▁
+wandb:         gpu_memory_allocated ▁▇▆▆▆▇▆▆▇▆▆▆▇▆▆▆▆▇▆▇▇▆▇▇▆▇▆▆█▇▆▆▆▆▆▇▆▆▆▇
+wandb:          gpu_memory_reserved ▇▇▇▇▁█▁▄▅▁▄▄▄▂▅▄▄▁▁▄▅▂▄▇▁▄▄▄▄▅▃▆▁▅▄▂▅▁▄▇
+wandb:             total_parameters ▁
+wandb:                  val_ndcg_10 ▁▅▇███████████████
+wandb:
+wandb: Run summary:
+wandb:               avg_train_loss 0.02187
+wandb:                        batch 41
+wandb:                   batch_loss 0.02089
+wandb:                        epoch 18
+wandb: final_avg_relevant_per_query 1.545
+wandb:                 final_ndcg_1 0.21
+wandb:                final_ndcg_10 0.4667
+wandb:            final_ndcg_10_std 0.28928
+wandb:                 final_ndcg_5 0.37791
+wandb:      final_queries_evaluated 200
+wandb:    final_total_relevant_docs 309
+wandb:         gpu_memory_allocated 0.22108
+wandb:          gpu_memory_reserved 26.71352
+wandb:             total_parameters 46345984
+wandb:                  val_ndcg_10 0.99503
+wandb:
+wandb: 🚀 View run scarlet-sweep-19 at: https://wandb.ai/freemvmt-london/two-towers-retrieval/r
+uns/zgdn2bex
+wandb: ⭐️ View project at: https://wandb.ai/freemvmt-london/two-towers-retrieval
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20250618_220445-zgdn2bex/logs
+wandb: Sweep Agent: Waiting for job.
+wandb: Job received.
+wandb: Agent Starting Run: flgnbhml with config:
+wandb:  accumulation_steps: 2
+wandb:  batch_size: 1024
+wandb:  epochs: 18
+wandb:  learning_rate: 0.0001
+wandb:  margin: 0.7
+wandb:  max_samples: 100000
+wandb:  projection_dim: 512
+wandb: Tracking run with wandb version 0.20.2rc20250616
+wandb: Run data is saved locally in /workspace/two-towers-overlords/freemvmt/wandb/run-20250618
+_221858-flgnbhml
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run resilient-sweep-20
+wandb: ⭐️ View project at https://wandb.ai/freemvmt-london/two-towers-retrieval
+wandb: 🧹 View sweep at https://wandb.ai/freemvmt-london/two-towers-retrieval/sweeps/8x5w5jxn
+wandb: 🚀 View run at https://wandb.ai/freemvmt-london/two-towers-retrieval/runs/flgnbhml
+Running training with hyperparameters:
+Initializing model and data...
+Using device: cuda
+GPU: NVIDIA GeForce RTX 5090
+Memory: 33.7GB
+Building MS Marco train dataset with at most 100000 samples...
+Built train dataset with 100000 query-document pairs, including 98086 unique passages
+Building MS Marco validation dataset with at most 1000 samples...
+Built validation dataset with 1000 query-document pairs, including 997 unique passages
+Training configuration:
+  Physical batch size: 1024
+  Gradient accumulation steps: 2
+  Effective batch size: 2048
+  Mixed precision: True
+  DataLoader workers: 6
+Starting training for 18 epochs...
+
+Epoch 1/18
+Batch 0, Loss: 0.7003, GPU Memory: 0.21GB allocated, 4.18GB reserved
+Batch 4, Loss: 0.6973, GPU Memory: 0.22GB allocated, 5.55GB reserved
+Batch 9, Loss: 0.6969, GPU Memory: 0.21GB allocated, 6.33GB reserved
+Average training loss: 0.5990
+Sampling documents for evaluation (initial sample size: 200)...
+Grouping data by queries (target: 20 unique queries)...
+Selected 20 queries for evaluation
+  Total relevant documents across these queries: 68
+  Average relevant docs per query: 3.40
+Evaluating queries:   0%|
+         | 0/20 [00:00<?, ?it/s]
+Sample evaluation results:
+Query: how much does a librarian assistant make
+Number of relevant docs: 4
+Number of candidate docs: 68
+NDCG@10 score for this query: 1.0000
+Top 10 ranked documents:
+  1. [RELEVANT] For example the median expected annual pay for a typical Librarian Assistant in
+ the United States is...
+  2. [RELEVANT] Librarians in the United States take home an average $48K per year. Pay general
+ly varies between $28...
+  3. [RELEVANT] The Bureau of Labor Statistics reports that librarians earned an average salary
+ of $57,020 a year as...
+  4. [RELEVANT] When looking into a job as an assistant librarian, it is always important to be
+ knowledgeable of sal...
+  5. [irrelevant] $38,000. Average Pharmacist salaries for job postings in Oregon are 3% lower
+than average Pharmacist...
+  6. [irrelevant] This will add nearly 69,700 pharmacist jobs at pharmacies all across the Unit
+ed States from 2010 – 2...
+  7. [irrelevant] $89,000. Average Oregon Pharmacy Pharmacist salaries for job postings in Oreg
+on are 3% lower than av...
+  8. [irrelevant] Within Oregon there is a lot of variation in Pharmacist salaries. These varia
+tions depend on on a wi...
+  9. [irrelevant] Make sure you use your credit card wisely on holiday []. A Yes. Section 75 of
+ the Consumer Credit Ac...
+  10. [irrelevant] When you spend between 100 and 30,000 on your credit card you are covered un
+der Section 75 of the Co...
+Evaluating queries: 100%|██████████████████████████████████████████████████████████████████████
+| 20/20 [00:00<00:00, 55.69it/s]
+
+Mean NDCG@10 across 20 queries: 0.8747
+Validation NDCG@10: 0.8747
+
+Epoch 2/18
+Batch 0, Loss: 0.3176, GPU Memory: 0.22GB allocated, 5.57GB reserved
+Batch 4, Loss: 0.3179, GPU Memory: 0.22GB allocated, 5.58GB reserved
+Batch 9, Loss: 0.2919, GPU Memory: 0.21GB allocated, 5.58GB reserved
+Average training loss: 0.2228
+Sampling documents for evaluation (initial sample size: 200)...
+Grouping data by queries (target: 20 unique queries)...
+Selected 20 queries for evaluation
+  Total relevant documents across these queries: 71
+  Average relevant docs per query: 3.55
+Evaluating queries:   0%|
+         | 0/20 [00:00<?, ?it/s]
+Sample evaluation results:
+Query: how much is it to rent a tux
+Number of relevant docs: 5
+Number of candidate docs: 71
+NDCG@10 score for this query: 0.7145
+Top 10 ranked documents:
+  1. [RELEVANT] But otherwise, the question most groom's face is whether to rent or buy a tuxed
+o. Money is the main ...
+  2. [irrelevant] Clearly, then, the monthly ownership costs of a swimming pool is $100 or more
+ every month. Still, th...
+  3. [irrelevant] Approximate cost for labor to pour & finish concrete. I am in the EARLY plann
+ing stages for a backya...
+  4. [RELEVANT] We offer one and two week rentals. Please contact the Men's Wearhouse store nea
+rest you for more inf...
+  5. [RELEVANT] You should return your tuxedo the day after the event to any of our Men's Wearh
+ouse locations. A $20...
+  6. [irrelevant] Get an INSTANT estimate of the cost to Install a Concrete Pad! Our free calcu
+lator uses recent, trus...
+  7. [irrelevant] 1 Your water bill will depend, therefore, on how efficiently you use water in
+ your pool, coupled wit...
+  8. [irrelevant] Please read more about many of your options below. Annual pool maintenance co
+st can vary, depending ...
+  9. [irrelevant] Basic concrete slab cost. I'll base my price on what my actual estimate would
+ be to install a 6 thic...
+  10. [RELEVANT] So what started out as the $99 tux package for my fiance & groomsmen ended up
+at $175 when you tacke...
+Evaluating queries: 100%|██████████████████████████████████████████████████████████████████████
+| 20/20 [00:00<00:00, 55.39it/s]
+
+Mean NDCG@10 across 20 queries: 0.8696
+Validation NDCG@10: 0.8696
+
+Epoch 3/18
+Batch 0, Loss: 0.1726, GPU Memory: 0.22GB allocated, 4.92GB reserved
+Batch 4, Loss: 0.1657, GPU Memory: 0.22GB allocated, 9.68GB reserved
+Batch 9, Loss: 0.1640, GPU Memory: 0.21GB allocated, 9.68GB reserved
+Average training loss: 0.1465
+Sampling documents for evaluation (initial sample size: 200)...
+Grouping data by queries (target: 20 unique queries)...
+Selected 20 queries for evaluation
+  Total relevant documents across these queries: 67
+  Average relevant docs per query: 3.35
+Evaluating queries:   0%|
+         | 0/20 [00:00<?, ?it/s]
+Sample evaluation results:
+Query: grassland ecosystem where in the world is it
+Number of relevant docs: 6
+Number of candidate docs: 67
+NDCG@10 score for this query: 1.0000
+Top 10 ranked documents:
+  1. [RELEVANT] Grasslands are areas where the vegetation is dominated by grasses (Poaceae), ho
+wever sedge (Cyperace...
+  2. [RELEVANT] Grassland biomes are large, rolling terrains of grasses, flowers and herbs. Lat
+itude, soil and local...
+  3. [RELEVANT] S.G. REYNOLDS. Grasslands in the wider sense are among the largest ecosystems i
+n the world (Figure 1...
+  4. [RELEVANT] Grasslands are generally located between deserts and forests. The major tempera
+te grasslands are loc...
+  5. [RELEVANT] There are two different kinds of grasslands: tropical and temperate. Grasslands
+ in the southern hemi...
+  6. [RELEVANT] Different kinds of grass grow in different areas of the grasslands. There are a
+ctually thousands of ...
+  7. [irrelevant] LOCATION: Savannas are comprised mostly of grasses and a few scattered trees.
+ They cover half the su...
+  8. [irrelevant] Savanna Plant Life. Plants of the savannas are highly specialized to grow in
+this environment of lon...
+  9. [irrelevant] Trees. Although the savanna is defined as a grassland, several species of tre
+e dot the landscape. Th...
+  10. [irrelevant] The meerkat is a small diurnal herpestid (mongoose) weighing on average abou
+t 0.5 to 2.5 kilograms (...
+Evaluating queries: 100%|██████████████████████████████████████████████████████████████████████
+| 20/20 [00:00<00:00, 56.46it/s]
+
+Mean NDCG@10 across 20 queries: 0.9742
+Validation NDCG@10: 0.9742
+
+Epoch 4/18
+Batch 0, Loss: 0.1309, GPU Memory: 0.22GB allocated, 5.78GB reserved
+Batch 4, Loss: 0.1295, GPU Memory: 0.22GB allocated, 5.78GB reserved
+Batch 9, Loss: 0.1289, GPU Memory: 0.21GB allocated, 5.78GB reserved
+Average training loss: 0.1208
+Sampling documents for evaluation (initial sample size: 200)...
+Grouping data by queries (target: 20 unique queries)...
+Selected 20 queries for evaluation
+  Total relevant documents across these queries: 77
+  Average relevant docs per query: 3.85
+Evaluating queries:   0%|
+         | 0/20 [00:00<?, ?it/s]
+Sample evaluation results:
+Query: average cost per square meter to build a garage
+Number of relevant docs: 6
+Number of candidate docs: 77
+NDCG@10 score for this query: 1.0000
+Top 10 ranked documents:
+  1. [RELEVANT] If you are in an area with higher-than-average cost of living you can use $50 t
+o $55. If there are c...
+  2. [RELEVANT] by Jay Behm-A very basic way to estimate the cost of building a detached garage
+ is to simply apply a...
+  3. [RELEVANT] Posted. Your building costs per square meter vary according to where you live u
+nfortunately. You can...
+  4. [RELEVANT] For the building of the garages, the typical costs will include: 1  Two car-Acc
+ording to Hanley Wood...
+  5. [RELEVANT] For this discussion we will assess the costs of building detached a two-car as
+well as a four car ga...
+  6. [RELEVANT] 1 Concrete footings and slab to grade - The average price of concrete is $75 pe
+r cubic yard, with th...
+  7. [irrelevant] 1 $1000 per zone: A general rule of thumb in residential or commercial landsc
+apes is to charge $1000...
+  8. [irrelevant] Get an INSTANT estimate of the cost to Install a Lawn Irrigation System! Our
+free calculator uses re...
+  9. [irrelevant] Sprinkler System Price Estimates. 1  $1000 per zone: A general rule of thumb
+in residential or comme...
+  10. [irrelevant] View full size image. With the news of higher losses at every major publishe
+r this year, many fans w...
+Evaluating queries: 100%|██████████████████████████████████████████████████████████████████████
+| 20/20 [00:00<00:00, 49.37it/s]
+
+Mean NDCG@10 across 20 queries: 0.9333
+Validation NDCG@10: 0.9333
+
+Epoch 5/18
+Batch 0, Loss: 0.1018, GPU Memory: 0.22GB allocated, 4.56GB reserved
+Batch 4, Loss: 0.1178, GPU Memory: 0.22GB allocated, 7.19GB reserved
+Batch 9, Loss: 0.1171, GPU Memory: 0.21GB allocated, 9.30GB reserved
+Average training loss: 0.1066
+Sampling documents for evaluation (initial sample size: 200)...
+Grouping data by queries (target: 20 unique queries)...
+Selected 20 queries for evaluation
+  Total relevant documents across these queries: 67
+  Average relevant docs per query: 3.35
+Evaluating queries:   0%|
+         | 0/20 [00:00<?, ?it/s]
+Sample evaluation results:
+Query: cost for postage stamp
+Number of relevant docs: 5
+Number of candidate docs: 67
+NDCG@10 score for this query: 1.0000
+Top 10 ranked documents:
+  1. [RELEVANT] Price of a Stamp. The current price of a first class stamp is 49 cents. A domes
+tic first class lette...
+  2. [RELEVANT] 1 Each additional ounce will cost $0.22 (up one cent from 2014). 2  The discoun
+ted “Metered Mail” ca...
+  3. [RELEVANT] 1 The discounted “Metered Mail” category for First Class Mail Letters (1 oz.),
+which includes online...
+  4. [RELEVANT] Letters destined for Canada and Mexico-for the (1) ounce first class letter cos
+t $1.20 as of May 31s...
+  5. [RELEVANT] Postal Service says stamp prices are going up. Stamp prices are going up by 1 c
+ent starting in Janua...
+  6. [irrelevant] The cost of a mitigation system may vary according to the home's design, size
+, foundation, construct...
+  7. [irrelevant] A quality radon reduction (mitigation) system is often able to reduce the ann
+ual average radon level...
+  8. [irrelevant] As a service to taxpayers, the Department of Taxation has compiled the list o
+f municipal income tax ...
+  9. [irrelevant] I moved from Bedford Heights (Definitely a RITA municipality) to Cleveland (D
+oesn't appear to be a R...
+  10. [irrelevant] RITA continues to experience extraordinary growth throughout the State of Oh
+io. Click on a municipal...
+Evaluating queries: 100%|██████████████████████████████████████████████████████████████████████
+| 20/20 [00:00<00:00, 58.92it/s]
+
+Mean NDCG@10 across 20 queries: 0.9529
+Validation NDCG@10: 0.9529
+
+Epoch 6/18
+Batch 0, Loss: 0.1028, GPU Memory: 0.22GB allocated, 4.71GB reserved
+Batch 4, Loss: 0.0936, GPU Memory: 0.22GB allocated, 9.23GB reserved
+Batch 9, Loss: 0.1034, GPU Memory: 0.21GB allocated, 9.23GB reserved
+Average training loss: 0.0959
+Sampling documents for evaluation (initial sample size: 200)...
+Grouping data by queries (target: 20 unique queries)...
+Selected 20 queries for evaluation
+  Total relevant documents across these queries: 66
+  Average relevant docs per query: 3.30
+Evaluating queries:   0%|
+         | 0/20 [00:00<?, ?it/s]
+Sample evaluation results:
+Query: what is a muscle in the body
+Number of relevant docs: 5
+Number of candidate docs: 66
+NDCG@10 score for this query: 1.0000
+Top 10 ranked documents:
+  1. [RELEVANT] Nevertheless, the exact number is difficult to define because different sources
+ group muscles differ...
+  2. [RELEVANT] Muscles are how we move and live. All movement in the body is controlled by mus
+cles. Some muscles wo...
+  3. [RELEVANT] The muscles of the chest and upper back occupy the thoracic region of the body
+inferior to the neck ...
+  4. [RELEVANT] 1 The statement that the tongue is the strongest muscle in the body appears fre
+quently in lists of s...
+  5. [RELEVANT] From time to time, you'll see lists of interesting facts about the human body.
+Many times these list...
+  6. [irrelevant] Esophagus. The esophagus is a collapsible muscular tube that serves as a pass
+ageway between the phar...
+  7. [irrelevant] The esophagus is a muscular tube that connects the pharynx to the stomach. It
+ is approximately 25.4 ...
+  8. [irrelevant] The pharynx is the uppermost part of the alimentary tract and commonly referr
+ed to as the throat. It...
+  9. [irrelevant] It makes up the part of the throat situated immediately posterior to the nasa
+l cavity, posterior to ...
+  10. [irrelevant] 2. Use regulation of body temperature to illustrate maintenance of homeostas
+is by a feedback mechani...
+Evaluating queries: 100%|██████████████████████████████████████████████████████████████████████
+| 20/20 [00:00<00:00, 61.39it/s]
+
+Mean NDCG@10 across 20 queries: 0.9760
+Validation NDCG@10: 0.9760
+
+Epoch 7/18
+Batch 0, Loss: 0.0946, GPU Memory: 0.22GB allocated, 5.57GB reserved
+Batch 4, Loss: 0.0910, GPU Memory: 0.22GB allocated, 5.57GB reserved
+Batch 9, Loss: 0.0878, GPU Memory: 0.21GB allocated, 8.44GB reserved
+Average training loss: 0.0889
+Sampling documents for evaluation (initial sample size: 200)...
+Grouping data by queries (target: 20 unique queries)...
+Selected 20 queries for evaluation
+  Total relevant documents across these queries: 70
+  Average relevant docs per query: 3.50
+Evaluating queries:   0%|
+         | 0/20 [00:00<?, ?it/s]
+Sample evaluation results:
+Query: granite countertops cost per square foot installed
+Number of relevant docs: 5
+Number of candidate docs: 70
+NDCG@10 score for this query: 1.0000
+Top 10 ranked documents:
+  1. [RELEVANT] As we’ve noted in other posts, granite countertop prices for the material and i
+nstallation range fro...
+  2. [RELEVANT] 1 Some manufacturers require a minimum purchase. 2  Slab granite countertops--s
+olid pieces of granit...
+  3. [RELEVANT] There are a number of factors and options that can affect the final price of a
+countertop installati...
+  4. [RELEVANT] Granite tiles typically cost around $4 to $19 per square foot or $120 to $570 f
+or 30 square feet of ...
+  5. [RELEVANT] Modular (or prefabricated) granite costs anywhere from $25 to $100 per sq. ft.
+(for materials only)....
+  6. [irrelevant] According to The Knot, new tuxedos typically cost between $300 and $500 to bu
+y, and renting a tux co...
+  7. [irrelevant] Rating Newest Oldest. Best Answer: We are getting married in October, and the
+ tuxes are going to be ...
+  8. [irrelevant] We offer one and two week rentals. Please contact the Men's Wearhouse store n
+earest you for more inf...
+  9. [irrelevant] Franchise Costs-Introduction. Introduction to Franchise Costs: This page cont
+ains invaluable informa...
+  10. [irrelevant] Your budget will limit your choices. The cost of entry varies greatly, by bo
+th the segment you choos...
+Evaluating queries: 100%|██████████████████████████████████████████████████████████████████████
+| 20/20 [00:00<00:00, 55.63it/s]
+
+Mean NDCG@10 across 20 queries: 0.9869
+Validation NDCG@10: 0.9869
+
+Epoch 8/18
+Batch 0, Loss: 0.0854, GPU Memory: 0.22GB allocated, 5.03GB reserved
+Batch 4, Loss: 0.0804, GPU Memory: 0.22GB allocated, 7.61GB reserved
+Batch 9, Loss: 0.0791, GPU Memory: 0.21GB allocated, 10.62GB reserved
+Average training loss: 0.0824
+Sampling documents for evaluation (initial sample size: 200)...
+Grouping data by queries (target: 20 unique queries)...
+Selected 20 queries for evaluation
+  Total relevant documents across these queries: 66
+  Average relevant docs per query: 3.30
+Evaluating queries:   0%|
+         | 0/20 [00:00<?, ?it/s]
+Sample evaluation results:
+Query: average cost per square meter to build a garage
+Number of relevant docs: 4
+Number of candidate docs: 66
+NDCG@10 score for this query: 1.0000
+Top 10 ranked documents:
+  1. [RELEVANT] For the building of the garages, the typical costs will include: 1  Two car-Acc
+ording to Hanley Wood...
+  2. [RELEVANT] If you are in an area with higher-than-average cost of living you can use $50 t
+o $55. If there are c...
+  3. [RELEVANT] For this discussion we will assess the costs of building detached a two-car as
+well as a four car ga...
+  4. [RELEVANT] 1 Upgrading the quality of materials can bump the cost to $55 a square foot, or
+ $13,200 for a minimu...
+  5. [irrelevant] Basic concrete slab cost. I'll base my price on what my actual estimate would
+ be to install a 6 thic...
+  6. [irrelevant] Labor costs will vary depending on the company you hire. Some companies have
+reusable concrete forms...
+  7. [irrelevant] Cost to Repair a Dryer. Your dryer saves you time and keeps you from having t
+o hang clothes out on a...
+  8. [irrelevant] Get an INSTANT estimate of the cost to Install a Cement Slab! Our free calcul
+ator uses recent, trust...
+  9. [irrelevant] The average cost of the additional materials, including the limestone gravel,
+ plastic sheeting, reba...
+  10. [irrelevant] It depends on how much you pay for a new washer. If you can replace the wash
+er for $400, then it mig...
+Evaluating queries: 100%|██████████████████████████████████████████████████████████████████████
+| 20/20 [00:00<00:00, 54.44it/s]
+
+Mean NDCG@10 across 20 queries: 0.9807
+Validation NDCG@10: 0.9807
+
+Epoch 9/18
+Batch 0, Loss: 0.0762, GPU Memory: 0.22GB allocated, 7.20GB reserved
+Batch 4, Loss: 0.0797, GPU Memory: 0.22GB allocated, 7.20GB reserved
+Batch 9, Loss: 0.0812, GPU Memory: 0.21GB allocated, 7.20GB reserved
+Average training loss: 0.0789
+Sampling documents for evaluation (initial sample size: 200)...
+Grouping data by queries (target: 20 unique queries)...
+Selected 20 queries for evaluation
+  Total relevant documents across these queries: 67
+  Average relevant docs per query: 3.35
+Evaluating queries:   0%|
+         | 0/20 [00:00<?, ?it/s]
+Sample evaluation results:
+Query: how many carbs should a diabetic eat daily
+Number of relevant docs: 5
+Number of candidate docs: 67
+NDCG@10 score for this query: 1.0000
+Top 10 ranked documents:
+  1. [RELEVANT] The amount of carbs you can eat depends on your age, sex, height, weight, and a
+ctivity level. On ave...
+  2. [RELEVANT] Counting carbohydrates is important because carbohydrates you eat make your blo
+od sugar levels go up...
+  3. [RELEVANT] Carb grams/day range*: 259–455 grams. Carb grams/meal range (3 meals per day):
+86–151 grams. *Based ...
+  4. [RELEVANT] Carb grams/meal range (3 meals per day): 60–103 grams. *Based on 45%–65% of cal
+ories from carbohydra...
+  5. [RELEVANT] The Dietary Guidelines for Americans recommends that carbohydrates make up 45 t
+o 65 percent of your ...
+  6. [irrelevant] Good nutrition is an important part of leading a healthy lifestyle. Combined
+with physical activity,...
+  7. [irrelevant] Nutrition is the science that interprets the interaction of nutrients and oth
+er substances in food (...
+  8. [irrelevant] Dairy. Dairy products provide nutrients that are critical for bone health, in
+cluding calcium, potass...
+  9. [irrelevant] Growth Hormone. Guide. A growth hormone (GH) test measures the amount of huma
+n growth hormone (GH) i...
+  10. [irrelevant] Beginning in middle age, however, the pituitary gland slowly reduces the amo
+unt of growth hormone it...
+Evaluating queries: 100%|██████████████████████████████████████████████████████████████████████
+| 20/20 [00:00<00:00, 44.57it/s]
+
+Mean NDCG@10 across 20 queries: 0.9950
+Validation NDCG@10: 0.9950
+
+Epoch 10/18
+Batch 0, Loss: 0.0750, GPU Memory: 0.22GB allocated, 6.50GB reserved
+Batch 4, Loss: 0.0749, GPU Memory: 0.22GB allocated, 6.51GB reserved
+Batch 9, Loss: 0.0807, GPU Memory: 0.21GB allocated, 6.51GB reserved
+Average training loss: 0.0764
+Sampling documents for evaluation (initial sample size: 200)...
+Grouping data by queries (target: 20 unique queries)...
+Selected 20 queries for evaluation
+  Total relevant documents across these queries: 68
+  Average relevant docs per query: 3.40
+Evaluating queries:   0%|
+         | 0/20 [00:00<?, ?it/s]
+Sample evaluation results:
+Query: what is pulmonary fibrosis symptoms
+Number of relevant docs: 5
+Number of candidate docs: 68
+NDCG@10 score for this query: 1.0000
+Top 10 ranked documents:
+  1. [RELEVANT] 1 Pulmonary fibrosis refers to scarring of the lung tissue (fibrosis of the lun
+gs). 2  Symptoms of p...
+  2. [RELEVANT] Idiopathic pulmonary fibrosis is a serious disease where the tiny air sacs of t
+he lungs (the alveoli...
+  3. [RELEVANT] Pulmonary Fibrosis. Pulmonary fibrosis (PF) is one of a family of related disea
+ses called interstiti...
+  4. [RELEVANT] “Pulmonary Fibrosis”. Pulmonary fibrosis, sometimes known as “scarring of the l
+ung”, is the name giv...
+  5. [RELEVANT] Idiopathic pulmonary fibrosis (IPF) causes scar tissue to grow inside your lung
+s. Usually, when you ...
+  6. [irrelevant] Your pc water cooling reservoir capacity is an important variable in your liq
+uid cooling system. The...
+  7. [irrelevant] Estimates. According to the Federal Reserve Bureau, the average cost of an an
+nual premium for homeow...
+  8. [irrelevant] According to the Federal Reserve Bureau, the average cost of an annual premiu
+m for homeowners insura...
+  9. [irrelevant] The average homeowners insurance premium rose by 5.6 percent in 2012, followi
+ng a 7.7 percent increa...
+  10. [irrelevant] Basic concrete slab cost. I'll base my price on what my actual estimate woul
+d be to install a 6 thic...
+Evaluating queries: 100%|██████████████████████████████████████████████████████████████████████
+| 20/20 [00:00<00:00, 62.14it/s]
+
+Mean NDCG@10 across 20 queries: 0.9816
+Validation NDCG@10: 0.9816
+
+Epoch 11/18
+Batch 0, Loss: 0.0765, GPU Memory: 0.22GB allocated, 4.88GB reserved
+Batch 4, Loss: 0.0734, GPU Memory: 0.22GB allocated, 7.39GB reserved
+Batch 9, Loss: 0.0729, GPU Memory: 0.21GB allocated, 7.39GB reserved
+Average training loss: 0.0728
+Sampling documents for evaluation (initial sample size: 200)...
+Grouping data by queries (target: 20 unique queries)...
+Selected 20 queries for evaluation
+  Total relevant documents across these queries: 69
+  Average relevant docs per query: 3.45
+Evaluating queries:   0%|
+         | 0/20 [00:00<?, ?it/s]
+Sample evaluation results:
+Query: benefits of eating protein for breakfast
+Number of relevant docs: 5
+Number of candidate docs: 69
+NDCG@10 score for this query: 0.9896
+Top 10 ranked documents:
+  1. [RELEVANT] Benefits of a Protein-Rich Breakfast (and a Protein Pancake Recipe). Written by
+ Stacy K, Contributin...
+  2. [RELEVANT] Its ability to keep you feeling fuller longer and eat less throughout the day r
+eally does make break...
+  3. [RELEVANT] Having protein with breakfast can optimize your brain's ability to send message
+s to the rest of your...
+  4. [RELEVANT] Breakfast is often described as the most important meal of the day, and rightfu
+lly so -- it not only...
+  5. [irrelevant] Though they are a critical component of a healthy diet, many protein foods ca
+n also be high in satur...
+  6. [RELEVANT] In this study, the scientists found that after a high-protein meal, there was a
+ significant drop in ...
+  7. [irrelevant] Some are found only in a few foods, so it is important that these foods are i
+ncluded in the diet on ...
+  8. [irrelevant] Macronutrients are nutrients that provide calories or energy. Nutrients are s
+ubstances needed for gr...
+  9. [irrelevant] The most important use of potassium is to treat the symptoms of hypokalemia (
+low potassium), which i...
+  10. [irrelevant] Potassium It's certainly important to have enough potassium into your system
+. Potassium is important...
+Evaluating queries: 100%|██████████████████████████████████████████████████████████████████████
+| 20/20 [00:00<00:00, 59.51it/s]
+
+Mean NDCG@10 across 20 queries: 0.9853
+Validation NDCG@10: 0.9853
+
+Epoch 12/18
+Batch 0, Loss: 0.0691, GPU Memory: 0.22GB allocated, 5.20GB reserved
+Batch 4, Loss: 0.0766, GPU Memory: 0.22GB allocated, 7.93GB reserved
+Batch 9, Loss: 0.0715, GPU Memory: 0.21GB allocated, 11.96GB reserved
+Average training loss: 0.0701
+Sampling documents for evaluation (initial sample size: 200)...
+Grouping data by queries (target: 20 unique queries)...
+Selected 20 queries for evaluation
+  Total relevant documents across these queries: 69
+  Average relevant docs per query: 3.45
+Evaluating queries:   0%|
+         | 0/20 [00:00<?, ?it/s]
+Sample evaluation results:
+Query: what is the human growth hormone used for
+Number of relevant docs: 6
+Number of candidate docs: 69
+NDCG@10 score for this query: 1.0000
+Top 10 ranked documents:
+  1. [RELEVANT] Human growth hormone (GH) is a substance that controls your body’s growth. GH i
+s made by the pituita...
+  2. [RELEVANT] Growth Hormone. Guide. A growth hormone (GH) test measures the amount of human
+growth hormone (GH) i...
+  3. [RELEVANT] Some people turn to a substance called human growth hormone (HGH) in hopes that
+ it will keep them fe...
+  4. [RELEVANT] Beginning in middle age, however, the pituitary gland slowly reduces the amount
+ of growth hormone it...
+  5. [RELEVANT] The body naturally produces growth hormone (HGH or simply GH) in the pituitary
+gland, and, as its na...
+  6. [RELEVANT] It also stimulates production of IGF-1. GH is used as a prescription drug in me
+dicine to treat child...
+  7. [irrelevant] In this study, the scientists found that after a high-protein meal, there was
+ a significant drop in ...
+  8. [irrelevant] When the subjects ate a high protein breakfast (35 grams) versus skipping the
+ meal or eating a low p...
+  9. [irrelevant] Potassium It's certainly important to have enough potassium into your system.
+ Potassium is important...
+  10. [irrelevant] Having protein with breakfast can optimize your brain's ability to send mess
+ages to the rest of your...
+Evaluating queries: 100%|██████████████████████████████████████████████████████████████████████
+| 20/20 [00:00<00:00, 57.68it/s]
+
+Mean NDCG@10 across 20 queries: 0.9912
+Validation NDCG@10: 0.9912
+
+Epoch 13/18
+Batch 0, Loss: 0.0787, GPU Memory: 0.22GB allocated, 5.13GB reserved
+Batch 4, Loss: 0.0665, GPU Memory: 0.22GB allocated, 7.86GB reserved
+Batch 9, Loss: 0.0755, GPU Memory: 0.21GB allocated, 9.48GB reserved
+Average training loss: 0.0688
+Sampling documents for evaluation (initial sample size: 200)...
+Grouping data by queries (target: 20 unique queries)...
+Selected 20 queries for evaluation
+  Total relevant documents across these queries: 67
+  Average relevant docs per query: 3.35
+Evaluating queries:   0%|
+         | 0/20 [00:00<?, ?it/s]
+Sample evaluation results:
+Query: cost of labor to pour concrete
+Number of relevant docs: 5
+Number of candidate docs: 67
+NDCG@10 score for this query: 1.0000
+Top 10 ranked documents:
+  1. [RELEVANT] Approximate cost for labor to pour & finish concrete. I am in the EARLY plannin
+g stages for a backya...
+  2. [RELEVANT] The average cost of the additional materials, including the limestone gravel, p
+lastic sheeting, reba...
+  3. [RELEVANT] 1 Labor costs to pour and form concrete run somewhere around $3.50 to $7.00 per
+ square foot. 2  One ...
+  4. [RELEVANT] Get an INSTANT estimate of the cost to Install a Cement Slab! Our free calculat
+or uses recent, trust...
+  5. [RELEVANT] Best Answer: A yard of concrete will cover about 80 square feet when poured abo
+ut 4 inches thick. So...
+  6. [irrelevant] 2. Don't overspend on the tuxedo. The average cost of renting a tuxedo is $14
+1, according to Wedding...
+  7. [irrelevant] Cost to Repair a Dryer. Your dryer saves you time and keeps you from having t
+o hang clothes out on a...
+  8. [irrelevant] We offer one and two week rentals. Please contact the Men's Wearhouse store n
+earest you for more inf...
+  9. [irrelevant] You should return your tuxedo the day after the event to any of our Men's Wea
+rhouse locations. A $20...
+  10. [irrelevant] (And you know if you get a new washer, you're going to need a new dryer too!
+) If you fixed the washe...
+Evaluating queries: 100%|██████████████████████████████████████████████████████████████████████
+| 20/20 [00:00<00:00, 57.67it/s]
+
+Mean NDCG@10 across 20 queries: 0.9957
+Validation NDCG@10: 0.9957
+
+Epoch 14/18
+Batch 0, Loss: 0.0653, GPU Memory: 0.22GB allocated, 5.22GB reserved
+Batch 4, Loss: 0.0654, GPU Memory: 0.22GB allocated, 9.36GB reserved
+Batch 9, Loss: 0.0698, GPU Memory: 0.21GB allocated, 9.36GB reserved
+Average training loss: 0.0668
+Sampling documents for evaluation (initial sample size: 200)...
+Grouping data by queries (target: 20 unique queries)...
+Selected 20 queries for evaluation
+  Total relevant documents across these queries: 71
+  Average relevant docs per query: 3.55
+Evaluating queries:   0%|
+         | 0/20 [00:00<?, ?it/s]
+Sample evaluation results:
+Query: what kinds of trees are in the savannas
+Number of relevant docs: 5
+Number of candidate docs: 71
+NDCG@10 score for this query: 1.0000
+Top 10 ranked documents:
+  1. [RELEVANT] The savanna is covered by grasses such as Rhodes grass, red oats grass, star gr
+ass, lemon grass, and...
+  2. [RELEVANT] Tropical Savannah: Plants Grasses are the dominant plant life in the savanna. A
+ wide variety of gras...
+  3. [RELEVANT] There are many types of grasses in the savanna, such as Rhodes grass, red oats
+grass and lemon grass...
+  4. [RELEVANT] LOCATION: Savannas are comprised mostly of grasses and a few scattered trees. T
+hey cover half the su...
+  5. [RELEVANT] Grass Patches... and a Few Trees. The savanna is characterized by its variety o
+f grasses. However, i...
+  6. [irrelevant] : any of several African mongooses; especially: a burrowing highly social pri
+marily insectivorous ma...
+  7. [irrelevant] 1 Over the past year, we have been making a film on meerkats in the southern
+Kalahari. 2  There are ...
+  8. [irrelevant] 1 any of several South African mongooses, esp Suricata suricatta (slender-tai
+led meerkat or suricate...
+  9. [irrelevant] For decades, scientists thought an excess of something special, a substance c
+alled royal jelly, elev...
+  10. [irrelevant] The word meerkat is Dutch for lake cat, but although the suricata is a felif
+orm, it is not of the ca...
+Evaluating queries: 100%|██████████████████████████████████████████████████████████████████████
+| 20/20 [00:00<00:00, 57.44it/s]
+
+Mean NDCG@10 across 20 queries: 0.9869
+Validation NDCG@10: 0.9869
+
+Epoch 15/18
+Batch 0, Loss: 0.0679, GPU Memory: 0.22GB allocated, 5.74GB reserved
+Batch 4, Loss: 0.0603, GPU Memory: 0.22GB allocated, 9.44GB reserved
+Batch 9, Loss: 0.0644, GPU Memory: 0.21GB allocated, 9.44GB reserved
+Average training loss: 0.0646
+Sampling documents for evaluation (initial sample size: 200)...
+Grouping data by queries (target: 20 unique queries)...
+Selected 20 queries for evaluation
+  Total relevant documents across these queries: 71
+  Average relevant docs per query: 3.55
+Evaluating queries:   0%|
+         | 0/20 [00:00<?, ?it/s]
+Sample evaluation results:
+Query: what are the uses for liquefied natural gas
+Number of relevant docs: 5
+Number of candidate docs: 71
+NDCG@10 score for this query: 1.0000
+Top 10 ranked documents:
+  1. [RELEVANT] Liquefied natural gas (LNG) is natural gas (predominantly methane, CH 4) that h
+as been converted to ...
+  2. [RELEVANT] Liquefied Natural Gas. Natural gas plays a vital role in the U.S. energy supply
+ and in achieving the...
+  3. [RELEVANT] Liquefied natural gas, or LNG, is natural gas in its liquid form. When natural
+gas is cooled to minu...
+  4. [RELEVANT] LNG And ItsMany Uses LNG, or liquefied natural gas, is simply natural gas conve
+rted into a liquid by...
+  5. [RELEVANT] Natural gas, a fossil fuel comprised mostly of methane, is one of the cleanest
+burning alternative f...
+  6. [irrelevant] 1 Drain tile suction system: caps are placed on the sump pump baskets. 2  The
+ pump continues to drai...
+  7. [irrelevant] Illustration of the relative abilities of three different types of ionizing r
+adiation to penetrate s...
+  8. [irrelevant] A quality radon reduction (mitigation) system is often able to reduce the ann
+ual average radon level...
+  9. [irrelevant] Gold bars Reuters. If gold dips below $1,200 per ounce for a “sustained” peri
+od, serious production ...
+  10. [irrelevant] In the broad category of radiation, the broad definition includes all of tho
+se things and more. We n...
+Evaluating queries: 100%|██████████████████████████████████████████████████████████████████████
+| 20/20 [00:00<00:00, 54.46it/s]
+
+Mean NDCG@10 across 20 queries: 0.9965
+Validation NDCG@10: 0.9965
+
+Epoch 16/18
+Batch 0, Loss: 0.0688, GPU Memory: 0.22GB allocated, 4.77GB reserved
+Batch 4, Loss: 0.0638, GPU Memory: 0.22GB allocated, 8.14GB reserved
+Batch 9, Loss: 0.0666, GPU Memory: 0.21GB allocated, 8.14GB reserved
+Average training loss: 0.0633
+Sampling documents for evaluation (initial sample size: 200)...
+Grouping data by queries (target: 20 unique queries)...
+Selected 20 queries for evaluation
+  Total relevant documents across these queries: 65
+  Average relevant docs per query: 3.25
+Evaluating queries:   0%|
+         | 0/20 [00:00<?, ?it/s]
+Sample evaluation results:
+Query: what is trapezoid
+Number of relevant docs: 4
+Number of candidate docs: 65
+NDCG@10 score for this query: 1.0000
+Top 10 ranked documents:
+  1. [RELEVANT] Trapezoid. A trapezoid is a quadrilateral with two sides parallel. The trapezoi
+d is equivalent to th...
+  2. [RELEVANT] 1 A trapezoid is a quadrilateral with one pair of opposite sides parallel. 2  I
+t can have right angl...
+  3. [RELEVANT] In Euclidean geometry, an isosceles trapezoid (isosceles trapezium in British E
+nglish) is a convex q...
+  4. [RELEVANT] An isosceles trapezoid (called an isosceles trapezium by the British; Bronshtei
+n and Semendyayev 199...
+  5. [irrelevant] Paresthesia of the upper extremity: Symptom Checker. Listed below are some co
+mbinations of symptoms ...
+  6. [irrelevant] Here is how. Earthquakes are detected using a seismometer. A seismometer, als
+o known as a seismograp...
+  7. [irrelevant] Paresthesia of the upper extremity: is the tingling, prickin or numbness of t
+he upper extremity with...
+  8. [irrelevant] 1 Drain tile suction system: caps are placed on the sump pump baskets. 2  The
+ pump continues to drai...
+  9. [irrelevant] It makes up the part of the throat situated immediately posterior to the nasa
+l cavity, posterior to ...
+  10. [irrelevant] In humans the pharynx is part of the digestive system and also of the conduc
+ting zone of the respira...
+Evaluating queries: 100%|██████████████████████████████████████████████████████████████████████
+| 20/20 [00:00<00:00, 57.40it/s]
+
+Mean NDCG@10 across 20 queries: 0.9944
+Validation NDCG@10: 0.9944
+
+Epoch 17/18
+Batch 0, Loss: 0.0645, GPU Memory: 0.22GB allocated, 7.20GB reserved
+Batch 4, Loss: 0.0627, GPU Memory: 0.22GB allocated, 7.20GB reserved
+Batch 9, Loss: 0.0668, GPU Memory: 0.21GB allocated, 7.20GB reserved
+Average training loss: 0.0627
+Sampling documents for evaluation (initial sample size: 200)...
+Grouping data by queries (target: 20 unique queries)...
+Selected 20 queries for evaluation
+  Total relevant documents across these queries: 67
+  Average relevant docs per query: 3.35
+Evaluating queries:   0%|
+         | 0/20 [00:00<?, ?it/s]
+Sample evaluation results:
+Query: length definition
+Number of relevant docs: 5
+Number of candidate docs: 67
+NDCG@10 score for this query: 1.0000
+Top 10 ranked documents:
+  1. [RELEVANT] Full Definition of LENGTH. 1. a: the longer or longest dimension of an object c
+: the quality or stat...
+  2. [RELEVANT] Definition of LENGTH for Kids. 1. : the measured distance from one end to the o
+ther of the longer or...
+  3. [RELEVANT] The length of this ruler is twelve inches. The length of this ruler is twelve i
+nches. The definition...
+  4. [RELEVANT] For example, it is possible to cut a length of a wire which is shorter than wir
+e thickness. Length m...
+  5. [RELEVANT] 1 The length of the table is six feet, and its width is three feet. 2  These pi
+ns are available in o...
+  6. [irrelevant] 1 Scale (map) , the ratio of the distance on a map to the corresponding actua
+l distance. 2  Scale (r...
+  7. [irrelevant] In the social sciences, scaling is the process of measuring or ordering entit
+ies with respect to qua...
+  8. [irrelevant] More on the Moral Law: Formulations of The Categorical Imperative. The Catego
+rical Imperative: Kant'...
+  9. [irrelevant] Best Answer: A static IP address is a number (in the form of a dotted quad) t
+hat is assigned to a co...
+  10. [irrelevant] In this example, the alert is for the ShakeOut scenario earthquake. Earthqua
+ke early warning systems...
+Evaluating queries: 100%|██████████████████████████████████████████████████████████████████████
+| 20/20 [00:00<00:00, 55.06it/s]
+
+Mean NDCG@10 across 20 queries: 0.9791
+Validation NDCG@10: 0.9791
+
+Epoch 18/18
+Batch 0, Loss: 0.0580, GPU Memory: 0.22GB allocated, 4.99GB reserved
+Batch 4, Loss: 0.0648, GPU Memory: 0.22GB allocated, 7.54GB reserved
+Batch 9, Loss: 0.0640, GPU Memory: 0.21GB allocated, 10.54GB reserved
+Average training loss: 0.0610
+Sampling documents for evaluation (initial sample size: 200)...
+Grouping data by queries (target: 20 unique queries)...
+Selected 20 queries for evaluation
+  Total relevant documents across these queries: 70
+  Average relevant docs per query: 3.50
+Evaluating queries:   0%|
+         | 0/20 [00:00<?, ?it/s]
+Sample evaluation results:
+Query: what are plantar warts
+Number of relevant docs: 4
+Number of candidate docs: 70
+NDCG@10 score for this query: 1.0000
+Top 10 ranked documents:
+  1. [RELEVANT] A plantar wart is a wart that occurs on the sole (plantar) of the foot, most of
+ten on the parts of t...
+  2. [RELEVANT] Causes. Plantar warts are caused by an infection with the human papillomavirus
+(HPV) in the outer la...
+  3. [RELEVANT] Plantar warts and palmer warts are noncancerous skin growths, caused by a viral
+ infection in the top...
+  4. [RELEVANT] The human papillomavirus (HPV) strains that are most often the cause of plantar
+ warts are type 1 & 2...
+  5. [irrelevant] One great property of hopsack fabric is its rugged and rough feel. With this
+particular property, ma...
+  6. [irrelevant] Hopsack or Basketweave, woven upholstery fabric. Hopsack is a distinctive wov
+en fabric with a promin...
+  7. [irrelevant] Hopsack is one of my go-to fabrics in the Spring and Summer. It’s not technic
+ally a fabric, it’s a m...
+  8. [irrelevant] Television adaptation and home media [edit]. In the 1990s, The Werewolf of Fe
+ver Swamp was adapted i...
+  9. [irrelevant] The Werewolf of Fever Swamp was featured on the USA Today and Publishers Week
+ly bestseller list. In ...
+  10. [irrelevant] goosebumps the werewolf of fever swamp. Follow goosebumps the werewolf of fe
+ver swamp to get e-mail ...
+Evaluating queries: 100%|██████████████████████████████████████████████████████████████████████
+| 20/20 [00:00<00:00, 54.82it/s]
+
+Mean NDCG@10 across 20 queries: 0.9972
+Validation NDCG@10: 0.9972
+
+============================================================
+TRAINING COMPLETED - Starting comprehensive testing
+============================================================
+Building MS Marco test dataset with at most 10000 samples...
+Built test dataset with 10000 query-document pairs, including 9950 unique passages
+Sampling documents for evaluation (initial sample size: 200)...
+Grouping data by queries (target: 200 unique queries)...
+Selected 200 queries for evaluation
+  Total relevant documents across these queries: 316
+  Average relevant docs per query: 1.58
+🚀 Pre-encoding *all* documents for efficiency (this may take a moment)...
+🔥 Pre-encoded 9950 documents to reuse for all queries
+Evaluating queries:   0%|
+        | 0/200 [00:00<?, ?it/s]
+Sample evaluation results:
+Query: cost of tuition with hope uga
+Number of relevant docs: 4
+Number of candidate docs: 9950
+NDCG@10 score for this query: 0.7316
+Top 10 ranked documents:
+  1. [irrelevant] The combined annual cost of tuition and fees at the University of Georgia has
+ more than tripled in t...
+  2. [RELEVANT] Claire Suggs with the Georgia Budget and Policy Institute calculates that a UGA
+ student’s HOPE award...
+  3. [RELEVANT] Graduates of UGA have one of the lowest debts following completion of their deg
+ree and, with the HOP...
+  4. [irrelevant] Costs. **Please check back in November for updated program fees. The program
+fee for the 2015 Freshm...
+  5. [RELEVANT] Additional information regarding Tuition and Fees is available on the Board of
+Regents of the Univer...
+  6. [RELEVANT] In addition, out-of-state tuition is applicable for all F-1 visa students. Geor
+gia Resident Out of S...
+  7. [irrelevant] TOP- 25 Best Value SCHOOL #1 UC. Best Value Schools (2014 U.S. News and World
+ Report) are above aver...
+  8. [irrelevant] University of Massachusetts--Boston is a public school. The College of Nursin
+g & Health Sciences has...
+  9. [irrelevant] 1 $3,000 renewable which can be combined with the Zell Miller/HOPE scholarshi
+p for Georgia residents...
+  10. [irrelevant] Students are charged per credit hour up to 14 hours; any credit accumulation
+ of 15 hours or more wil...
+Evaluating queries: 100%|████████████████████████████████████████████████████████████████████|
+200/200 [00:03<00:00, 58.50it/s]
+
+============================================================
+COMPREHENSIVE EVALUATION RESULTS
+============================================================
+📊 Performance Metrics:
+   NDCG@1:  0.1900
+   NDCG@5:  0.3579
+   NDCG@10: 0.4416 (±0.2922)
+
+📈 Evaluation Set Coverage:
+   Queries evaluated: 200
+   Total relevant documents: 316
+   Avg relevant docs/query: 1.58
+
+✅ Comprehensive test results logged to wandb
+wandb:
+wandb:
+wandb: Run history:
+wandb:               avg_train_loss █▃▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                        batch ▃▆▁▅▁▅▆▂▅▆▆█▁▆▃▂▅█▂▄▁▅▆▆▁▆▆▁▃▇▂▇▂▃▄▆▇▃▆▃
+wandb:                   batch_loss ███▇▄▃▂▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                        epoch ▁▁▂▂▃▃▃▄▄▅▅▆▆▆▇▇██
+wandb: final_avg_relevant_per_query ▁
+wandb:                 final_ndcg_1 ▁
+wandb:                final_ndcg_10 ▁
+wandb:            final_ndcg_10_std ▁
+wandb:                 final_ndcg_5 ▁
+wandb:      final_queries_evaluated ▁
+wandb:    final_total_relevant_docs ▁
+wandb:         gpu_memory_allocated ▁███████████████████████████████████████
+wandb:          gpu_memory_reserved ▁▂▄▂▆▄▄▄▄▆▄▄▄▇▂██▃▃▃▃▃▃▃▅▆▆▆▆██▅▅▅▄▅▃▃▃▆
+wandb:             total_parameters ▁
+wandb:                  val_ndcg_10 ▁▁▇▄▆▇▇▇█▇▇██▇██▇█
+wandb:
+wandb: Run summary:
+wandb:               avg_train_loss 0.06098
+wandb:                        batch 91
+wandb:                   batch_loss 0.05784
+wandb:                        epoch 18
+wandb: final_avg_relevant_per_query 1.58
+wandb:                 final_ndcg_1 0.19
+wandb:                final_ndcg_10 0.44163
+wandb:            final_ndcg_10_std 0.29217
+wandb:                 final_ndcg_5 0.35791
+wandb:      final_queries_evaluated 200
+wandb:    final_total_relevant_docs 316
+wandb:         gpu_memory_allocated 0.21688
+wandb:          gpu_memory_reserved 14.27531
+wandb:             total_parameters 46345984
+wandb:                  val_ndcg_10 0.99724
+wandb:
+wandb: 🚀 View run resilient-sweep-20 at: https://wandb.ai/freemvmt-london/two-towers-retrieval
+/runs/flgnbhml
+wandb: ⭐️ View project at: https://wandb.ai/freemvmt-london/two-towers-retrieval
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20250618_221858-flgnbhml/logs
+(freemvmt) root@817456c2dacb:/workspace/two-towers-overlords/freemvmt#
