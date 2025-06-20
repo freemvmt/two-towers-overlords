@@ -23,7 +23,9 @@ class MSMarcoDataset(Dataset):
         print(f"Building MS Marco {split} dataset with {samples_txt} samples...")
         # validate max_samples
         if max_samples < -1 or max_samples == 0:
-            raise ValueError("max_samples must be -1 (use full dataset) or > 0 (limit to that many samples)")
+            raise ValueError(
+                "max_samples must be -1 (use full dataset) or > 0 (limit to that many samples)"
+            )
 
         # get map-style dataset from Hugging Face
         self.dataset = load_dataset("microsoft/ms_marco", "v1.1", split=split)
@@ -102,7 +104,9 @@ class TripletDataLoader:
             batch_size=batch_size,
             shuffle=True,
             num_workers=num_workers,
-            pin_memory=True if (device and device.type == "cuda") else False,  # faster GPU transfer
+            pin_memory=True
+            if (device and device.type == "cuda")
+            else False,  # faster GPU transfer
             persistent_workers=True if num_workers > 0 else False,
         )
 
@@ -125,7 +129,9 @@ class TripletDataLoader:
 
         return queries, positives, negatives
 
-    def _get_random_negative(self, batch: list[MsMarcoDatasetItem], idx: int) -> tuple[str, int]:
+    def _get_random_negative(
+        self, batch: list[MsMarcoDatasetItem], idx: int
+    ) -> tuple[str, int]:
         """Get a random negative sample from the batch, excluding the specified index."""
         neg_idx = random.choice([j for j in range(len(batch)) if j != idx])
         return batch[neg_idx]["positive"], batch[neg_idx]["query_id"]  # type: ignore
@@ -136,7 +142,11 @@ class TripletDataLoader:
             batch_list = []
             for i in range(len(batch["query"])):
                 batch_list.append(
-                    {"query": batch["query"][i], "positive": batch["positive"][i], "query_id": batch["query_id"][i]}
+                    {
+                        "query": batch["query"][i],
+                        "positive": batch["positive"][i],
+                        "query_id": batch["query_id"][i],
+                    }
                 )
 
             yield self.create_triplets(batch_list)

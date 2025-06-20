@@ -50,7 +50,9 @@ def find_best_model(models_dir: str = MODELS_DIR) -> Optional[tuple[str, str]]:
         Path to the best model file, or None if no models found
     """
     if not os.path.exists(models_dir) or not os.path.isdir(models_dir):
-        print(f"❌ Models directory '{models_dir}' does not exist or is not a directory")
+        print(
+            f"❌ Models directory '{models_dir}' does not exist or is not a directory"
+        )
         return None
 
     model_files = []
@@ -63,7 +65,9 @@ def find_best_model(models_dir: str = MODELS_DIR) -> Optional[tuple[str, str]]:
                 path = os.path.join(models_dir, filename)
                 model_files.append((epochs, path, filename))
         elif filename in (WEIGHTS_OVERRIDE):
-            print(f"🔍 Best model selection overridden by presence of {WEIGHTS_OVERRIDE} file in {models_dir}")
+            print(
+                f"🔍 Best model selection overridden by presence of {WEIGHTS_OVERRIDE} file in {models_dir}"
+            )
             return os.path.join(models_dir, filename), filename
 
     if not model_files:
@@ -74,7 +78,9 @@ def find_best_model(models_dir: str = MODELS_DIR) -> Optional[tuple[str, str]]:
     model_files.sort(key=lambda x: x[0], reverse=True)
     best_epochs, best_path, best_filename = model_files[0]
 
-    print(f"🎯 Auto-selected best model: {best_filename} (trained for {best_epochs} epochs)")
+    print(
+        f"🎯 Auto-selected best model: {best_filename} (trained for {best_epochs} epochs)"
+    )
     return best_path, best_filename
 
 
@@ -101,7 +107,9 @@ def get_projection_dim_from_model(model_path: str) -> int:
             print(f"🔍 Detected projection dimension: {projection_dim}")
             return projection_dim
         else:
-            print("⚠️ Could not find projection layer in model state dict, using default dimension")
+            print(
+                "⚠️ Could not find projection layer in model state dict, using default dimension"
+            )
             return DEFAULT_PROJ_DIM
 
     except Exception as e:
@@ -168,9 +176,13 @@ class DocumentSearchEngine:
         if redis_url:
             self.redis_client = Redis.from_url(redis_url)
         elif redis_host and redis_port and redis_pass:
-            self.redis_client = Redis(host=redis_host, port=redis_port, password=redis_pass)
+            self.redis_client = Redis(
+                host=redis_host, port=redis_port, password=redis_pass
+            )
         else:
-            raise ValueError("Must provide either redis URL or full host/port/pass combination")
+            raise ValueError(
+                "Must provide either redis URL or full host/port/pass combination"
+            )
 
         # Find model weights if available
         model_path = None
@@ -187,17 +199,25 @@ class DocumentSearchEngine:
                 actual_model_filename = model_filename
             print(f"🔍 Using custom model: {model_filename}")
         else:
-            print("❌ Custom model provided but either not found to exist, or not ending with .pt/.pth")
+            print(
+                "❌ Custom model provided but either not found to exist, or not ending with .pt/.pth"
+            )
 
         # init index name, using model filename if available
-        self.index_name = os.path.splitext(actual_model_filename)[0] if actual_model_filename else DEFAULT_INDEX_NAME
+        self.index_name = (
+            os.path.splitext(actual_model_filename)[0]
+            if actual_model_filename
+            else DEFAULT_INDEX_NAME
+        )
 
         # Auto-detect projection dimension from model if not provided
         if projection_dim is None:
             if model_path:
                 self.projection_dim = get_projection_dim_from_model(model_path)
             else:
-                print(f"ℹ️ No model available for dimension detection, using default projection dim: {DEFAULT_PROJ_DIM}")
+                print(
+                    f"ℹ️ No model available for dimension detection, using default projection dim: {DEFAULT_PROJ_DIM}"
+                )
                 self.projection_dim = DEFAULT_PROJ_DIM
         else:
             self.projection_dim = projection_dim
@@ -206,9 +226,13 @@ class DocumentSearchEngine:
         self.model = TwoTowersModel(projection_dim=self.projection_dim)
         if model_path:
             print(f"🔍 Loading model weights from: {model_path}")
-            self.model.load_state_dict(torch.load(model_path, map_location="cpu", weights_only=True))
+            self.model.load_state_dict(
+                torch.load(model_path, map_location="cpu", weights_only=True)
+            )
         else:
-            print("ℹ️ No model weights provided or found - using untrained model with random weights")
+            print(
+                "ℹ️ No model weights provided or found - using untrained model with random weights"
+            )
         self.model.eval()
 
         # Set up device
@@ -228,7 +252,9 @@ class DocumentSearchEngine:
 
         try:
             # Check if index already exists, and create it if not
-            self.search_index = SearchIndex(schema=schema, redis_client=self.redis_client)
+            self.search_index = SearchIndex(
+                schema=schema, redis_client=self.redis_client
+            )
             if not self.search_index.exists():
                 print(f"Creating new search index: {self.index_name}")
                 self.search_index.create(overwrite=False)
@@ -272,11 +298,15 @@ class DocumentSearchEngine:
                 num_batches = (len(documents) + batch_size - 1) // batch_size
 
                 for i in tqdm(
-                    range(0, len(documents), batch_size), desc="Encoding document batches", total=num_batches
+                    range(0, len(documents), batch_size),
+                    desc="Encoding document batches",
+                    total=num_batches,
                 ):
                     batch_docs = documents[i : i + batch_size]
                     batch_embeddings = self.model.encode_documents(batch_docs)
-                    embeddings.append(batch_embeddings.cpu())  # Move to CPU to free GPU memory
+                    embeddings.append(
+                        batch_embeddings.cpu()
+                    )  # Move to CPU to free GPU memory
 
                 # Concatenate all embeddings
                 print("Concatenating embeddings...")
@@ -291,7 +321,9 @@ class DocumentSearchEngine:
         print("Preparing documents for bulk insertion...")
         data = []
         for i, (doc_text, embedding) in tqdm(
-            enumerate(zip(documents, embeddings_np)), desc="Preparing documents", total=len(documents)
+            enumerate(zip(documents, embeddings_np)),
+            desc="Preparing documents",
+            total=len(documents),
         ):
             data.append(
                 {
@@ -306,7 +338,11 @@ class DocumentSearchEngine:
         if self.search_index:
             # could load everything at once, but we batch it to show progress (sanity!)
             total_batches = (len(data) + batch_size - 1) // batch_size
-            for i in tqdm(range(0, len(data), batch_size), desc="Inserting into Redis", total=total_batches):
+            for i in tqdm(
+                range(0, len(data), batch_size),
+                desc="Inserting into Redis",
+                total=total_batches,
+            ):
                 batch_data = data[i : i + batch_size]
                 self.search_index.load(batch_data, id_field="id")
             print(f"✅ Successfully ingested {len(documents)} documents")
@@ -327,7 +363,9 @@ class DocumentSearchEngine:
         # Encode the query
         with torch.no_grad():
             query_embedding = self.model.encode_queries([query])
-            query_vector = query_embedding.cpu().numpy()[0]  # Get first (and only) result
+            query_vector = query_embedding.cpu().numpy()[
+                0
+            ]  # Get first (and only) result
 
         # Create vector query
         vector_query = VectorQuery(
@@ -352,8 +390,13 @@ class DocumentSearchEngine:
                 {
                     "id": result.get("id"),
                     "content": result.get("content"),
-                    "score": float(result.get("vector_distance", 0.0)),  # cosine similarity between query and given doc
-                    "distance": 1.0 - float(result.get("vector_distance", 0.0)),  # convert similarity -> distance
+                    "score": float(
+                        result.get("vector_distance", 0.0)
+                    ),  # cosine similarity between query and given doc
+                    "distance": 1.0
+                    - float(
+                        result.get("vector_distance", 0.0)
+                    ),  # convert similarity -> distance
                 }
             )
         return formatted
@@ -431,7 +474,9 @@ def build_document_index(
         print(f"Found {len(unique_docs)} unique documents")
 
     # Ingest documents
-    engine.ingest_documents(unique_docs, batch_size=batch_size, clear_existing=clear_existing)
+    engine.ingest_documents(
+        unique_docs, batch_size=batch_size, clear_existing=clear_existing
+    )
 
     # Print index info
     info = engine.get_index_info()
@@ -469,7 +514,9 @@ def search_documents(
     # Check if index exists and has documents
     info = engine.get_index_info()
     if info.get("num_docs", 0) == 0:
-        print("❌ No documents found in index. Please run with --build-index first (or simultaneously)")
+        print(
+            "❌ No documents found in index. Please run with --build-index first (or simultaneously)"
+        )
         return
 
     print(f"Searching index with {info.get('num_docs', 0)} documents...")
@@ -482,8 +529,14 @@ def search_documents(
     print("=" * 80)
 
     for i, result in enumerate(results, 1):
-        content_preview = result["content"][:200] + "..." if len(result["content"]) > 200 else result["content"]
-        print(f"{i}. [Score: {result['score']:.4f}] [Distance: {result['distance']:.4f}]")
+        content_preview = (
+            result["content"][:200] + "..."
+            if len(result["content"]) > 200
+            else result["content"]
+        )
+        print(
+            f"{i}. [Score: {result['score']:.4f}] [Distance: {result['distance']:.4f}]"
+        )
         print(f"   {content_preview}")
         if i < len(results):
             print()
@@ -491,12 +544,18 @@ def search_documents(
 
 def main():
     """Main CLI interface for the search system."""
-    parser = argparse.ArgumentParser(description="Redis Vector Search for Two-Towers Model")
+    parser = argparse.ArgumentParser(
+        description="Redis Vector Search for Two-Towers Model"
+    )
 
     # Main actions
     parser.add_argument("query", nargs="?", help="Query to search for")
-    parser.add_argument("--build-index", action="store_true", help="Build the document index")
-    parser.add_argument("--index-info", action="store_true", help="Show index information")
+    parser.add_argument(
+        "--build-index", action="store_true", help="Build the document index"
+    )
+    parser.add_argument(
+        "--index-info", action="store_true", help="Show index information"
+    )
 
     # Configuration
     parser.add_argument(
@@ -505,26 +564,44 @@ def main():
         default=None,
         help="Filename for saved model weights in /models dir (optional, auto-selects best model if not provided)",
     )
-    parser.add_argument("--models-dir", type=str, default=MODELS_DIR, help="Path to model weights")
     parser.add_argument(
-        "--dims", type=int, default=None, help="Model projection dimension (auto-detected from model if not provided)"
+        "--models-dir", type=str, default=MODELS_DIR, help="Path to model weights"
     )
     parser.add_argument(
-        "--max-docs", type=int, default=-1, help="Maximum documents to index (-1 for all documents from all splits)"
+        "--dims",
+        type=int,
+        default=None,
+        help="Model projection dimension (auto-detected from model if not provided)",
+    )
+    parser.add_argument(
+        "--max-docs",
+        type=int,
+        default=-1,
+        help="Maximum documents to index (-1 for all documents from all splits)",
     )
     # note that a batch size of 1024 surfed close to the wind on RTX 4090, so may overflow on e.g. a 3090
-    parser.add_argument("--batch-size", type=int, default=1024, help="Batch size for processing")
-    parser.add_argument("--top-k", type=int, default=10, help="Number of results to return")
+    parser.add_argument(
+        "--batch-size", type=int, default=1024, help="Batch size for processing"
+    )
+    parser.add_argument(
+        "--top-k", type=int, default=10, help="Number of results to return"
+    )
 
     # redis connection - expect an URL but allow host/pass for greater compatibility
-    parser.add_argument("--redis-url", type=str, default="redis://localhost:6379", help="Redis URL")
+    parser.add_argument(
+        "--redis-url", type=str, default="redis://localhost:6379", help="Redis URL"
+    )
     parser.add_argument("--redis-host", type=str, default=None, help="Redis host")
     parser.add_argument("--redis-port", type=int, default=6379, help="Redis port")
-    parser.add_argument("--redis-pass", type=str, default="redispass", help="Redis pass")
+    parser.add_argument(
+        "--redis-pass", type=str, default="redispass", help="Redis pass"
+    )
 
     args = parser.parse_args()
     if not (args.query or args.build_index or args.index_info):
-        print("ℹ️ No action specified. Use --build-index, --index-info, or provide a query.")
+        print(
+            "ℹ️ No action specified. Use --build-index, --index-info, or provide a query."
+        )
         parser.print_help()
         return
 

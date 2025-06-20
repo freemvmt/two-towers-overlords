@@ -62,7 +62,9 @@ async def lifespan(app: FastAPI):
         model_filename = os.getenv("MODEL", "e15.lr4.d512.m3.pt")
         print(f"Redis URL: {redis_url}")
         print(f"Models directory: {models_dir}")
-        print(f"Model filename: {model_filename if model_filename else 'not specified'}")
+        print(
+            f"Model filename: {model_filename if model_filename else 'not specified'}"
+        )
 
         # Initialize search engine
         search_engine = DocumentSearchEngine(
@@ -76,9 +78,13 @@ async def lifespan(app: FastAPI):
         print(f"Redis index info: {index_info}")
 
         if index_info.get("num_docs", 0) == 0:
-            print("Redis index appears to be empty. Make sure to build the index first!")
+            print(
+                "Redis index appears to be empty. Make sure to build the index first!"
+            )
         else:
-            print(f"Successfully connected to Redis with {index_info.get('num_docs', 0)} documents")
+            print(
+                f"Successfully connected to Redis with {index_info.get('num_docs', 0)} documents"
+            )
 
     except Exception as e:
         print(f"Failed to initialize search engine: {e}")
@@ -116,7 +122,9 @@ async def health_check():
         redis_connected = False
 
     return HealthResponse(
-        status="healthy" if redis_connected else "unhealthy", redis_connected=redis_connected, index_info=index_info
+        status="healthy" if redis_connected else "unhealthy",
+        redis_connected=redis_connected,
+        index_info=index_info,
     )
 
 
@@ -138,14 +146,19 @@ async def search_documents(request: SearchRequest):
 
         # Convert to response format
         results = [
-            SearchResult(id=result["id"], content=result["content"], score=float(result["score"]))
+            SearchResult(
+                id=result["id"], content=result["content"], score=float(result["score"])
+            )
             for result in raw_results
         ]
 
         processing_time = (time.time() - start_time) * 1000  # Convert to milliseconds
 
         return SearchResponse(
-            query=request.query, results=results, total_results=len(results), processing_time_ms=processing_time
+            query=request.query,
+            results=results,
+            total_results=len(results),
+            processing_time_ms=processing_time,
         )
 
     except Exception as e:
@@ -165,7 +178,9 @@ async def get_index_info():
         return search_engine.get_index_info()
     except Exception as e:
         print(f"Failed to get index info: {e}")
-        raise HTTPException(status_code=500, detail=f"Failed to get index info: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Failed to get index info: {str(e)}"
+        )
 
 
 # Root endpoint
@@ -175,5 +190,9 @@ async def root():
     return {
         "message": "Two-Towers Document Retrieval API",
         "version": "1.0.0",
-        "endpoints": {"health": "/health", "search": "/search", "index_info": "/index-info"},
+        "endpoints": {
+            "health": "/health",
+            "search": "/search",
+            "index_info": "/index-info",
+        },
     }

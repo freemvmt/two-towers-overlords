@@ -13,7 +13,11 @@ from transformers import AutoModel, AutoTokenizer
 class AveragePoolingTower(Module):
     """Simple encoder that uses pre-trained embeddings with average pooling and a trainable projection layer."""
 
-    def __init__(self, model_name: str = "sentence-transformers/all-MiniLM-L6-v2", projection_dim: int = 128):
+    def __init__(
+        self,
+        model_name: str = "sentence-transformers/all-MiniLM-L6-v2",
+        projection_dim: int = 128,
+    ):
         super().__init__()
         # we export TOKENIZERS_PARALLELISM=false to avoid the tokenizer clashing with the DL workers
         self.tokenizer = AutoTokenizer.from_pretrained(model_name)
@@ -36,7 +40,9 @@ class AveragePoolingTower(Module):
     def forward(self, texts: list[str]) -> Tensor:
         """Encode texts using average pooling over token embeddings, then project."""
         # Tokenize
-        tokens = self.tokenizer(texts, padding=True, truncation=True, return_tensors="pt", max_length=512)
+        tokens = self.tokenizer(
+            texts, padding=True, truncation=True, return_tensors="pt", max_length=512
+        )
 
         # Move tokenized inputs to the same device as the model
         tokens = {k: v.to(self.pretrained_model.device) for k, v in tokens.items()}
@@ -55,9 +61,15 @@ class AveragePoolingTower(Module):
 
     # Mean Pooling - Take attention mask into account for correct averaging
     def _mean_pooling(self, output, attention_mask):
-        token_embeddings = output[0]  # First element of output contains all token embeddings
-        input_mask_expanded = attention_mask.unsqueeze(-1).expand(token_embeddings.size()).float()
-        return sum(token_embeddings * input_mask_expanded, 1) / clamp(input_mask_expanded.sum(1), min=1e-9)
+        token_embeddings = output[
+            0
+        ]  # First element of output contains all token embeddings
+        input_mask_expanded = (
+            attention_mask.unsqueeze(-1).expand(token_embeddings.size()).float()
+        )
+        return sum(token_embeddings * input_mask_expanded, 1) / clamp(
+            input_mask_expanded.sum(1), min=1e-9
+        )
 
 
 class TwoTowersModel(Module):
@@ -99,7 +111,9 @@ class TwoTowersModel(Module):
         all_embeddings = cat(embeddings, dim=0)
         return all_embeddings.to(next(self.parameters()).device)
 
-    def forward(self, queries: list[str], documents: list[str]) -> Tuple[Tensor, Tensor]:
+    def forward(
+        self, queries: list[str], documents: list[str]
+    ) -> Tuple[Tensor, Tensor]:
         """Forward pass returning query and document embeddings."""
         query_embeddings = self.encode_queries(queries)
         # the forward pass is subject to training batch size control, so no need to use batching method

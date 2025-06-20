@@ -15,34 +15,72 @@ MODEL_FILENAME_BASE_TEMPLATE = "e{epochs}.lr{learning_rate}.d{projection_dim}.m{
 
 def main():
     """Main function to run training with command-line arguments."""
-    parser = argparse.ArgumentParser(description="Train two-towers document retrieval model")
+    parser = argparse.ArgumentParser(
+        description="Train two-towers document retrieval model"
+    )
     # size of dataset to use (-1 for full dataset) and batch size
     parser.add_argument(
-        "--max-samples", type=int, default=100_000, help="Maximum number of training samples (for faster development)"
+        "--max-samples",
+        type=int,
+        default=100_000,
+        help="Maximum number of training samples (for faster development)",
     )
-    parser.add_argument("--batch-size", type=int, default=1024, help="Batch size for training")
+    parser.add_argument(
+        "--batch-size", type=int, default=1024, help="Batch size for training"
+    )
 
     # hyperparams proper (assume a small but effective run as default, modelled on iconic sweep)
-    parser.add_argument("--epochs", type=int, default=9, help="Number of training epochs")
-    parser.add_argument("--learning-rate", type=float, default=1e-3, help="Learning rate")
-    parser.add_argument("--projection-dim", type=int, default=128, help="Project dimension for each tower")
-    parser.add_argument("--margin", type=float, default=0.3, help="Margin for triplet loss")
+    parser.add_argument(
+        "--epochs", type=int, default=9, help="Number of training epochs"
+    )
+    parser.add_argument(
+        "--learning-rate", type=float, default=1e-3, help="Learning rate"
+    )
+    parser.add_argument(
+        "--projection-dim",
+        type=int,
+        default=128,
+        help="Project dimension for each tower",
+    )
+    parser.add_argument(
+        "--margin", type=float, default=0.3, help="Margin for triplet loss"
+    )
 
     # logistics / switches
-    parser.add_argument("--project-name", type=str, default="two-towers-retrieval", help="Wandb project name")
-    parser.add_argument("--no-wandb", action="store_true", help="Disable wandb logging")
-    parser.add_argument("--no-save", action="store_true", help="Don't save weights after training")
-    parser.add_argument("--sweep", action="store_true", help="Run hyperparameter sweep with wandb")
     parser.add_argument(
-        "--no-comprehensive-test", action="store_true", help="Skip comprehensive testing after training"
+        "--project-name",
+        type=str,
+        default="two-towers-retrieval",
+        help="Wandb project name",
+    )
+    parser.add_argument("--no-wandb", action="store_true", help="Disable wandb logging")
+    parser.add_argument(
+        "--no-save", action="store_true", help="Don't save weights after training"
+    )
+    parser.add_argument(
+        "--sweep", action="store_true", help="Run hyperparameter sweep with wandb"
+    )
+    parser.add_argument(
+        "--no-comprehensive-test",
+        action="store_true",
+        help="Skip comprehensive testing after training",
     )
 
     # GPU optimization
     parser.add_argument(
-        "--accumulation-steps", type=int, default=2, help="Gradient accumulation steps for larger effective batch size"
+        "--accumulation-steps",
+        type=int,
+        default=2,
+        help="Gradient accumulation steps for larger effective batch size",
     )
-    parser.add_argument("--no-mixed-precision", action="store_true", help="Disable mixed precision training")
-    parser.add_argument("--num-workers", type=int, default=4, help="Number of DataLoader workers")
+    parser.add_argument(
+        "--no-mixed-precision",
+        action="store_true",
+        help="Disable mixed precision training",
+    )
+    parser.add_argument(
+        "--num-workers", type=int, default=4, help="Number of DataLoader workers"
+    )
 
     args = parser.parse_args()
 
@@ -88,7 +126,9 @@ def main():
 
     # Print model summary and save state
     print("\n✅ Finished training!")
-    print(f"   Model trained successfully with {sum(p.numel() for p in trained_model.parameters())} parameters.")
+    print(
+        f"   Model trained successfully with {sum(p.numel() for p in trained_model.parameters())} parameters."
+    )
 
     # Generate and display model summary
     model_summary = summary(trained_model, verbose=0)  # verbose=0 to get return object
@@ -131,8 +171,12 @@ def main():
                 },
                 "model_stats": {
                     "total_params": sum(p.numel() for p in trained_model.parameters()),
-                    "trainable_params": sum(p.numel() for p in trained_model.parameters() if p.requires_grad),
-                    "model_size_mb": sum(p.numel() * p.element_size() for p in trained_model.parameters())
+                    "trainable_params": sum(
+                        p.numel() for p in trained_model.parameters() if p.requires_grad
+                    ),
+                    "model_size_mb": sum(
+                        p.numel() * p.element_size() for p in trained_model.parameters()
+                    )
                     / (1024 * 1024),
                 },
                 "files": {
@@ -147,12 +191,18 @@ def main():
             # Add summary statistics if available
             if hasattr(model_summary, "total_params"):
                 model_info["torchinfo_summary"] = {
-                    "total_params": model_summary.total_params if hasattr(model_summary, "total_params") else None,
+                    "total_params": model_summary.total_params
+                    if hasattr(model_summary, "total_params")
+                    else None,
                     "trainable_params": (
-                        model_summary.trainable_params if hasattr(model_summary, "trainable_params") else None
+                        model_summary.trainable_params
+                        if hasattr(model_summary, "trainable_params")
+                        else None
                     ),
                     "total_mult_adds": (
-                        model_summary.total_mult_adds if hasattr(model_summary, "total_mult_adds") else None
+                        model_summary.total_mult_adds
+                        if hasattr(model_summary, "total_mult_adds")
+                        else None
                     ),
                 }
 
@@ -194,7 +244,9 @@ def sweep_train():
         use_wandb=True,
         accumulation_steps=config.get("accumulation_steps", 2),
         num_workers=config.get("num_workers", 4),
-        run_comprehensive_test=config.get("run_comprehensive_test", True),  # Enable by default for sweeps
+        run_comprehensive_test=config.get(
+            "run_comprehensive_test", True
+        ),  # Enable by default for sweeps
     )
 
     return trained_model

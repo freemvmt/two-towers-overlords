@@ -13,7 +13,9 @@ import streamlit as st
 API_URL = os.getenv("API_URL", "http://localhost:8000")
 
 
-def call_api(endpoint: str, method: str = "GET", json_data: Optional[Dict] = None) -> Dict[str, Any]:
+def call_api(
+    endpoint: str, method: str = "GET", json_data: Optional[Dict] = None
+) -> Dict[str, Any]:
     """Make API call with error handling."""
     try:
         url = f"{API_URL}{endpoint}"
@@ -54,7 +56,9 @@ def check_api_health() -> bool:
 
 def search_documents(query: str, top_k: int = 10) -> Dict[str, Any]:
     """Search for documents using the API."""
-    return call_api("/search", method="POST", json_data={"query": query, "top_k": top_k})
+    return call_api(
+        "/search", method="POST", json_data={"query": query, "top_k": top_k}
+    )
 
 
 def get_index_info() -> Dict[str, Any]:
@@ -157,7 +161,10 @@ if submitted and query.strip():
             with col1:
                 st.metric("📄 Results Found", search_results["total_results"])
             with col2:
-                st.metric("⚡ Processing Time", f"{search_results['processing_time_ms']:.1f}ms")
+                st.metric(
+                    "⚡ Processing Time",
+                    f"{search_results['processing_time_ms']:.1f}ms",
+                )
             with col3:
                 st.metric("🌐 Total Time", f"{search_time * 1000:.1f}ms")
 
@@ -181,9 +188,13 @@ if submitted and query.strip():
                             unsafe_allow_html=True,
                         )
             else:
-                st.info("🔍 No results found for your query. Try different keywords or phrases.")
+                st.info(
+                    "🔍 No results found for your query. Try different keywords or phrases."
+                )
         else:
-            st.error(f"❌ Search failed: {search_results.get('error', 'Unknown error')}")
+            st.error(
+                f"❌ Search failed: {search_results.get('error', 'Unknown error')}"
+            )
 
 elif submitted and not query.strip():
     st.warning("⚠️ Please enter a search query.")
@@ -202,4 +213,6 @@ with st.expander("ℹ️ How to use this search system"):
 
 # Footer
 st.markdown("---")
-st.markdown(f"Built with ❤️ using Streamlit, FastAPI, and Redis Vector Search | API Endpoint: `{API_URL}`")
+st.markdown(
+    f"Built with ❤️ using Streamlit, FastAPI, and Redis Vector Search | API Endpoint: `{API_URL}`"
+)

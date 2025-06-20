@@ -42,7 +42,9 @@ def train_epoch(
         negative_embeds = model.encode_documents(negatives)
 
         # Compute triplet loss
-        loss = criterion(query_embeds, positive_embeds, negative_embeds)  # compute triplet loss
+        loss = criterion(
+            query_embeds, positive_embeds, negative_embeds
+        )  # compute triplet loss
 
         # Backward pass
         loss.backward()  # compute gradients (∇loss wrt parameters)
@@ -108,8 +110,12 @@ def train_epoch_optimized(
                 {
                     "batch_loss": loss.item() * accumulation_steps,
                     "batch": num_batches,
-                    "gpu_memory_allocated": torch.cuda.memory_allocated() / 1e9 if torch.cuda.is_available() else 0,
-                    "gpu_memory_reserved": torch.cuda.memory_reserved() / 1e9 if torch.cuda.is_available() else 0,
+                    "gpu_memory_allocated": torch.cuda.memory_allocated() / 1e9
+                    if torch.cuda.is_available()
+                    else 0,
+                    "gpu_memory_reserved": torch.cuda.memory_reserved() / 1e9
+                    if torch.cuda.is_available()
+                    else 0,
                 }
             )
 
@@ -120,7 +126,9 @@ def train_epoch_optimized(
                 if torch.cuda.is_available()
                 else ""
             )
-            print(f"Batch {batch_idx}, Loss: {loss.item() * accumulation_steps:.4f}, {mem_info}")
+            print(
+                f"Batch {batch_idx}, Loss: {loss.item() * accumulation_steps:.4f}, {mem_info}"
+            )
 
     return total_loss / num_batches
 
@@ -176,7 +184,9 @@ def evaluate_model(
     query_groups: dict[int, dict[str, Union[str, set[str]]]] = {}
     sample_multiplier = 1
     print(f"Grouping data by queries (target: {min_query_groups} unique queries)...")
-    while len(query_groups) < min_query_groups and sample_multiplier <= 10:  # Prevent infinite loop
+    while (
+        len(query_groups) < min_query_groups and sample_multiplier <= 10
+    ):  # Prevent infinite loop
         sample_size_current = min(sample_size * sample_multiplier, len(dataset))
         indices = random.sample(range(len(dataset)), sample_size_current)
         eval_data = [dataset[i] for i in indices]
@@ -198,7 +208,9 @@ def evaluate_model(
     )[:min_query_groups]
 
     # Calculate statistics about the evaluation set (needed for both modes)
-    total_relevant_docs = sum(len(query_groups[qid]["relevant_docs"]) for qid in query_ids)
+    total_relevant_docs = sum(
+        len(query_groups[qid]["relevant_docs"]) for qid in query_ids
+    )
     avg_relevant_per_query = total_relevant_docs / len(query_ids)
 
     print(f"Selected {len(query_ids)} queries for evaluation")
@@ -216,14 +228,18 @@ def evaluate_model(
     pre_encoded_docs = None
     fixed_candidate_pool = None
     if candidate_pool_size == -1:
-        print("🚀 Pre-encoding *all* documents for efficiency (this may take a moment)...")
+        print(
+            "🚀 Pre-encoding *all* documents for efficiency (this may take a moment)..."
+        )
         fixed_candidate_pool = dataset.get_unique_passages()
         with torch.no_grad():
             pre_encoded_docs = model.encode_documents_batched(
                 documents=fixed_candidate_pool,
                 batch_size=batch_size,
             )
-        print(f"🔥 Pre-encoded {len(fixed_candidate_pool)} documents to reuse for all queries")
+        print(
+            f"🔥 Pre-encoded {len(fixed_candidate_pool)} documents to reuse for all queries"
+        )
 
     for i, query_id in enumerate(tqdm(query_ids, desc="Evaluating queries")):
         query_data: dict[str, Union[str, set[str]]] = query_groups[query_id]
@@ -244,21 +260,29 @@ def evaluate_model(
                 if doc not in relevant_docs
             )
             if len(irrelevant_docs) > candidate_pool_size:
-                irrelevant_docs = random.sample(list(irrelevant_docs), candidate_pool_size)
+                irrelevant_docs = random.sample(
+                    list(irrelevant_docs), candidate_pool_size
+                )
             # we don't make a list from union of sets here to ensure relevant docs come first in the candidate pool
             candidate_pool = list(relevant_docs) + list(irrelevant_docs)
 
         # Create ground-truth relevance labels
         if candidate_pool_size == -1:
             # For pre-encoded docs, create relevance labels based on document positions
-            true_relevance = np.array([1 if doc in relevant_docs else 0 for doc in candidate_pool])
+            true_relevance = np.array(
+                [1 if doc in relevant_docs else 0 for doc in candidate_pool]
+            )
         else:
             # to avoid traversing full candidate pool when we have built the docs by hand
-            true_relevance = np.array([1] * len(relevant_docs) + [0] * len(irrelevant_docs))  # type: ignore
+            true_relevance = np.array(
+                [1] * len(relevant_docs) + [0] * len(irrelevant_docs)
+            )  # type: ignore
 
         # Get embeddings and compute similarities
         with torch.no_grad():
-            query_embed = model.encode_queries([query])  # Shape: (1, embed_dim)  # type: ignore
+            query_embed = model.encode_queries(
+                [query]
+            )  # Shape: (1, embed_dim)  # type: ignore
 
             # Use pre-encoded documents if available, otherwise encode on-demand
             if candidate_pool_size == -1 and pre_encoded_docs is not None:
@@ -270,7 +294,9 @@ def evaluate_model(
                 )  # Shape: (n_docs, embed_dim)
 
             # Compute similarities between the query and all candidate documents
-            similarities = torch.cosine_similarity(query_embed.cpu(), doc_embeds.cpu(), dim=1).numpy()
+            similarities = torch.cosine_similarity(
+                query_embed.cpu(), doc_embeds.cpu(), dim=1
+            ).numpy()
 
         # Calculate NDCG scores (first reshaping nparrays to 2D for sklearn compatibility)
         true_relevance_reshaped = true_relevance.reshape(1, -1)
@@ -334,11 +360,17 @@ def evaluate_model(
     print("📊 Performance Metrics:")
     print(f"   NDCG@1:  {results[f'{wandb_prefix}ndcg_1']:.4f}")
     print(f"   NDCG@5:  {results[f'{wandb_prefix}ndcg_5']:.4f}")
-    print(f"   NDCG@10: {results[f'{wandb_prefix}ndcg_10']:.4f} (±{results[f'{wandb_prefix}ndcg_10_std']:.4f})")
+    print(
+        f"   NDCG@10: {results[f'{wandb_prefix}ndcg_10']:.4f} (±{results[f'{wandb_prefix}ndcg_10_std']:.4f})"
+    )
     print("\n📈 Evaluation Set Coverage:")
     print(f"   Queries evaluated: {results[f'{wandb_prefix}queries_evaluated']}")
-    print(f"   Total relevant documents: {results[f'{wandb_prefix}total_relevant_docs']}")
-    print(f"   Avg relevant docs/query: {results[f'{wandb_prefix}avg_relevant_per_query']:.2f}")
+    print(
+        f"   Total relevant documents: {results[f'{wandb_prefix}total_relevant_docs']}"
+    )
+    print(
+        f"   Avg relevant docs/query: {results[f'{wandb_prefix}avg_relevant_per_query']:.2f}"
+    )
 
     # Log to wandb if requested
     if log_wandb:
@@ -386,7 +418,9 @@ def run_training(
             "margin": margin,
             "dataset_type": "ms_marco_all_passages",  # Using all passages by default
             "device": str(device),
-            "device_name": torch.cuda.get_device_name(0) if device.type == "cuda" else "CPU",
+            "device_name": torch.cuda.get_device_name(0)
+            if device.type == "cuda"
+            else "CPU",
         }
         if wandb_config:
             config.update(wandb_config)
@@ -411,7 +445,9 @@ def run_training(
     val_ds = MSMarcoDataset("validation", max_samples=1000)
 
     # Create data loader with optimizations
-    train_dl = TripletDataLoader(train_ds, batch_size=batch_size, num_workers=num_workers, device=device)
+    train_dl = TripletDataLoader(
+        train_ds, batch_size=batch_size, num_workers=num_workers, device=device
+    )
 
     # GPU optimization settings
     print("Training configuration:")
@@ -422,7 +458,11 @@ def run_training(
     print(f"  DataLoader workers: {num_workers}")
 
     # Initialize mixed precision scaler
-    scaler = GradScaler(device.type) if use_mixed_precision and device.type == "cuda" else None
+    scaler = (
+        GradScaler(device.type)
+        if use_mixed_precision and device.type == "cuda"
+        else None
+    )
 
     print(f"Starting training for {num_epochs} epochs...")
     for epoch in range(num_epochs):
@@ -441,7 +481,9 @@ def run_training(
                 log_wandb=use_wandb,
             )
         else:
-            avg_loss = train_epoch(model, train_dl, criterion, optimizer, log_wandb=use_wandb)
+            avg_loss = train_epoch(
+                model, train_dl, criterion, optimizer, log_wandb=use_wandb
+            )
         print(f"Average training loss: {avg_loss:.4f}")
 
         # in-epoch evaluation
