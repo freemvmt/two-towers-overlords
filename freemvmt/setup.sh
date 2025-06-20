@@ -6,8 +6,8 @@ apt-get update
 apt-get install -y vim rsync git nvtop htop tmux curl ca-certificates git-lfs
 apt-get upgrade -y
 
-# load env vars into shell
-cp .env.example .env
+# get env vars sent via send script and load into shell
+cp ~/.env .env
 set -a
 source .env
 set +a
