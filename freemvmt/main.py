@@ -8,12 +8,6 @@ from math import log10
 import os
 from datetime import datetime
 
-# Heavy imports moved to lazy loading for faster startup
-# import torch
-# from torchinfo import summary
-# import wandb
-# from training import run_training
-
 
 MODELS_DIR = "models"
 MODEL_FILENAME_BASE_TEMPLATE = "e{epochs}.lr{learning_rate}.d{projection_dim}.m{margin}"

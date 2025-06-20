@@ -1,19 +1,24 @@
 services:
-  backend:
-    build: ./backend
-    container_name: backend
-    # expose the backend to linked services in same docker network, but not to host machine
+  api:
+    build: ./api
+    container_name: api
     expose:
-      - ${BACKEND_PORT}
+      - ${API_PORT}
+    ports:
+      - "${API_PORT}:8000"
     environment:
-      - DB_HOST=db
-      - DB_PORT=${DB_PORT}
-      - DB_NAME=${POSTGRES_DB}
-      - DB_USER=${POSTGRES_USER}
-      - DB_PASS=${POSTGRES_PASSWORD}
+      - REDIS_URL=${REDIS_URL}
+      - MODEL_PATH=${MODEL_PATH}
+      - PROJECTION_DIM=${PROJECTION_DIM}
+      - TOKENIZERS_PARALLELISM=false
     depends_on:
-      db:
+      redis:
         condition: service_healthy
+    volumes:
+      - ./models:/app/models:ro
+      - ./model.py:/app/model.py:ro
+      - ./search.py:/app/data.py:ro
+      - ./search.py:/app/search.py:ro
     networks: [two-towers]
 
   frontend:
@@ -21,43 +26,31 @@ services:
     container_name: frontend
     expose:
       - ${FRONTEND_PORT}
-    depends_on: [backend]
+    ports:
+      - "${FRONTEND_PORT}:8501"
+    environment:
+      - API_URL="http://api:${FRONTEND_PORT}""
+    depends_on: [api]
     networks: [two-towers]
 
-  db:
-    image: postgres:16-alpine
-    container_name: postgres
+  redis:
+    image: redis/redis-stack-server:7.4.0-v5
+    container_name: redis
     restart: unless-stopped
-    # we do expose the db to the host so we can connect to it and query the data (e.g via pgAdmin)
     ports:
-      - "${DB_PORT}:5432"
-    environment:
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - "${REDIS_PORT}:6379"
     volumes:
-      - pgdata:/var/lib/postgresql/data
-      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - redis_data:/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      test: ["CMD", "redis-cli", "ping"]
       interval: 5s
       timeout: 3s
       retries: 5
     networks: [two-towers]
 
-  redis:
-    image: redis:8.0.2-bookworm
-    container_name: redis
-    restart: unless-stopped
-    ports:
-      - "6379:6379"
-    networks: [two-towers]
-
 networks:
-  mnist-net:
+  two-towers:
     driver: bridge
 
 volumes:
-  caddy_config:
-  caddy_data:
-  pgdata:
+  redis_data:

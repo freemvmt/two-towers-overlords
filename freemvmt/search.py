@@ -18,6 +18,7 @@ import argparse
 import os
 import random
 import re
+import sys
 from typing import Any, Optional
 
 import torch
@@ -27,8 +28,19 @@ from redisvl.index import SearchIndex
 from redisvl.query import VectorQuery
 from redisvl.schema import IndexSchema
 
-from model import TwoTowersModel
-from training import MSMarcoDataset
+
+# Determine if running in Docker
+if os.path.exists("/.dockerenv"):
+    print("Running in Docker environment, importing modules from /app volume")
+    # if so, import modules from volume
+    import sys
+
+    sys.path.append("/app")
+    from freemvmt.model import TwoTowersModel
+    from freemvmt.data import MSMarcoDataset
+else:
+    from model import TwoTowersModel
+    from data import MSMarcoDataset
 
 
 MODELS_DIR = "models"
@@ -372,6 +384,8 @@ def build_document_index(
     batch_size: int = 1024,
     model_filename: Optional[str] = None,
     projection_dim: Optional[int] = None,
+    redis_url: str = "redis://localhost:6379",
+    clear_existing: bool = True,
 ):
     """Build the document index from MS Marco dataset."""
     print("Building document index from *all* MS Marco datasets...")
@@ -380,6 +394,7 @@ def build_document_index(
     engine = DocumentSearchEngine(
         model_filename=model_filename,
         projection_dim=projection_dim,
+        redis_url=redis_url,
     )
 
     if max_docs == -1:
@@ -412,7 +427,7 @@ def build_document_index(
         print(f"Found {len(unique_docs)} unique documents")
 
     # Ingest documents
-    engine.ingest_documents(unique_docs, batch_size=batch_size, clear_existing=True)
+    engine.ingest_documents(unique_docs, batch_size=batch_size, clear_existing=clear_existing)
 
     # Print index info
     info = engine.get_index_info()

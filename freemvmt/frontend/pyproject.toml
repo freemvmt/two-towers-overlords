@@ -1,0 +1,10 @@
+[project]
+name = "two-towers-frontend"
+version = "0.1.0"
+description = "Streamlit frontend for two-towers document retrieval"
+requires-python = ">=3.12"
+dependencies = [
+    "streamlit>=1.28.0",
+    "requests>=2.31.0",
+    "pandas>=2.1.0",
+]
