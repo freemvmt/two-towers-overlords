@@ -37,10 +37,19 @@ if [[ "$RUN_REDIS" == "1" ]]; then
   apt-get install -y redis-server
   # ensure any existing redis server is stopped before starting it (check with `lsof -i :6379`)
   pkill redis-server || true
-  # run redis in a tmux session so we can attach to see logs / stop it
-  tmux new-session -d -s redis 'redis-server redis.remote.conf'
+  cp redis.remote.conf /tmp/redis.conf
+  sleep 2
+  # run redis in a tmux session so we can attach to see logs / stop it (kill any existing session first)
+  tmux kill-session -t redis 2>/dev/null || true
+  tmux new-session -d -s redis 'redis-server /tmp/redis.conf'
   # alternatively, run redis in the background like `redis-server /etc/redis/redis.conf --daemonize yes`
-  echo "Redis server started in tmux session 'redis' - check with redis-cli ping` Attach to it with 'tmux attach -t redis'."
+  # give Redis a moment to start and check if it's running
+  sleep 2
+  if tmux ls | grep -q redis; then
+    echo "✅ Redis server started in tmux session 'redis'"
+  else
+    echo "❌ Failed to start Redis server"
+  fi
 fi
 
 # finally, activate virtual environment for running python scripts
