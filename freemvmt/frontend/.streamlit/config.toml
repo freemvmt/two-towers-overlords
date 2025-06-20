@@ -1,0 +1,6 @@
+[browser]
+gatherUsageStats = false
+
+# if streamlit complains about torch libraries, turn off file watching
+[server]
+fileWatcherType = "none"

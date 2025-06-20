@@ -19,9 +19,14 @@ if [[ -n "$SSH_CONNECTION" && -d /workspace ]]; then
   echo "🐧 Running on remote runpod with storage attached - setting custom uv/hf cache dir"
   mkdir -p /workspace/.cache/uv
   mkdir -p /workspace/.cache/datasets_cache
+  set -a
   export UV_CACHE_DIR="/workspace/.cache/uv"
   export HF_DATASETS_CACHE="/workspace/.cache/datasets_cache"
+  set +a
 fi
+
+# cd into backend dir, where the action happens
+cd backend
 
 # install python packages (using nightly index for latest torch if beast mode enabled)
 if [[ "$BEAST_MODE" == "1" ]]; then

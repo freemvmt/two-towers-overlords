@@ -6,10 +6,12 @@ Our 'two towers' here are the *query* tower and *document* tower.
 
 Aiming to start with a basic full stack setup (including early deploy), using only avergae pooling for each tower. Then we will swap those NNs out for RNNs and see what improvement we get.
 
+
 ## TODO
 
-- [ ] Build frontend for running queries and seeing results
-- [ ] Swap average pooling tower out for an RNN and compare like for like (test as a hyperparam?)
+- [x] Build frontend for running queries and seeing results
+- [ ] Fix the frontend so it actually points at a real search index
+- [ ] Read [Cortex pt. 2](https://cortex.mlx.institute/m/179/l/262/e/0), swap average pooling tower out for an RNN and compare
 - [ ] Try using the v2.1 dataset
 
 
@@ -25,20 +27,28 @@ Aiming to start with a basic full stack setup (including early deploy), using on
 
 ## Files
 
+All the below are in `backend/`, which is where the action happens.
+
 - `model.py`: Two-towers model architecture with average pooling encoders
 - `training.py`: Training loop with MS Marco data loading and triplet loss
 - `main.py`: Entry point for running training
-- `sweep_config.py`: Wandb hyperparameter sweep configurations
+- `search.py`: Module for building Redis search index, ingesting and searching documents
 
 
-## Remote
+## Remotes
 
 As usual, we have a handy `setup.sh` script, which should be sourced after cloning the repo.
 
+If you don't even want to do the bits before that, `send.sh` materiel in advance from local, then `source ssh.sh` once you're in.
+
 If using a next-gen Nvidia demon like RTX 5090, we have to pull torch from the nightly builds index, in which case one should `export BEAST_MODE=1` before setup.
+
+If you want to spin up a Redis server on your remote as part of setup (and in a tmux!), then `export RUN_REDIS=1` beforehand.
 
 
 ## Usage
+
+⚠️ Bear in mind that most commands in this README should be run from within `backend/` (especially anything python, but not including scripts for dev ops).
 
 ```bash
 # Install dependencies
@@ -166,7 +176,7 @@ perfect_model = 1.0          # Theoretical maximum (never achieved in practice)
 ## Quick Start
 
 ```python
-from freemvmt.model import TwoTowersModel
+from model import TwoTowersModel
 
 # Initialize model
 model = TwoTowersModel()

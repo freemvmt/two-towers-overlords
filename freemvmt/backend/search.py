@@ -27,11 +27,12 @@ from redisvl.index import SearchIndex
 from redisvl.query import VectorQuery
 from redisvl.schema import IndexSchema
 
+
 from model import TwoTowersModel
-from training import MSMarcoDataset
+from data import MSMarcoDataset
 
 
-MODELS_DIR = "models"
+MODELS_DIR = "../models"
 WEIGHTS_OVERRIDE = "weights.pt"
 DEFAULT_INDEX_NAME = "default_index"
 DEFAULT_PROJ_DIM = 128
@@ -148,8 +149,12 @@ class DocumentSearchEngine:
     def __init__(
         self,
         model_filename: Optional[str] = None,
+        models_dir: str = MODELS_DIR,
         projection_dim: Optional[int] = None,
         redis_url: str = "redis://localhost:6379",
+        redis_host: Optional[str] = None,
+        redis_port: Optional[int] = 6379,
+        redis_pass: Optional[str] = None,
     ):
         """
         Initialize the search engine.
@@ -159,30 +164,33 @@ class DocumentSearchEngine:
             projection_dim: Dimension of the model's projection layer (auto-detected if None)
             redis_url: Redis connection URL
         """
-        self.redis_url = redis_url
-
         # Initialize Redis client
-        self.redis_client = Redis.from_url(redis_url)
+        if redis_url:
+            self.redis_client = Redis.from_url(redis_url)
+        elif redis_host and redis_port and redis_pass:
+            self.redis_client = Redis(host=redis_host, port=redis_port, password=redis_pass)
+        else:
+            raise ValueError("Must provide either redis URL or full host/port/pass combination")
 
         # Find model weights if available
         model_path = None
-        model_filename = None
+        actual_model_filename = None
         if model_filename is None:
-            result = find_best_model()
+            result = find_best_model(models_dir)
             if result:
-                model_path, model_filename = result
+                model_path, actual_model_filename = result
         # if a specific model filename is provided, we check it exists and has appropriate extension
         elif model_filename and model_filename.endswith((".pt", ".pth")):
             path = os.path.join(MODELS_DIR, model_filename)
             if os.path.exists(path):
                 model_path = path
-                model_filename = model_filename
+                actual_model_filename = model_filename
             print(f"🔍 Using custom model: {model_filename}")
         else:
             print("❌ Custom model provided but either not found to exist, or not ending with .pt/.pth")
 
         # init index name, using model filename if available
-        self.index_name = os.path.splitext(model_filename)[0] if model_filename else DEFAULT_INDEX_NAME
+        self.index_name = os.path.splitext(actual_model_filename)[0] if actual_model_filename else DEFAULT_INDEX_NAME
 
         # Auto-detect projection dimension from model if not provided
         if projection_dim is None:
@@ -371,7 +379,13 @@ def build_document_index(
     max_docs: int = -1,
     batch_size: int = 1024,
     model_filename: Optional[str] = None,
+    models_dir: str = MODELS_DIR,
     projection_dim: Optional[int] = None,
+    redis_url: str = "redis://localhost:6379",
+    redis_host: Optional[str] = None,
+    redis_port: int = 6379,
+    redis_pass: Optional[str] = None,
+    clear_existing: bool = True,
 ):
     """Build the document index from MS Marco dataset."""
     print("Building document index from *all* MS Marco datasets...")
@@ -379,7 +393,12 @@ def build_document_index(
     # Initialize search engine
     engine = DocumentSearchEngine(
         model_filename=model_filename,
+        models_dir=models_dir,
         projection_dim=projection_dim,
+        redis_url=redis_url,
+        redis_host=redis_host,
+        redis_port=redis_port,
+        redis_pass=redis_pass,
     )
 
     if max_docs == -1:
@@ -412,7 +431,7 @@ def build_document_index(
         print(f"Found {len(unique_docs)} unique documents")
 
     # Ingest documents
-    engine.ingest_documents(unique_docs, batch_size=batch_size, clear_existing=True)
+    engine.ingest_documents(unique_docs, batch_size=batch_size, clear_existing=clear_existing)
 
     # Print index info
     info = engine.get_index_info()
@@ -425,7 +444,12 @@ def search_documents(
     query: str,
     top_k: int = 10,
     model_filename: Optional[str] = None,
+    models_dir: str = MODELS_DIR,
     projection_dim: Optional[int] = None,
+    redis_url: str = "redis://localhost:6379",
+    redis_host: Optional[str] = None,
+    redis_port: Optional[int] = 6379,
+    redis_pass: Optional[str] = None,
 ):
     """Search for documents similar to the given query using auto-selected model."""
     print(f"Searching for: '{query}'")
@@ -434,7 +458,12 @@ def search_documents(
     # Initialize search engine
     engine = DocumentSearchEngine(
         model_filename=model_filename,
+        models_dir=models_dir,
         projection_dim=projection_dim,
+        redis_url=redis_url,
+        redis_host=redis_host,
+        redis_port=redis_port,
+        redis_pass=redis_pass,
     )
 
     # Check if index exists and has documents
@@ -476,6 +505,7 @@ def main():
         default=None,
         help="Filename for saved model weights in /models dir (optional, auto-selects best model if not provided)",
     )
+    parser.add_argument("--models-dir", type=str, default=MODELS_DIR, help="Path to model weights")
     parser.add_argument(
         "--dims", type=int, default=None, help="Model projection dimension (auto-detected from model if not provided)"
     )
@@ -485,7 +515,12 @@ def main():
     # note that a batch size of 1024 surfed close to the wind on RTX 4090, so may overflow on e.g. a 3090
     parser.add_argument("--batch-size", type=int, default=1024, help="Batch size for processing")
     parser.add_argument("--top-k", type=int, default=10, help="Number of results to return")
+
+    # redis connection - expect an URL but allow host/pass for greater compatibility
     parser.add_argument("--redis-url", type=str, default="redis://localhost:6379", help="Redis URL")
+    parser.add_argument("--redis-host", type=str, default=None, help="Redis host")
+    parser.add_argument("--redis-port", type=int, default=6379, help="Redis port")
+    parser.add_argument("--redis-pass", type=str, default="redispass", help="Redis pass")
 
     args = parser.parse_args()
     if not (args.query or args.build_index or args.index_info):
@@ -501,7 +536,12 @@ def main():
             max_docs=args.max_docs,
             batch_size=args.batch_size,
             model_filename=args.model,
+            models_dir=args.models_dir,
             projection_dim=args.dims,
+            redis_url=args.redis_url,
+            redis_host=args.redis_host,
+            redis_port=args.redis_port,
+            redis_pass=args.redis_pass,
         )
         print("\n✅ Index built successfully!")
 
@@ -510,7 +550,12 @@ def main():
         # Show index information
         engine = DocumentSearchEngine(
             model_filename=args.model,
+            models_dir=args.models_dir,
             projection_dim=args.dims,
+            redis_url=args.redis_url,
+            redis_host=args.redis_host,
+            redis_port=args.redis_port,
+            redis_pass=args.redis_pass,
         )
         info = engine.get_index_info()
         print(f"\nIndex info: {info}")
@@ -522,7 +567,12 @@ def main():
             query=args.query,
             top_k=args.top_k,
             model_filename=args.model,
+            models_dir=args.models_dir,
             projection_dim=args.dims,
+            redis_url=args.redis_url,
+            redis_host=args.redis_host,
+            redis_port=args.redis_port,
+            redis_pass=args.redis_pass,
         )
 
 
