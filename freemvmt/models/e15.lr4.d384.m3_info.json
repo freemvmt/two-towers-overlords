@@ -1,0 +1,29 @@
+{
+  "training_config": {
+    "epochs": 15,
+    "batch_size": 2048,
+    "learning_rate": 0.0001,
+    "max_samples": -1,
+    "projection_dim": 384,
+    "margin": 0.3,
+    "accumulation_steps": 2,
+    "num_workers": 6
+  },
+  "model_stats": {
+    "total_params": 46017792,
+    "trainable_params": 591360,
+    "model_size_mb": 175.5439453125
+  },
+  "files": {
+    "weights": "e15.lr-4.d384.m3.pt",
+    "summary": "e15.lr-4.d384.m3_summary.txt",
+    "info": "e15.lr-4.d384.m3_info.json"
+  },
+  "timestamp": "2025-06-20T13:33:09.689115",
+  "pytorch_version": "2.8.0.dev20250620+cu128",
+  "torchinfo_summary": {
+    "total_params": 46017792,
+    "trainable_params": 591360,
+    "total_mult_adds": 0
+  }
+}
