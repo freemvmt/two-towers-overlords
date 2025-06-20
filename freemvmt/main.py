@@ -107,7 +107,7 @@ def main():
             # encode the filename with the core hyperparams for clarity
             base_name = MODEL_FILENAME_BASE_TEMPLATE.format(
                 epochs=args.epochs,
-                learning_rate=int(log10(args.learning_rate)),
+                learning_rate=abs(int(log10(args.learning_rate))),
                 projection_dim=args.projection_dim,
                 margin=int(args.margin * 10),
             )
