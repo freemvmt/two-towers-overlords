@@ -3,8 +3,10 @@ Main entry point for training the two-towers document retrieval model.
 """
 
 import argparse
+import json
 from math import log10
 import os
+from datetime import datetime
 
 import torch
 from torchinfo import summary
@@ -14,7 +16,7 @@ from training import run_training
 
 
 MODELS_DIR = "models"
-MODEL_FILENAME_TEMPLATE = "e{epochs}.lr{learning_rate}.d{projection_dim}.m{margin}.pt"
+MODEL_FILENAME_BASE_TEMPLATE = "e{epochs}.lr{learning_rate}.d{projection_dim}.m{margin}.pt"
 
 
 def main():
@@ -86,21 +88,78 @@ def main():
     # Print model summary and save state
     print("\n✅ Finished training!")
     print(f"   Model trained successfully with {sum(p.numel() for p in trained_model.parameters())} parameters.")
-    summary(trained_model)
+
+    # Generate and display model summary
+    model_summary = summary(trained_model, verbose=0)  # verbose=0 to get return object
+    print(model_summary)
+
     if not args.no_save:
         try:
             # Ensure the models directory exists
             os.makedirs(MODELS_DIR, exist_ok=True)
             # encode the filename with the core hyperparams for clarity
-            filename = MODEL_FILENAME_TEMPLATE.format(
+            base_name = MODEL_FILENAME_BASE_TEMPLATE.format(
                 epochs=args.epochs,
                 learning_rate=int(log10(args.learning_rate)),
                 projection_dim=args.projection_dim,
                 margin=int(args.margin * 10),
             )
-            path = os.path.join(MODELS_DIR, filename)
-            torch.save(trained_model.state_dict(), path)
-            print(f"\n✅ Model state saved to: {path}")
+
+            # Save model weights
+            weights_path = os.path.join(MODELS_DIR, f"{base_name}.pt")
+            torch.save(trained_model.state_dict(), weights_path)
+            print(f"\n✅ Model weights saved to: {weights_path}")
+
+            # Save model summary as text
+            summary_txt_path = os.path.join(MODELS_DIR, f"{base_name}_summary.txt")
+            with open(summary_txt_path, "w") as f:
+                f.write(str(model_summary))
+            print(f"✅ Model summary saved to: {summary_txt_path}")
+
+            # Save detailed model info as JSON
+            model_info = {
+                "training_config": {
+                    "epochs": args.epochs,
+                    "batch_size": args.batch_size,
+                    "learning_rate": args.learning_rate,
+                    "max_samples": args.max_samples,
+                    "projection_dim": args.projection_dim,
+                    "margin": args.margin,
+                    "accumulation_steps": args.accumulation_steps,
+                    "num_workers": args.num_workers,
+                },
+                "model_stats": {
+                    "total_params": sum(p.numel() for p in trained_model.parameters()),
+                    "trainable_params": sum(p.numel() for p in trained_model.parameters() if p.requires_grad),
+                    "model_size_mb": sum(p.numel() * p.element_size() for p in trained_model.parameters())
+                    / (1024 * 1024),
+                },
+                "files": {
+                    "weights": f"{base_name}.pt",
+                    "summary": f"{base_name}_summary.txt",
+                    "info": f"{base_name}_info.json",
+                },
+                "timestamp": datetime.now().isoformat(),
+                "pytorch_version": torch.__version__,
+            }
+
+            # Add summary statistics if available
+            if hasattr(model_summary, "total_params"):
+                model_info["torchinfo_summary"] = {
+                    "total_params": model_summary.total_params if hasattr(model_summary, "total_params") else None,
+                    "trainable_params": (
+                        model_summary.trainable_params if hasattr(model_summary, "trainable_params") else None
+                    ),
+                    "total_mult_adds": (
+                        model_summary.total_mult_adds if hasattr(model_summary, "total_mult_adds") else None
+                    ),
+                }
+
+            info_json_path = os.path.join(MODELS_DIR, f"{base_name}_info.json")
+            with open(info_json_path, "w") as f:
+                json.dump(model_info, f, indent=2)
+            print(f"✅ Model info saved to: {info_json_path}")
+
         except Exception as e:
             print(f"\n❌ Error saving model: {e}")
             print("Training completed successfully, but model saving failed.")
