@@ -32,7 +32,7 @@ from model import TwoTowersModel
 from data import MSMarcoDataset
 
 
-MODELS_DIR = "models"
+MODELS_DIR = "../models"
 WEIGHTS_OVERRIDE = "weights.pt"
 DEFAULT_INDEX_NAME = "default_index"
 DEFAULT_PROJ_DIM = 128
@@ -149,6 +149,7 @@ class DocumentSearchEngine:
     def __init__(
         self,
         model_filename: Optional[str] = None,
+        models_dir: str = MODELS_DIR,
         projection_dim: Optional[int] = None,
         redis_url: str = "redis://localhost:6379",
         redis_host: Optional[str] = None,
@@ -175,7 +176,7 @@ class DocumentSearchEngine:
         model_path = None
         model_filename = None
         if model_filename is None:
-            result = find_best_model()
+            result = find_best_model(models_dir)
             if result:
                 model_path, model_filename = result
         # if a specific model filename is provided, we check it exists and has appropriate extension
@@ -378,10 +379,11 @@ def build_document_index(
     max_docs: int = -1,
     batch_size: int = 1024,
     model_filename: Optional[str] = None,
+    models_dir: str = MODELS_DIR,
     projection_dim: Optional[int] = None,
     redis_url: str = "redis://localhost:6379",
     redis_host: Optional[str] = None,
-    redis_port: Optional[int] = 6379,
+    redis_port: int = 6379,
     redis_pass: Optional[str] = None,
     clear_existing: bool = True,
 ):
@@ -391,6 +393,7 @@ def build_document_index(
     # Initialize search engine
     engine = DocumentSearchEngine(
         model_filename=model_filename,
+        models_dir=models_dir,
         projection_dim=projection_dim,
         redis_url=redis_url,
         redis_host=redis_host,
@@ -441,6 +444,7 @@ def search_documents(
     query: str,
     top_k: int = 10,
     model_filename: Optional[str] = None,
+    models_dir: str = MODELS_DIR,
     projection_dim: Optional[int] = None,
     redis_url: str = "redis://localhost:6379",
     redis_host: Optional[str] = None,
@@ -454,6 +458,7 @@ def search_documents(
     # Initialize search engine
     engine = DocumentSearchEngine(
         model_filename=model_filename,
+        models_dir=models_dir,
         projection_dim=projection_dim,
         redis_url=redis_url,
         redis_host=redis_host,
@@ -500,6 +505,7 @@ def main():
         default=None,
         help="Filename for saved model weights in /models dir (optional, auto-selects best model if not provided)",
     )
+    parser.add_argument("--models-dir", type=str, default=MODELS_DIR, help="Path to model weights")
     parser.add_argument(
         "--dims", type=int, default=None, help="Model projection dimension (auto-detected from model if not provided)"
     )
@@ -530,6 +536,7 @@ def main():
             max_docs=args.max_docs,
             batch_size=args.batch_size,
             model_filename=args.model,
+            models_dir=args.models_dir,
             projection_dim=args.dims,
             redis_url=args.redis_url,
             redis_host=args.redis_host,
@@ -543,6 +550,7 @@ def main():
         # Show index information
         engine = DocumentSearchEngine(
             model_filename=args.model,
+            models_dir=args.models_dir,
             projection_dim=args.dims,
             redis_url=args.redis_url,
             redis_host=args.redis_host,
@@ -559,6 +567,7 @@ def main():
             query=args.query,
             top_k=args.top_k,
             model_filename=args.model,
+            models_dir=args.models_dir,
             projection_dim=args.dims,
             redis_url=args.redis_url,
             redis_host=args.redis_host,

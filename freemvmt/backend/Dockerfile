@@ -19,9 +19,8 @@ COPY pyproject.toml uv.lock /app/
 # TODO: define dev dependencies to reduce deps installed in container
 RUN uv sync
 
-# copy relevant code from this dir and create models directory
-# NB. we insert anything we need from project root (e.g. model.py definition) via the docker-compose.yml
-COPY api.py /app/
+# copy relevant code and create models directory
+COPY api.py data.py model.py search.py /app/
 RUN mkdir -p /app/models
 
 # give new user ownership of the workdir, and switch

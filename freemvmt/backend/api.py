@@ -13,6 +13,9 @@ from pydantic import BaseModel
 from search import DocumentSearchEngine
 
 
+MODELS_DIR = os.getenv("MODELS_DIR", "../models")
+
+
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -53,13 +56,19 @@ async def lifespan(app: FastAPI):
     try:
         print("Initializing document search engine...")
 
-        # Get configuration from environment
-        redis_url = os.getenv("REDIS_URL", "redis://redis:6379")
+        # Get configuration from environment, defaults assume running on local
+        redis_url = os.getenv("REDIS_URL", "redis://localhost:6379")
+        models_dir = os.getenv("MODELS_DIR", "../models")
+        model_filename = os.getenv("MODEL")
         print(f"Redis URL: {redis_url}")
+        print(f"Models directory: {models_dir}")
+        print(f"Model filename: {model_filename if model_filename else 'not specified'}")
 
         # Initialize search engine
         search_engine = DocumentSearchEngine(
             redis_url=redis_url,
+            model_filename=model_filename,
+            models_dir=models_dir,
         )
 
         # Check if index exists

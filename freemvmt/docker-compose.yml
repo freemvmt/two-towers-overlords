@@ -8,9 +8,9 @@ services:
       - "${API_PORT}:8000"
     environment:
       - REDIS_URL=${REDIS_URL}
-      - MODEL_PATH=${MODEL_PATH}
+      - MODEL=${MODEL}
       - PROJECTION_DIM=${PROJECTION_DIM}
-      - TOKENIZERS_PARALLELISM=false
+      - TOKENIZERS_PARALLELISM=${TOKENIZERS_PARALLELISM}
     depends_on:
       redis:
         condition: service_healthy
@@ -26,7 +26,7 @@ services:
     ports:
       - "${FRONTEND_PORT}:8501"
     environment:
-      - API_URL="http://backend:${FRONTEND_PORT}""
+      - API_URL=http://backend:${API_PORT}
     depends_on: [backend]
     networks: [two-towers]
 

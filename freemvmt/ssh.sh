@@ -10,7 +10,7 @@ cd /workspace
 apt-get update && apt-get install -y git
 git clone git@github.com:freemvmt/two-towers-overlords.git || true
 cd two-towers-overlords
-git checkout freemvmt-init
+git checkout freemvmt-app
 git pull
 cd freemvmt
 git status
