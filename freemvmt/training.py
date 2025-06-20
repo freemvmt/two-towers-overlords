@@ -38,7 +38,8 @@ class MSMarcoDataset(Dataset):
         max_samples: int = 10_000,
         random_seed: int = 42,
     ) -> None:
-        print(f"Building MS Marco {split} dataset with at most {max_samples} samples...")
+        samples_txt = f"at most {max_samples}" if max_samples > 0 else "all"
+        print(f"Building MS Marco {split} dataset with {samples_txt} samples...")
         # validate max_samples
         if max_samples < -1 or max_samples == 0:
             raise ValueError("max_samples must be -1 (use full dataset) or > 0 (limit to that many samples)")
@@ -250,6 +251,7 @@ def train_epoch_optimized(
                 }
             )
 
+        # FIXME: use length of dataloader (i.e. total # of triplets?) instead of num_batches here, which doesn't make sense
         if batch_idx % (num_batches / 10) == 0:
             mem_info = (
                 f"GPU Memory: {torch.cuda.memory_allocated() / 1e9:.2f}GB allocated, {torch.cuda.memory_reserved() / 1e9:.2f}GB reserved"
