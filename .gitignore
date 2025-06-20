@@ -1,0 +1,58 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.eggs/
+dist/
+sdist/
+*.egg-info/
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# Environments
+.venv/
+venv/
+env/
+ENV/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Log files
+*.log
+
+# VS Code
+.vscode/
+
+# Temp files
+*.tmp
+
+# Compiled Object files
+*.o
+*.obj
+*.dll
+*.exe
+*.pdb
+
+# HDF5 data files
+*.h5
+*.hdf5
+
+# TensorFlow checkpoint files
+*.ckpt
+
+# ruff
+.ruff_cache/
