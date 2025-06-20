@@ -36,19 +36,18 @@ if [[ "$RUN_REDIS" == "1" ]]; then
   echo "🚀 RUN_REDIS is set - installing and starting Redis server in the background"
   apt-get install -y redis-server
   # ensure any existing redis server is stopped before starting it (check with `lsof -i :6379`)
-  pkill redis-server || true
-  cp redis.remote.conf /tmp/redis.conf
+  pkill redis-server 2>/dev/null || true
+  cp redis.runpod.conf /tmp/redis.conf
   sleep 2
   # run redis in a tmux session so we can attach to see logs / stop it (kill any existing session first)
   tmux kill-session -t redis 2>/dev/null || true
   tmux new-session -d -s redis 'redis-server /tmp/redis.conf'
-  # alternatively, run redis in the background like `redis-server /etc/redis/redis.conf --daemonize yes`
   # give Redis a moment to start and check if it's running
-  sleep 2
+  sleep 3
   if tmux ls | grep -q redis; then
     echo "✅ Redis server started in tmux session 'redis'"
   else
-    echo "❌ Failed to start Redis server"
+    echo "❌ Failed to start Redis server, try running: `redis-server /tmpredis.conf --daemonize yes`"
   fi
 fi
 
