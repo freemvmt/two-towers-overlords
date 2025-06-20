@@ -1,0 +1,51 @@
+_wandb:
+    value:
+        cli_version: 0.20.1
+        m: []
+        python_version: 3.12.8
+        t:
+            "1":
+                - 1
+                - 5
+                - 11
+                - 49
+                - 51
+                - 53
+            "2":
+                - 1
+                - 5
+                - 11
+                - 49
+                - 51
+                - 53
+            "3":
+                - 1
+                - 16
+                - 55
+            "4": 3.12.8
+            "5": 0.20.1
+            "6": 4.52.4
+            "12": 0.20.1
+            "13": linux-x86_64
+batch_size:
+    value: 128
+dataset_type:
+    value: ms_marco_all_passages
+device:
+    value: cpu
+device_name:
+    value: CPU
+distance_metric:
+    value: cosine
+epochs:
+    value: 1
+learning_rate:
+    value: 0.001
+loss_function:
+    value: triplet_loss
+margin:
+    value: 0.3
+max_samples:
+    value: 1000
+model_name:
+    value: sentence-transformers/all-MiniLM-L6-v2

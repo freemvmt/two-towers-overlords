@@ -1,0 +1,134 @@
+Building MS Marco train dataset with at most 1000 samples...
+Built train dataset with 1000 query-document pairs, including 999 unique passages
+Building MS Marco validation dataset with at most 1000 samples...
+Built validation dataset with 1000 query-document pairs, including 997 unique passages
+Training configuration:
+  Physical batch size: 128
+  Gradient accumulation steps: 1
+  Effective batch size: 128
+  Mixed precision: True
+  DataLoader workers: 1
+Starting training for 1 epochs...
+
+Epoch 1/1
+Average training loss: 0.2961
+Sampling documents for evaluation (initial sample size: 200)...
+Grouping data by queries (target: 20 unique queries)...
+Selected 20 queries for evaluation
+  Total relevant documents across these queries: 77
+  Average relevant docs per query: 3.85
+Evaluating queries: 100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 20/20 [00:47<00:00,  2.37s/it]
+
+Sample evaluation results:
+Query: what zone is carpal tunnel in hand
+Number of relevant docs: 5
+Number of candidate docs: 77
+NDCG@10 score for this query: 0.0000
+Top 10 ranked documents:
+  1. [irrelevant] Vitamin A is a fat-soluble vitamin that is naturally present in many foods. Vitamin A is important f...
+  2. [irrelevant] From time to time, you'll see lists of interesting facts about the human body. Many times these list...
+  3. [irrelevant] Part of the Mathematics glossary: An order of magnitude is an exponential change of plus-or-minus 1 ...
+  4. [irrelevant] Vitamin A is necessary for eye health and vision. Vitamin A, a fat-soluble vitamin found as either p...
+  5. [irrelevant] The rest of the muscles make up the tongue’s body. They’re what give it the ability to contort into ...
+  6. [irrelevant] Qatar is a male absolute monarchy and its head of state is Emir Sheikh Tamim bin Hamad Al Thani. Aft...
+  7. [irrelevant] Muscles are how we move and live. All movement in the body is controlled by muscles. Some muscles wo...
+  8. [irrelevant] Doha (Arabic: الدوحة ‎, ad-Dawḥa or ad-Dōḥa, literally in MSA : the big tree, locally: rounded bays)...
+  9. [irrelevant] Together, we support progress, stability and prosperity in the region. The United States and Qatar a...
+  10. [irrelevant] Definition of MUSSEL for Kids. 1. : a saltwater shellfish that has a long dark shell in two parts an...
+
+Mean NDCG@10 across 20 queries: 0.1046
+Validation NDCG@10: 0.1046
+
+============================================================
+TRAINING COMPLETED - Starting comprehensive testing
+============================================================
+Building MS Marco test dataset with at most 10000 samples...
+Built test dataset with 10000 query-document pairs, including 9950 unique passages
+Sampling documents for evaluation (initial sample size: 200)...
+Grouping data by queries (target: 200 unique queries)...
+Selected 200 queries for evaluation
+  Total relevant documents across these queries: 308
+  Average relevant docs per query: 1.54
+🚀 Pre-encoding *all* documents for efficiency (this may take a moment)...
+Traceback (most recent call last):
+  File "/home/dan/code/freemvmt/mlx/two-towers-overlords/freemvmt/backend/main.py", line 239, in <module>
+    main()
+  File "/home/dan/code/freemvmt/mlx/two-towers-overlords/freemvmt/backend/main.py", line 74, in main
+    trained_model = run_training(
+                    ^^^^^^^^^^^^^
+  File "/home/dan/code/freemvmt/mlx/two-towers-overlords/freemvmt/backend/training.py", line 471, in run_training
+    _ = evaluate_model(
+        ^^^^^^^^^^^^^^^
+  File "/home/dan/code/freemvmt/mlx/two-towers-overlords/freemvmt/backend/training.py", line 222, in evaluate_model
+    pre_encoded_docs = model.encode_documents_batched(
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dan/code/freemvmt/mlx/two-towers-overlords/freemvmt/backend/model.py", line 95, in encode_documents_batched
+    batch_embeddings = self.encode_documents(batch_docs)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dan/code/freemvmt/mlx/two-towers-overlords/freemvmt/backend/model.py", line 81, in encode_documents
+    return self.document_tower(documents)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dan/code/freemvmt/mlx/two-towers-overlords/freemvmt/backend/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1751, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dan/code/freemvmt/mlx/two-towers-overlords/freemvmt/backend/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1762, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dan/code/freemvmt/mlx/two-towers-overlords/freemvmt/backend/model.py", line 46, in forward
+    output = self.pretrained_model(**tokens)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dan/code/freemvmt/mlx/two-towers-overlords/freemvmt/backend/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1751, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dan/code/freemvmt/mlx/two-towers-overlords/freemvmt/backend/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1762, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dan/code/freemvmt/mlx/two-towers-overlords/freemvmt/backend/.venv/lib/python3.12/site-packages/transformers/models/bert/modeling_bert.py", line 1016, in forward
+    encoder_outputs = self.encoder(
+                      ^^^^^^^^^^^^^
+  File "/home/dan/code/freemvmt/mlx/two-towers-overlords/freemvmt/backend/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1751, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dan/code/freemvmt/mlx/two-towers-overlords/freemvmt/backend/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1762, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dan/code/freemvmt/mlx/two-towers-overlords/freemvmt/backend/.venv/lib/python3.12/site-packages/transformers/models/bert/modeling_bert.py", line 662, in forward
+    layer_outputs = layer_module(
+                    ^^^^^^^^^^^^^
+  File "/home/dan/code/freemvmt/mlx/two-towers-overlords/freemvmt/backend/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1751, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dan/code/freemvmt/mlx/two-towers-overlords/freemvmt/backend/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1762, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dan/code/freemvmt/mlx/two-towers-overlords/freemvmt/backend/.venv/lib/python3.12/site-packages/transformers/models/bert/modeling_bert.py", line 552, in forward
+    self_attention_outputs = self.attention(
+                             ^^^^^^^^^^^^^^^
+  File "/home/dan/code/freemvmt/mlx/two-towers-overlords/freemvmt/backend/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1751, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dan/code/freemvmt/mlx/two-towers-overlords/freemvmt/backend/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1762, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dan/code/freemvmt/mlx/two-towers-overlords/freemvmt/backend/.venv/lib/python3.12/site-packages/transformers/models/bert/modeling_bert.py", line 482, in forward
+    self_outputs = self.self(
+                   ^^^^^^^^^^
+  File "/home/dan/code/freemvmt/mlx/two-towers-overlords/freemvmt/backend/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1751, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dan/code/freemvmt/mlx/two-towers-overlords/freemvmt/backend/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1762, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dan/code/freemvmt/mlx/two-towers-overlords/freemvmt/backend/.venv/lib/python3.12/site-packages/transformers/models/bert/modeling_bert.py", line 375, in forward
+    key_layer = self.transpose_for_scores(self.key(current_states))
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dan/code/freemvmt/mlx/two-towers-overlords/freemvmt/backend/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1751, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dan/code/freemvmt/mlx/two-towers-overlords/freemvmt/backend/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1762, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dan/code/freemvmt/mlx/two-towers-overlords/freemvmt/backend/.venv/lib/python3.12/site-packages/torch/nn/modules/linear.py", line 125, in forward
+    return F.linear(input, self.weight, self.bias)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt

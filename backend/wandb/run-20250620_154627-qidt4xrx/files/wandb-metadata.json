@@ -1,0 +1,45 @@
+{
+  "os": "Linux-6.11.0-26-generic-x86_64-with-glibc2.39",
+  "python": "CPython 3.12.8",
+  "startedAt": "2025-06-20T14:46:27.779543Z",
+  "args": [
+    "--epochs",
+    "1",
+    "--batch-size",
+    "128",
+    "--projection-dim",
+    "64",
+    "--max-samples",
+    "1000",
+    "--accumulation-steps",
+    "1",
+    "--num-workers",
+    "1"
+  ],
+  "program": "/home/dan/code/freemvmt/mlx/two-towers-overlords/freemvmt/backend/main.py",
+  "codePath": "freemvmt/backend/main.py",
+  "git": {
+    "remote": "git@github.com:freemvmt/two-towers-overlords.git",
+    "commit": "3b4cf2504f2bb06ccfd99caa04bcede280674771"
+  },
+  "email": "freemvmt@posteo.net",
+  "root": "/home/dan/code/freemvmt/mlx/two-towers-overlords/freemvmt/backend",
+  "host": "carbon-based",
+  "executable": "/home/dan/code/freemvmt/mlx/two-towers-overlords/freemvmt/backend/.venv/bin/python",
+  "codePathLocal": "main.py",
+  "cpu_count": 4,
+  "cpu_count_logical": 8,
+  "disk": {
+    "/": {
+      "total": "1700440363008",
+      "used": "611648299008"
+    }
+  },
+  "memory": {
+    "total": "33360179200"
+  },
+  "cpu": {
+    "count": 4,
+    "countLogical": 8
+  }
+}

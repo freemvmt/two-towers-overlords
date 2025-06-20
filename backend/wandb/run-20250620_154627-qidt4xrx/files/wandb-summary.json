@@ -1,0 +1,1 @@
+{"_timestamp":1.7504309074243445e+09,"_step":9,"batch":8,"batch_loss":0.2935476005077362,"_wandb":{"runtime":230},"_runtime":119.644977362,"epoch":1,"val_ndcg_10":0.1046304774282439,"avg_train_loss":0.29606742411851883,"total_parameters":45484032}
