@@ -16,9 +16,6 @@ services:
         condition: service_healthy
     volumes:
       - ./models:/app/models:ro
-      - ./model.py:/app/model.py:ro
-      - ./search.py:/app/data.py:ro
-      - ./search.py:/app/search.py:ro
     networks: [two-towers]
 
   frontend:
