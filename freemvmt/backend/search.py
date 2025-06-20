@@ -151,6 +151,9 @@ class DocumentSearchEngine:
         model_filename: Optional[str] = None,
         projection_dim: Optional[int] = None,
         redis_url: str = "redis://localhost:6379",
+        redis_host: Optional[str] = None,
+        redis_port: Optional[int] = None,
+        redis_pass: Optional[str] = None,
     ):
         """
         Initialize the search engine.
@@ -160,10 +163,13 @@ class DocumentSearchEngine:
             projection_dim: Dimension of the model's projection layer (auto-detected if None)
             redis_url: Redis connection URL
         """
-        self.redis_url = redis_url
-
         # Initialize Redis client
-        self.redis_client = Redis.from_url(redis_url)
+        if redis_url:
+            self.redis_client = Redis.from_url(redis_url)
+        elif redis_host and redis_port and redis_pass:
+            self.redis_client = Redis(host=redis_host, port=redis_port, password=redis_pass)
+        else:
+            raise ValueError("Must provide either redis URL or full host/port/pass combination")
 
         # Find model weights if available
         model_path = None
@@ -374,6 +380,9 @@ def build_document_index(
     model_filename: Optional[str] = None,
     projection_dim: Optional[int] = None,
     redis_url: str = "redis://localhost:6379",
+    redis_host: Optional[str] = None,
+    redis_port: Optional[int] = None,
+    redis_pass: Optional[str] = None,
     clear_existing: bool = True,
 ):
     """Build the document index from MS Marco dataset."""
@@ -384,6 +393,9 @@ def build_document_index(
         model_filename=model_filename,
         projection_dim=projection_dim,
         redis_url=redis_url,
+        redis_host=redis_host,
+        redis_port=redis_port,
+        redis_pass=redis_pass,
     )
 
     if max_docs == -1:
@@ -489,7 +501,12 @@ def main():
     # note that a batch size of 1024 surfed close to the wind on RTX 4090, so may overflow on e.g. a 3090
     parser.add_argument("--batch-size", type=int, default=1024, help="Batch size for processing")
     parser.add_argument("--top-k", type=int, default=10, help="Number of results to return")
+
+    # redis connection - expect an URL but allow host/pass for greater compatibility
     parser.add_argument("--redis-url", type=str, default="redis://localhost:6379", help="Redis URL")
+    parser.add_argument("--redis-host", type=str, default=None, help="Redis host")
+    parser.add_argument("--redis-pass", type=int, default=6379, help="Redis pass")
+    parser.add_argument("--redis-host", type=str, default="redispass", help="Redis host")
 
     args = parser.parse_args()
     if not (args.query or args.build_index or args.index_info):
