@@ -210,6 +210,7 @@ i.e. if we wanted to use the *flowing* approach on the full dataset, we might ru
 
 ```
 python main.py \
+  --max-samples -1 \
   --batch-size 2048 \
   --epochs 15 \
   --learning-rate 0.0001 \
@@ -224,6 +225,7 @@ This suggests that if we want to do quicker runs to test new hyperparams, or the
 
 ```
 python main.py \
+  --max-samples -1 \
   --batch-size 2048 \
   --epochs 9 \
   --learning-rate 0.001 \
@@ -238,6 +240,7 @@ This suggests a near-optimal setup for a full run (with avg. pooling towers, tha
 
 ```
 python main.py \
+  --max-samples -1 \
   --batch-size 2048 \
   --epochs 15 \
   --learning-rate 0.0001 \
