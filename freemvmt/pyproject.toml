@@ -15,4 +15,5 @@ dependencies = [
     "torchinfo>=1.8.0",
     "redis>=6.2.0",
     "redisvl>=0.7.0",
+    "fastapi>=0.115.13",
 ]
