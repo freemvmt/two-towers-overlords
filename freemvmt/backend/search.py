@@ -152,7 +152,7 @@ class DocumentSearchEngine:
         projection_dim: Optional[int] = None,
         redis_url: str = "redis://localhost:6379",
         redis_host: Optional[str] = None,
-        redis_port: Optional[int] = None,
+        redis_port: Optional[int] = 6379,
         redis_pass: Optional[str] = None,
     ):
         """
@@ -381,7 +381,7 @@ def build_document_index(
     projection_dim: Optional[int] = None,
     redis_url: str = "redis://localhost:6379",
     redis_host: Optional[str] = None,
-    redis_port: Optional[int] = None,
+    redis_port: Optional[int] = 6379,
     redis_pass: Optional[str] = None,
     clear_existing: bool = True,
 ):
@@ -442,6 +442,10 @@ def search_documents(
     top_k: int = 10,
     model_filename: Optional[str] = None,
     projection_dim: Optional[int] = None,
+    redis_url: str = "redis://localhost:6379",
+    redis_host: Optional[str] = None,
+    redis_port: Optional[int] = 6379,
+    redis_pass: Optional[str] = None,
 ):
     """Search for documents similar to the given query using auto-selected model."""
     print(f"Searching for: '{query}'")
@@ -451,6 +455,10 @@ def search_documents(
     engine = DocumentSearchEngine(
         model_filename=model_filename,
         projection_dim=projection_dim,
+        redis_url=redis_url,
+        redis_host=redis_host,
+        redis_port=redis_port,
+        redis_pass=redis_pass,
     )
 
     # Check if index exists and has documents
@@ -505,8 +513,8 @@ def main():
     # redis connection - expect an URL but allow host/pass for greater compatibility
     parser.add_argument("--redis-url", type=str, default="redis://localhost:6379", help="Redis URL")
     parser.add_argument("--redis-host", type=str, default=None, help="Redis host")
-    parser.add_argument("--redis-pass", type=int, default=6379, help="Redis pass")
-    parser.add_argument("--redis-host", type=str, default="redispass", help="Redis host")
+    parser.add_argument("--redis-port", type=int, default=6379, help="Redis port")
+    parser.add_argument("--redis-pass", type=str, default="redispass", help="Redis pass")
 
     args = parser.parse_args()
     if not (args.query or args.build_index or args.index_info):
@@ -523,6 +531,10 @@ def main():
             batch_size=args.batch_size,
             model_filename=args.model,
             projection_dim=args.dims,
+            redis_url=args.redis_url,
+            redis_host=args.redis_host,
+            redis_port=args.redis_port,
+            redis_pass=args.redis_pass,
         )
         print("\n✅ Index built successfully!")
 
@@ -532,6 +544,10 @@ def main():
         engine = DocumentSearchEngine(
             model_filename=args.model,
             projection_dim=args.dims,
+            redis_url=args.redis_url,
+            redis_host=args.redis_host,
+            redis_port=args.redis_port,
+            redis_pass=args.redis_pass,
         )
         info = engine.get_index_info()
         print(f"\nIndex info: {info}")
@@ -544,6 +560,10 @@ def main():
             top_k=args.top_k,
             model_filename=args.model,
             projection_dim=args.dims,
+            redis_url=args.redis_url,
+            redis_host=args.redis_host,
+            redis_port=args.redis_port,
+            redis_pass=args.redis_pass,
         )
 
 
