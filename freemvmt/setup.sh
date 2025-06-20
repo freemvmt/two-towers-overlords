@@ -3,7 +3,7 @@
 
 # ensure we have all the utils we need
 apt-get update
-apt-get install -y vim rsync git nvtop htop tmux curl ca-certificates git-lfs
+apt-get install -y vim rsync git nvtop htop tmux curl ca-certificates git-lfs lsof
 apt-get upgrade -y
 
 # get env vars sent via send script and load into shell
@@ -35,9 +35,12 @@ fi
 if [[ "$RUN_REDIS" == "1" ]]; then
   echo "🚀 RUN_REDIS is set - installing and starting Redis server in the background"
   apt-get install -y redis-server
+  # ensure any existing redis server is stopped before starting it (check with `lsof -i :6379`)
+  pkill redis-server || true
   # run redis in a tmux session so we can attach to see logs / stop it
-  tmux new-session -d -s redis 'redis-server /etc/redis/redis.conf'
+  tmux new-session -d -s redis 'redis-server redis.remote.conf'
   # alternatively, run redis in the background like `redis-server /etc/redis/redis.conf --daemonize yes`
+  echo "Redis server started in tmux session 'redis' - check with redis-cli ping` Attach to it with 'tmux attach -t redis'."
 fi
 
 # finally, activate virtual environment for running python scripts

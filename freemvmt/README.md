@@ -6,6 +6,12 @@ Our 'two towers' here are the *query* tower and *document* tower.
 
 Aiming to start with a basic full stack setup (including early deploy), using only avergae pooling for each tower. Then we will swap those NNs out for RNNs and see what improvement we get.
 
+## TODO
+
+- [ ] Build frontend for running queries and seeing results
+- [ ] Swap average pooling tower out for an RNN and compare like for like (test as a hyperparam?)
+- [ ] Try using the v2.1 dataset
+
 
 ## Features
 
