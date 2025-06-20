@@ -143,12 +143,12 @@ def run_sweep(project_name: str = "two-towers-retrieval"):
         "method": "grid",  # Can be 'grid', 'random', or 'bayes'
         "metric": {"name": "final_ndcg_10", "goal": "maximize"},
         "parameters": {
-            "margin": {"values": [0.3, 0.4, 0.5]},
-            "epochs": {"values": [15]},
-            "batch_size": {"values": [2048]},
-            "learning_rate": {"values": [1e-4, 1e-5]},
-            "max_samples": {"values": [100_000]},  # -1 means use full dataset
-            "projection_dim": {"values": [512]},
+            "margin": {"values": [0.3]},
+            "epochs": {"values": [15, 20, 25]},
+            "batch_size": {"values": [1024]},
+            "learning_rate": {"values": [1e-4]},
+            "max_samples": {"values": [-1]},  # -1 means use full dataset
+            "projection_dim": {"values": [384, 512]},
         },
     }
 
