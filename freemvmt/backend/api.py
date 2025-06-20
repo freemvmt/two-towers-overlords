@@ -59,7 +59,7 @@ async def lifespan(app: FastAPI):
         # Get configuration from environment, defaults assume running on local
         redis_url = os.getenv("REDIS_URL", "redis://localhost:6379")
         models_dir = os.getenv("MODELS_DIR", "../models")
-        model_filename = os.getenv("MODEL")
+        model_filename = os.getenv("MODEL", "e15.lr4.d512.m3.pt")
         print(f"Redis URL: {redis_url}")
         print(f"Models directory: {models_dir}")
         print(f"Model filename: {model_filename if model_filename else 'not specified'}")
