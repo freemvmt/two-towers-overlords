@@ -18,7 +18,6 @@ import argparse
 import os
 import random
 import re
-import sys
 from typing import Any, Optional
 
 import torch
@@ -29,18 +28,8 @@ from redisvl.query import VectorQuery
 from redisvl.schema import IndexSchema
 
 
-# Determine if running in Docker
-if os.path.exists("/.dockerenv"):
-    print("Running in Docker environment, importing modules from /app volume")
-    # if so, import modules from volume
-    import sys
-
-    sys.path.append("/app")
-    from freemvmt.model import TwoTowersModel
-    from freemvmt.data import MSMarcoDataset
-else:
-    from model import TwoTowersModel
-    from data import MSMarcoDataset
+from model import TwoTowersModel
+from data import MSMarcoDataset
 
 
 MODELS_DIR = "models"

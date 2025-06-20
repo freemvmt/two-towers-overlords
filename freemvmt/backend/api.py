@@ -10,17 +10,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
-
-# Determine if running in Docker
-if os.path.exists("/.dockerenv"):
-    # if so, import modules from attached volume (rather than local filesystem)
-    print("Running in Docker environment, importing modules from /app volume")
-    import sys
-
-    sys.path.append("/app")
-    from search import DocumentSearchEngine
-else:
-    from ..search import DocumentSearchEngine
+from search import DocumentSearchEngine
 
 
 # Configure logging

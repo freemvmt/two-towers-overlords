@@ -1,7 +1,7 @@
 services:
-  api:
-    build: ./api
-    container_name: api
+  backend:
+    build: ./backend
+    container_name: backend
     expose:
       - ${API_PORT}
     ports:
@@ -29,8 +29,8 @@ services:
     ports:
       - "${FRONTEND_PORT}:8501"
     environment:
-      - API_URL="http://api:${FRONTEND_PORT}""
-    depends_on: [api]
+      - API_URL="http://backend:${FRONTEND_PORT}""
+    depends_on: [backend]
     networks: [two-towers]
 
   redis:

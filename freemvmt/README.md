@@ -6,6 +6,7 @@ Our 'two towers' here are the *query* tower and *document* tower.
 
 Aiming to start with a basic full stack setup (including early deploy), using only avergae pooling for each tower. Then we will swap those NNs out for RNNs and see what improvement we get.
 
+
 ## TODO
 
 - [ ] Build frontend for running queries and seeing results
@@ -25,6 +26,8 @@ Aiming to start with a basic full stack setup (including early deploy), using on
 
 ## Files
 
+All the below are in `backend/`, which is where the action happens.
+
 - `model.py`: Two-towers model architecture with average pooling encoders
 - `training.py`: Training loop with MS Marco data loading and triplet loss
 - `main.py`: Entry point for running training
@@ -43,6 +46,8 @@ If you want to spin up a Redis server on your remote as part of setup (and in a 
 
 
 ## Usage
+
+⚠️ Bear in mind that most commands in this README should be run from within `backend/` (especially anything python, but not including scripts for dev ops).
 
 ```bash
 # Install dependencies
@@ -170,7 +175,7 @@ perfect_model = 1.0          # Theoretical maximum (never achieved in practice)
 ## Quick Start
 
 ```python
-from freemvmt.model import TwoTowersModel
+from model import TwoTowersModel
 
 # Initialize model
 model = TwoTowersModel()

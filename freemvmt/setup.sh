@@ -23,6 +23,9 @@ if [[ -n "$SSH_CONNECTION" && -d /workspace ]]; then
   export HF_DATASETS_CACHE="/workspace/.cache/datasets_cache"
 fi
 
+# cd into backend dir, where the action happens
+cd backend
+
 # install python packages (using nightly index for latest torch if beast mode enabled)
 if [[ "$BEAST_MODE" == "1" ]]; then
   echo "🔥 BEAST_MODE enabled - using nightly config for torch prereleases"
