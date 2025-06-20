@@ -9,8 +9,9 @@ Aiming to start with a basic full stack setup (including early deploy), using on
 
 ## TODO
 
-- [ ] Build frontend for running queries and seeing results
-- [ ] Swap average pooling tower out for an RNN and compare like for like (test as a hyperparam?)
+- [x] Build frontend for running queries and seeing results
+- [ ] Fix the frontend so it actually points at a real search index
+- [ ] Read [Cortex pt. 2](https://cortex.mlx.institute/m/179/l/262/e/0), swap average pooling tower out for an RNN and compare
 - [ ] Try using the v2.1 dataset
 
 
