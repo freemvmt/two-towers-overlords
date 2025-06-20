@@ -8,15 +8,15 @@ from math import log10
 import os
 from datetime import datetime
 
-import torch
-from torchinfo import summary
-import wandb
-
-from training import run_training
+# Heavy imports moved to lazy loading for faster startup
+# import torch
+# from torchinfo import summary
+# import wandb
+# from training import run_training
 
 
 MODELS_DIR = "models"
-MODEL_FILENAME_BASE_TEMPLATE = "e{epochs}.lr{learning_rate}.d{projection_dim}.m{margin}.pt"
+MODEL_FILENAME_BASE_TEMPLATE = "e{epochs}.lr{learning_rate}.d{projection_dim}.m{margin}"
 
 
 def main():
@@ -52,6 +52,7 @@ def main():
 
     args = parser.parse_args()
 
+    # Early exit for sweep
     if args.sweep:
         run_sweep(args.project_name)
         return
@@ -68,6 +69,12 @@ def main():
     print(f"  Wandb enabled: {not args.no_wandb}")
     print(f"  Comprehensive testing: {not args.no_comprehensive_test}")
     print()
+
+    # Import heavy libraries only when we need them for training
+    print("Loading PyTorch and training modules...")
+    import torch
+    from torchinfo import summary
+    from training import run_training
 
     # Run training
     trained_model = run_training(
@@ -169,6 +176,9 @@ def main():
 
 def sweep_train():
     """Training function for wandb sweep."""
+    import wandb
+    from training import run_training
+
     # Initialize wandb for the sweep run if not already done
     if not wandb.run:
         wandb.init()
@@ -213,6 +223,9 @@ def run_sweep(project_name: str = "two-towers-retrieval"):
 
     print("Starting hyperparameter sweep...")
     print(f"Sweep configuration: {sweep_config}")
+
+    # Import wandb here to avoid unnecessary dependency if not running a sweep
+    import wandb
 
     sweep_id = wandb.sweep(sweep_config, project=project_name)
     print(f"Sweep ID: {sweep_id}")
