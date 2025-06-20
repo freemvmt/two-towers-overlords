@@ -174,23 +174,23 @@ class DocumentSearchEngine:
 
         # Find model weights if available
         model_path = None
-        model_filename = None
+        actual_model_filename = None
         if model_filename is None:
             result = find_best_model(models_dir)
             if result:
-                model_path, model_filename = result
+                model_path, actual_model_filename = result
         # if a specific model filename is provided, we check it exists and has appropriate extension
         elif model_filename and model_filename.endswith((".pt", ".pth")):
             path = os.path.join(MODELS_DIR, model_filename)
             if os.path.exists(path):
                 model_path = path
-                model_filename = model_filename
+                actual_model_filename = model_filename
             print(f"🔍 Using custom model: {model_filename}")
         else:
             print("❌ Custom model provided but either not found to exist, or not ending with .pt/.pth")
 
         # init index name, using model filename if available
-        self.index_name = os.path.splitext(model_filename)[0] if model_filename else DEFAULT_INDEX_NAME
+        self.index_name = os.path.splitext(actual_model_filename)[0] if actual_model_filename else DEFAULT_INDEX_NAME
 
         # Auto-detect projection dimension from model if not provided
         if projection_dim is None:
